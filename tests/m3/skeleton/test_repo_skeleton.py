@@ -18,8 +18,17 @@ FROZEN_DIRS = [
 ]
 
 MODULE_DIRS = {"data", "analysis", "application"}
-ALLOWED_TOP_LEVEL_DIRS = {"backend", "config", "frontend", "scripts", "tests"}
-ALLOWED_TOP_LEVEL_FILES = {".gitignore", ".python-version", "pyproject.toml", "uv.lock"}
+# docs/ 由 README 开工顺序第 2 条的文档 PR 同步进入仓库（规则、需求、CONTEXT、规格与追溯 ADR）。
+ALLOWED_TOP_LEVEL_DIRS = {"backend", "config", "docs", "frontend", "scripts", "tests"}
+ALLOWED_TOP_LEVEL_FILES = {
+    ".gitignore",
+    ".python-version",
+    "AGENTS.md",
+    "CONTEXT.md",
+    "pyproject.toml",
+    "uv.lock",
+    "高价值客户异常售后决策支持MVP需求文档.md",
+}
 SCRIPTS = ["bootstrap.ps1", "dev.ps1", "start.ps1", "test.ps1"]
 
 
