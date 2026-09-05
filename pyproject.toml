@@ -1,0 +1,47 @@
+[project]
+name = "psit-user-valueguard"
+version = "0.1.0"
+description = "PSIT MVP：高价值客户异常售后决策支持（单机本地工作台）"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.14",
+    "fastapi>=0.115",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy>=2.0.36",
+    "uvicorn>=0.32",
+    "zai-sdk",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+    "pyright>=1.1.390",
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["tests"]
+addopts = "-m 'not live_glm'"
+markers = [
+    "live_glm: 真实 GLM 调用验证（M2-10 专用，不进入普通 PR 门槛）",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pyright]
+include = ["backend", "tests"]
+extraPaths = ["backend"]

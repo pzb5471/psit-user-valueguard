@@ -1,0 +1,21 @@
+# 运行数据与本机环境（技术实施规格：密钥与 runtime_data 不得进入 Git）
+runtime_data/
+.env
+.venv/
+
+# 源数据副本（团队私有，禁止进入公开仓库；README 第 6 节数据红线）
+source_data/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# 前端依赖与构建产物
+node_modules/
+frontend/dist/
+
+# 操作系统与编辑器
+.DS_Store
+Thumbs.db
