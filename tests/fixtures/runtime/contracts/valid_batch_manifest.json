@@ -1,0 +1,14 @@
+{
+  "schema_version": "batch_manifest.v1",
+  "data_version": "mock_dataset_v1",
+  "batch_id": "batch-demo-0001",
+  "package_type": "DEMO",
+  "is_mock": true,
+  "source_snapshot_at": "2018-10-17T17:30:18Z",
+  "case_files": [
+    "cases/case-0001.json",
+    "cases/case-0002.json"
+  ],
+  "case_count": 2,
+  "evidence_count": 5
+}

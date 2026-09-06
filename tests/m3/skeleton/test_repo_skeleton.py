@@ -34,10 +34,10 @@ SCRIPTS = ["bootstrap.ps1", "dev.ps1", "start.ps1", "test.ps1"]
 
 def git_tracked() -> list[str]:
     out = subprocess.run(
-        ["git", "ls-files"],
+        ["git", "-c", "core.quotepath=false", "ls-files"],
         cwd=REPO_ROOT,
         capture_output=True,
-        text=True,
+        encoding="utf-8",
         check=True,
     ).stdout
     return [line for line in out.splitlines() if line.strip()]
@@ -50,7 +50,11 @@ def test_frozen_directories_exist() -> None:
 
 def test_exactly_three_business_modules() -> None:
     modules = REPO_ROOT / "backend" / "app" / "modules"
-    actual = {p.name for p in modules.iterdir() if p.is_dir()}
+    actual = {
+        path.name
+        for path in modules.iterdir()
+        if path.is_dir() and path.name != "__pycache__"
+    }
     assert actual == MODULE_DIRS, "不得建立第五个业务模块"
 
 
