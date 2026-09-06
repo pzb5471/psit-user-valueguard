@@ -3,6 +3,9 @@ runtime_data/
 .env
 .venv/
 
+# 成员本机配置覆盖（ADR 0047：config/local.toml 不进入 Git）
+config/local.toml
+
 # 源数据副本（团队私有，禁止进入公开仓库；README 第 6 节数据红线）
 source_data/
 
