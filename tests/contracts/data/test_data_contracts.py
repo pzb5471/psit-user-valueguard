@@ -270,6 +270,45 @@ def test_strict_type_and_enum_rejected(loc: tuple, value: Any) -> None:
     reject(CaseInput, payload)
 
 
+
+@pytest.mark.parametrize(
+    "bad_amount",
+    [
+        "1e3",
+        "1E+3",
+        "918.16E2",
+        "NaN",
+        "Infinity",
+        "-Infinity",
+        " 918.16",
+        "918.16 ",
+        "918.16\n",
+        "",
+        ".",
+        ".5",
+        "1.",
+        "0x10",
+        "九一八",
+    ],
+)
+def test_amount_rejects_non_fixed_point_strings(bad_amount: str) -> None:
+    # 金额只接受十进制定点记法：拒绝指数、空白、NaN/Infinity 等特殊值与畸形字符串。
+    payload = valid_case_input()
+    payload["primary_order"]["payment_total"] = bad_amount
+    reject(CaseInput, payload)
+
+
+@pytest.mark.parametrize(
+    "bad_amount",
+    [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")],
+)
+def test_amount_rejects_non_finite_decimal(bad_amount: Decimal) -> None:
+    # Decimal 直通路径同样拒绝 NaN/Infinity，金额必须是有限十进制定点数值。
+    payload = valid_case_input()
+    payload["primary_order"]["payment_total"] = bad_amount
+    reject(CaseInput, payload)
+
+
 @pytest.mark.parametrize(
     ("loc", "value"),
     [
@@ -502,3 +541,21 @@ def test_checksums_coverage_is_importer_concern() -> None:
     # 合同只约束路径与哈希格式；"必须覆盖 manifest/全部案例/全部图片"
     # 由导入器（M1-03/M1-04）负责，不在单文件 Schema 内强制。
     Checksums.model_validate({"cases/demo_case_001.json": "a" * 64})
+
+@pytest.mark.parametrize(
+    ("fact_type", "value"),
+    [
+        ("ORDER_PAYMENT_TOTAL", 918.16),
+        ("ORDER_STATUS", 123.5),
+        ("HIGH_VALUE_CUSTOMER", 0.5),
+        ("ORDER_PURCHASED_AT", 1.5),
+    ],
+)
+def test_behavior_value_float_rejected(fact_type: str, value: float) -> None:
+    # 行为证据 value 只接受 bool/int/Decimal/datetime/str 严格标量；float 不得直通，
+    # 金额一律走十进制定点字符串或 Decimal，避免二进制浮点累计误差。
+    item = valid_case_input()["evidence"]["behavior_items"][0]
+    item["fact_type"] = fact_type
+    item["value"] = value
+    reject(BehaviorEvidenceItem, item)
+

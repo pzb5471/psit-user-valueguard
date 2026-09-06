@@ -14,7 +14,8 @@ FastAPI、SQLAlchemy、Alembic、智谱 SDK 或任何模块实现。所有模型
   数据或映射变化时允许产生新 data_version，因此不冻结为字面量。
 - 金额统一为 Decimal（规格 5.5：金额使用 Python Decimal 计算并按十进制定点字符串
   序列化）。JSON 交换中金额是十进制定点字符串，因此 Amount 接受 Decimal 或等价
-  十进制定点字符串，拒绝 float/int/bool 等宽松输入，避免二进制浮点累计误差。
+  十进制定点字符串，拒绝 float/int/bool 等宽松输入，且字符串仅接受十进制定点记法
+  （自动拒绝指数、空白与 NaN/Infinity），避免二进制浮点累计误差。
 - 时间同样以 ISO 8601 字符串交换（规格 5.5），Timestamp 接受 datetime 或 ISO 8601
   字符串，拒绝数字等宽松输入。枚举字段接受枚举成员或其在 JSON 中的精确字符串值，
   其余字符串与数值一律拒绝。除此之外的标量保持 Pydantic 严格模式（"1" 不等于 1、
@@ -51,6 +52,7 @@ MOCK_DATA_VERSION = "mock_dataset_v1"
 
 _MAX_ID_LENGTH = 128
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+_DECIMAL_POINT_PATTERN = re.compile(r"^[+-]?\d+(?:\.\d+)?$")
 _DRIVE_LETTER_PATTERN = re.compile(r"^[A-Za-z]:")
 
 
@@ -87,14 +89,24 @@ def _validate_case_file_path(value: str) -> str:
 
 
 def _parse_decimal(value: object) -> Decimal:
-    """金额：Decimal 直通，十进制定点字符串精确转换（规格 5.5）；拒绝其他类型。"""
+    """金额：Decimal 直通，十进制定点字符串精确转换（规格 5.5）；拒绝其他类型。
+
+    十进制定点字符串只允许可选的单个正负号、整数部分与可选的小数部分，不接收
+    指数（1e3）、空白、NaN/Infinity 等特殊值或二进制浮点数值，避免累计误差。
+    """
     if isinstance(value, Decimal):
+        if not value.is_finite():
+            raise ValueError("金额必须为有限的十进制定点数值，拒绝 NaN/Infinity")
         return value
     if isinstance(value, str):
+        if not _DECIMAL_POINT_PATTERN.fullmatch(value):
+            raise ValueError(
+                "金额必须为十进制定点字符串（例如 '918.16'），不得含空白、指数或特殊值"
+            )
         try:
             return Decimal(value)
         except InvalidOperation as exc:
-            raise ValueError("金额必须为十进制定点字符串，例如 '918.16'") from exc
+            raise ValueError("金额必须为十进制定点字符串（例如 '918.16'）") from exc
     raise ValueError("金额必须为 Decimal 或十进制定点字符串")
 
 
@@ -232,7 +244,7 @@ class BehaviorEvidenceItem(_EvidenceBase):
     fact_type: Annotated[
         BehaviorFactType, BeforeValidator(_enum_parser(BehaviorFactType))
     ]
-    value: bool | int | float | Amount | Timestamp | str
+    value: bool | int | Amount | Timestamp | str
     calculation_rule: PrintableText | None = None
 
 
