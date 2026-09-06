@@ -1,9 +1,9 @@
 """ZIP 暂存与校验的拒绝报告合同（技术实施规格 12.4；ADR-0026/0067）。
 
-可预期拒绝（坏 ZIP、合同不合格、答案泄漏、媒体不支持、超大小）不抛 Python 异常，
-由 ZipImportStage.stage() 聚合为逐项 RejectionInfo 报告返回；意外异常（程序缺陷、
-磁盘失败等）保留技术因果链直接抛出，由最近模块边界（M1-04 BatchImportGateway / M3）
-映射为 INTERNAL_ERROR。
+可预期拒绝（坏 ZIP、合同不合格、答案泄漏、媒体不支持、超大小、批次冲突）不抛
+Python 异常，由 ZipImportStage.stage() / M1-04 BatchImportGateway 聚合为逐项
+RejectionInfo 报告返回；意外异常（程序缺陷、磁盘失败等）保留技术因果链直接抛出，
+由最近模块边界（M1-04 BatchImportGateway / M3）映射为 INTERNAL_ERROR。
 
 报告只包含稳定错误编号、中文可操作说明、包内相对路径或公开标识，不含本机绝对路径
 与客户正文（M1-03 人工验收：每类拒绝都有稳定编号和可操作说明）。
@@ -17,13 +17,15 @@ from uuid import uuid4
 
 
 class ImportRejectionCode(StrEnum):
-    """M1-03 阶段可产生的错误编号（规格 12.4 固定编号的子集）。"""
+    """M1-03/M1-04 阶段可产生的错误编号（规格 12.4 固定编号的子集）。"""
 
     INVALID_ZIP = "INVALID_ZIP"
     INPUT_CONTRACT_INVALID = "INPUT_CONTRACT_INVALID"
     ANSWER_LEAKAGE_DETECTED = "ANSWER_LEAKAGE_DETECTED"
     UNSUPPORTED_MEDIA_TYPE = "UNSUPPORTED_MEDIA_TYPE"
     UPLOAD_TOO_LARGE = "UPLOAD_TOO_LARGE"
+    BATCH_ID_CONFLICT = "BATCH_ID_CONFLICT"
+    INTERNAL_ERROR = "INTERNAL_ERROR"
 
 
 class ImportStage(StrEnum):
@@ -36,6 +38,7 @@ class ImportStage(StrEnum):
     MEDIA = "media"
     ANSWER_LEAKAGE = "answer_leakage"
     RELATIONSHIP = "relationship"
+    IMPORT = "import"
 
 
 @dataclass(frozen=True, slots=True)
