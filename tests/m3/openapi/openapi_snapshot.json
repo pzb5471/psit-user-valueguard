@@ -586,7 +586,7 @@
     "/api/v1/batches/{batch_id}/cases/{case_id}/reviews": {
       "post": {
         "summary": "Submit Review",
-        "description": "提交人工确认；相同 submission_id 返回第一次保存结果（M3-07 实现）。",
+        "description": "提交人工确认；相同 submission_id 返回第一次保存结果（M3-07）。",
         "operationId": "submit_review_api_v1_batches__batch_id__cases__case_id__reviews_post",
         "parameters": [
           {

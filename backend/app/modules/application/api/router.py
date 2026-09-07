@@ -44,6 +44,7 @@ from app.modules.application.api.contracts.views import (
 )
 from app.modules.application.app_factory.health import register_health
 from app.modules.application.config.settings import Settings
+from app.modules.application.review import ReviewService
 from app.modules.application.run_service import RunService
 from app.modules.application.services.query import ApplicationServices, ServiceError
 
@@ -104,6 +105,11 @@ def get_services(request: Request) -> ApplicationServices | None:
 def get_run_service(request: Request) -> RunService | None:
     """从应用状态取 M3 运行服务；未装配（M3-08 前）返回 None 由处理器兜底。"""
     return getattr(request.app.state, "run_service", None)
+
+
+def get_review_service(request: Request) -> ReviewService | None:
+    """从应用状态取 M3 审核服务；未装配（M3-08 前）返回 None 由处理器兜底。"""
+    return getattr(request.app.state, "review_service", None)
 
 
 def _require_services(
@@ -358,10 +364,21 @@ async def submit_review(
     batch_id: str,
     case_id: str,
     request: Annotated[ReviewRequest, Field(description="四种人工确认请求之一")],
-    services: ApplicationServices | None = Depends(get_services),
+    review_service: ReviewService | None = Depends(get_review_service),
 ) -> ReviewResultView:
-    """提交人工确认；相同 submission_id 返回第一次保存结果（M3-07 实现）。"""
-    raise NotImplementedError("M3-07 实现人工确认")
+    """提交人工确认；相同 submission_id 返回第一次保存结果（M3-07）。"""
+    if review_service is None:
+        raise _service_response_error(
+            ServiceError(
+                ApiErrorCode.INTERNAL_ERROR,
+                "审核服务尚未装配，请稍后重试",
+                next_action="检查应用装配后重试",
+            )
+        )
+    try:
+        return review_service.submit_review(batch_id, case_id, request)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.get(
@@ -406,6 +423,7 @@ def create_contract_app(
     settings: Settings | None = None,
     services: ApplicationServices | None = None,
     run_service: RunService | None = None,
+    review_service: ReviewService | None = None,
 ) -> FastAPI:
     """组合十个接口与错误边界，作为 OpenAPI 快照与合同测试的真源。
 
@@ -415,6 +433,7 @@ def create_contract_app(
     app.state.settings = settings if settings is not None else Settings.load()
     app.state.services = services
     app.state.run_service = run_service
+    app.state.review_service = review_service
     app.include_router(api_router)
     register_health(app)
     install_error_boundary(app)

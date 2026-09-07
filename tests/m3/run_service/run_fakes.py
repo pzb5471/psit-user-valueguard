@@ -269,10 +269,12 @@ class FakeRunQuery:
         queue: CaseQueueView | None = None,
         run_store: FakeRunStore | None = None,
         detail: CaseDetailView | None = None,
+        current_case_run_id: int | None = None,
     ) -> None:
         self.workspace = workspace or make_workspace()
         self.queue = queue or make_queue()
         self.detail = detail
+        self.current_case_run_id = current_case_run_id
         self.missing = set()
         self._run_store = run_store
 
@@ -298,6 +300,9 @@ class FakeRunQuery:
         if detail is None or detail.batch_id != batch_id or detail.case_id != case_id:
             raise LookupError(f"案例不存在: {batch_id}/{case_id}")
         return detail
+
+    def get_current_case_run_id(self, batch_id: str, case_id: str) -> int | None:
+        return self.current_case_run_id
 
     def get_case_input(self, batch_id: str, case_id: str) -> CaseInputV1Protocol | None:
         if case_id in self.missing:
