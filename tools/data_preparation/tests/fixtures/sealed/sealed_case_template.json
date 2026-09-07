@@ -1,0 +1,27 @@
+{
+  "case_id": "demo_case_001",
+  "task_id": "000000_a",
+  "source": {
+    "database": {
+      "order_id": "…",
+      "item_id": "…"
+    },
+    "database_gt": {
+      "order_info": {},
+      "logistics_info": {}
+    },
+    "first_query": "…",
+    "key_answer": [],
+    "label": 1,
+    "question_type": [],
+    "trajectory": "…",
+    "user_address": "…",
+    "user_profile": "…",
+    "user_profile_st1": {
+      "mood": "…",
+      "reason": "…",
+      "solution": "…",
+      "image_verification": "…"
+    }
+  }
+}

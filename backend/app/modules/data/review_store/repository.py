@@ -158,6 +158,7 @@ class ReviewStoreRepository:
         final_cause_json: dict[str, Any] | None,
         final_actions_json: list[Any] | None,
         review_reason: str | None,
+        execution_note: str | None,
         now: datetime,
     ) -> Review:
         """追加一份正式人工确认（review_id/submission_id/case_id 唯一约束保护）。"""
@@ -171,6 +172,7 @@ class ReviewStoreRepository:
             final_cause_json=final_cause_json,
             final_actions_json=final_actions_json,
             review_reason=review_reason,
+            execution_note=execution_note,
             created_at=now,
         )
         session.add(row)

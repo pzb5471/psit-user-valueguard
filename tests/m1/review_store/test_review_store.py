@@ -277,7 +277,12 @@ def test_four_outcomes_submit_persist_and_project(
         )
         assert view.outcome == expected
         assert view.created_at == OCCURRED_AT.isoformat()
-        assert view.execution_note == "已生成沟通要点"  # 系统原结果（strategy）回填
+        expected_execution_note = (
+            "已与客户确认补发时间"
+            if expected == "MODIFIED_AND_APPROVED"
+            else "已生成沟通要点"
+        )
+        assert view.execution_note == expected_execution_note
         if expected == "APPROVED":
             assert view.final_intervention_level == "MUST_INTERVENE"
             assert view.final_cause == {
@@ -308,14 +313,9 @@ def test_four_outcomes_submit_persist_and_project(
             final_level = InterventionLevel.MUST_INTERVENE
             review_reason = "商品问题明确，建议换货并联系客户"
         else:  # INSUFFICIENT_EVIDENCE
-            assert view.final_intervention_level == "MUST_INTERVENE"
-            assert view.final_cause == {
-                "cause_category": "PRODUCT_ISSUE",
-                "confidence": 0.9,
-            }
-            assert view.final_actions == [
-                {"action_type": "CUSTOMER_CONTACT", "content": "联系客户"}
-            ]
+            assert view.final_intervention_level is None
+            assert view.final_cause is None
+            assert view.final_actions is None
             assert view.review_reason == "图片与订单信息不足以判定责任归属"
             final_level = None
             review_reason = "图片与订单信息不足以判定责任归属"
@@ -330,6 +330,11 @@ def test_four_outcomes_submit_persist_and_project(
             assert review.outcome == ReviewOutcome(expected)
             assert review.final_intervention_level == final_level
             assert review.review_reason == review_reason
+            assert review.execution_note == (
+                "已与客户确认补发时间"
+                if expected == "MODIFIED_AND_APPROVED"
+                else None
+            )
             assert review.created_at.replace(tzinfo=UTC) == OCCURRED_AT
             case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
             assert case.status == CaseStatus.COMPLETED

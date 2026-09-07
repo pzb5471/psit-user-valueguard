@@ -19,7 +19,8 @@ from __future__ import annotations
 import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from types import SimpleNamespace
+from typing import Any, cast
 
 import pytest
 from pydantic import ValidationError
@@ -45,6 +46,7 @@ from app.modules.data.db.models import (
     ReviewOutcome,
     StageResult,
 )
+from app.modules.data.queries.gateway import _run_flags
 from app.modules.data.queries.views import (
     BatchWorkspaceView,
     CaseDetailView,
@@ -275,6 +277,7 @@ def _insert_review(
     final_cause: dict[str, Any] | None = None,
     final_actions: list[Any] | None = None,
     review_reason: str | None = None,
+    execution_note: str | None = None,
 ) -> int:
     with Session(engine) as session:
         case = _case_row(session, batch_id=batch_id, case_id=case_id)
@@ -289,6 +292,7 @@ def _insert_review(
             final_cause_json=final_cause,
             final_actions_json=final_actions,
             review_reason=review_reason,
+            execution_note=execution_note,
             created_at=now,
         )
         session.add(review)
@@ -617,6 +621,30 @@ def test_queue_flags_from_result_json_and_technical_failure(
     assert by_id["c1"].priority_reason == DEFAULT_PRIORITY_REASON
 
 
+def test_queue_flags_derive_from_frozen_result_contract() -> None:
+    """冲突、缺口和证据不足不依赖合同外的 has_* 布尔字段。"""
+    results = [
+        SimpleNamespace(
+            stage_name="perception",
+            result_json={
+                "events": [{"conflicting_evidence": ["ev_image_demo_case_001"]}],
+                "image_observations": [
+                    {"relationship": "CONFLICTS"},
+                ],
+                "missing_evidence": ["order_delivery_detail"],
+            }
+        ),
+        SimpleNamespace(
+            stage_name="attribution",
+            result_json={
+                "primary_cause": {"cause_category": "INSUFFICIENT_EVIDENCE"}
+            }
+        ),
+    ]
+
+    assert _run_flags(cast(list[StageResult], results), None) == (True, True, False)
+
+
 def test_queue_pagination_and_default_limit(query_gateway, gateway) -> None:
     batch_id = _import_batch(
         gateway, batch_id="qpage", case_ids=("c1", "c2", "c3", "c4", "c5")
@@ -891,6 +919,7 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
         final_cause={"cause_category": "PRICE_OR_BENEFIT"},
         final_actions=[{"action_type": "NO_ACTION_MONITOR"}],
         review_reason="人工复核为价格或权益问题",
+        execution_note="已联系客户确认权益补偿方案",
     )
     detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
     assert detail.status == "COMPLETED"
@@ -901,8 +930,8 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
     assert review_result.final_cause == {"cause_category": "PRICE_OR_BENEFIT"}
     assert review_result.final_actions == [{"action_type": "NO_ACTION_MONITOR"}]
     assert review_result.review_reason == "人工复核为价格或权益问题"
-    assert review_result.execution_note == "已生成沟通要点"
-    assert "T" in review_result.created_at
+    assert review_result.execution_note == "已联系客户确认权益补偿方案"
+    assert review_result.created_at.endswith("+00:00")
     assert detail.can_review is False
     assert detail.review_token is None
     assert detail.review_options is None

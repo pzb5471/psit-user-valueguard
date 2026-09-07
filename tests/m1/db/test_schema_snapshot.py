@@ -160,6 +160,7 @@ EXPECTED_TYPES: dict[str, dict[str, str]] = {
         "final_cause_json": "json",
         "final_actions_json": "json",
         "review_reason": "text",
+        "execution_note": "text",
         "created_at": "datetime",
     },
 }
@@ -200,6 +201,7 @@ EXPECTED_NULLABLE: dict[str, set[str]] = {
         "final_cause_json",
         "final_actions_json",
         "review_reason",
+        "execution_note",
     },
 }
 

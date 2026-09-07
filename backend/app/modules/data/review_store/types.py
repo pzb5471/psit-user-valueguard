@@ -2,7 +2,7 @@
 
 submit_review 的载荷：outcome 为四种人工确认结果之一，final_* 与
 review_reason 的必填/禁止由 outcome 按 12.3 表格决定（网关统一校验）。
-execution_note 在请求中按需出现，但 reviews 表无对应列（规格 11.1 九表
+execution_note 在请求中按需出现，并持久化于 reviews 表（规格 11.1 九表
 Schema），不落库，见 gateway 显式假设。
 """
 
