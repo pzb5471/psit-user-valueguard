@@ -23,6 +23,7 @@ import logging
 import re
 import shutil
 import stat
+import threading
 import zipfile
 from dataclasses import dataclass, replace
 from pathlib import Path, PurePosixPath
@@ -30,7 +31,6 @@ from typing import BinaryIO
 from uuid import uuid4
 
 from sqlalchemy.engine import Engine
-from sqlalchemy.exc import IntegrityError
 
 from app.contracts.data import BatchManifest, CaseInput, PackageType
 from app.contracts.states import BatchStatus
@@ -108,6 +108,9 @@ class BatchImportGateway:
         self.max_zip_bytes = max_zip_bytes
         self.repository = BatchImportRepository(engine)
         self.stage = ZipImportStage(tmp_root=self.tmp_root, max_zip_bytes=max_zip_bytes)
+        # 同一应用实例内，正式目录发布与数据库落库必须是一个临界区。否则两个
+        # 相同包会同时写入同一目录，失败请求的回滚可能删除成功请求的证据文件。
+        self._publish_lock = threading.Lock()
 
     def import_zip(
         self,
@@ -189,23 +192,6 @@ class BatchImportGateway:
                     next_action="查看技术日志后重试",
                 )
 
-            existing = self.repository.find_batch_by_package_sha256(package_sha256)
-            if existing is not None:
-                return self._existing_summary(existing, source_filename, trace)
-            conflict = self.repository.find_batch_by_batch_id(manifest.batch_id)
-            if conflict is not None and conflict.package_sha256 != package_sha256:
-                return self._reject(
-                    trace=trace,
-                    source_filename=source_filename,
-                    code=ImportRejectionCode.BATCH_ID_CONFLICT,
-                    object_type="batch",
-                    object_id=manifest.batch_id,
-                    message=f"batch_id（{manifest.batch_id}）已存在且内容与本次上传不一致",
-                    next_action="使用新的 batch_id 重新组包，或上传原包内容",
-                )
-            if conflict is not None:
-                return self._existing_summary(conflict, source_filename, trace)
-
             for field, value in (
                 ("batch_id", manifest.batch_id),
                 ("data_version", manifest.data_version),
@@ -228,44 +214,44 @@ class BatchImportGateway:
                 / manifest.batch_id
                 / manifest.data_version
             )
-            try:
-                formal_dir.mkdir(parents=True, exist_ok=True)
-                self._write_formal_package(temp_dir, formal_dir, source_filename)
-                self.repository.persist_import(
-                    manifest=manifest,
-                    cases=cases,
-                    package_sha256=package_sha256,
-                    package_relative_path=batch_relative_path,
-                )
-            except IntegrityError:
-                self._cleanup_formal_dir(formal_dir)
+            with self._publish_lock:
                 existing = self.repository.find_batch_by_package_sha256(package_sha256)
                 if existing is not None:
                     return self._existing_summary(existing, source_filename, trace)
                 conflict = self.repository.find_batch_by_batch_id(manifest.batch_id)
                 if conflict is not None:
+                    if conflict.package_sha256 == package_sha256:
+                        return self._existing_summary(conflict, source_filename, trace)
                     return self._reject(
                         trace=trace,
                         source_filename=source_filename,
                         code=ImportRejectionCode.BATCH_ID_CONFLICT,
                         object_type="batch",
-                        object_id=conflict.batch_id,
-                        message=f"batch_id（{conflict.batch_id}）已存在且内容与本次上传不一致",
+                        object_id=manifest.batch_id,
+                        message=f"batch_id（{manifest.batch_id}）已存在且内容与本次上传不一致",
                         next_action="使用新的 batch_id 重新组包，或上传原包内容",
                     )
-                raise
-            except Exception:
-                self._cleanup_formal_dir(formal_dir)
-                _logger.exception("正式批次文件写入或落库失败，trace_id=%s", trace)
-                return self._reject(
-                    trace=trace,
-                    source_filename=source_filename,
-                    code=ImportRejectionCode.INTERNAL_ERROR,
-                    object_type="package",
-                    object_id=manifest.batch_id,
-                    message="正式批次发布失败，已回滚清理，未留下半批次",
-                    next_action="查看技术日志后重试",
-                )
+                try:
+                    formal_dir.mkdir(parents=True, exist_ok=False)
+                    self._write_formal_package(temp_dir, formal_dir, source_filename)
+                    self.repository.persist_import(
+                        manifest=manifest,
+                        cases=cases,
+                        package_sha256=package_sha256,
+                        package_relative_path=batch_relative_path,
+                    )
+                except Exception:
+                    self._cleanup_formal_dir(formal_dir)
+                    _logger.exception("正式批次文件写入或落库失败，trace_id=%s", trace)
+                    return self._reject(
+                        trace=trace,
+                        source_filename=source_filename,
+                        code=ImportRejectionCode.INTERNAL_ERROR,
+                        object_type="package",
+                        object_id=manifest.batch_id,
+                        message="正式批次发布失败，已回滚清理，未留下半批次",
+                        next_action="查看技术日志后重试",
+                    )
             return ImportResult(
                 ok=True,
                 source_filename=source_filename,

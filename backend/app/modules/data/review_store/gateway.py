@@ -240,12 +240,15 @@ def _review_result_view(
     )
     final_cause = review.final_cause_json
     final_actions = review.final_actions_json
-    if final_intervention_level is None and strategy is not None:
-        final_intervention_level = strategy.get("intervention_level")
-    if final_cause is None and attribution is not None:
-        final_cause = attribution.get("primary_cause")
-    if final_actions is None and strategy is not None:
-        final_actions = strategy.get("actions")
+    # 仅“直接通过”表示人工完整认可系统结果。证据不足代表拒绝当前判断，
+    # 不得把系统原因和动作伪装成最终人工结论。
+    if review.outcome == ReviewOutcome.APPROVED:
+        if final_intervention_level is None and strategy is not None:
+            final_intervention_level = strategy.get("intervention_level")
+        if final_cause is None and attribution is not None:
+            final_cause = attribution.get("primary_cause")
+        if final_actions is None and strategy is not None:
+            final_actions = strategy.get("actions")
     return ReviewResultView(
         outcome=review.outcome.value,
         final_intervention_level=final_intervention_level,

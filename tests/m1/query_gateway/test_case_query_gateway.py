@@ -19,7 +19,8 @@ from __future__ import annotations
 import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from types import SimpleNamespace
+from typing import Any, cast
 
 import pytest
 from pydantic import ValidationError
@@ -45,6 +46,7 @@ from app.modules.data.db.models import (
     ReviewOutcome,
     StageResult,
 )
+from app.modules.data.queries.gateway import _run_flags
 from app.modules.data.queries.views import (
     BatchWorkspaceView,
     CaseDetailView,
@@ -615,6 +617,30 @@ def test_queue_flags_from_result_json_and_technical_failure(
     assert by_id["c3"].has_evidence_conflict is False
     assert by_id["c1"].risk_summary == DEFAULT_RISK_SUMMARY
     assert by_id["c1"].priority_reason == DEFAULT_PRIORITY_REASON
+
+
+def test_queue_flags_derive_from_frozen_result_contract() -> None:
+    """冲突、缺口和证据不足不依赖合同外的 has_* 布尔字段。"""
+    results = [
+        SimpleNamespace(
+            stage_name="perception",
+            result_json={
+                "events": [{"conflicting_evidence": ["ev_image_demo_case_001"]}],
+                "image_observations": [
+                    {"relationship": "CONFLICTS"},
+                ],
+                "missing_evidence": ["order_delivery_detail"],
+            }
+        ),
+        SimpleNamespace(
+            stage_name="attribution",
+            result_json={
+                "primary_cause": {"cause_category": "INSUFFICIENT_EVIDENCE"}
+            }
+        ),
+    ]
+
+    assert _run_flags(cast(list[StageResult], results), None) == (True, True, False)
 
 
 def test_queue_pagination_and_default_limit(query_gateway, gateway) -> None:

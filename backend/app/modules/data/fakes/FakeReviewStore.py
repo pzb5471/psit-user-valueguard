@@ -361,12 +361,13 @@ class FakeReviewStore:
         )
         final_cause = review["final_cause_json"]
         final_actions = review["final_actions_json"]
-        if final_intervention_level is None and strategy is not None:
-            final_intervention_level = strategy.get("intervention_level")
-        if final_cause is None and attribution is not None:
-            final_cause = attribution.get("primary_cause")
-        if final_actions is None and strategy is not None:
-            final_actions = strategy.get("actions")
+        if review["outcome"] == ReviewOutcome.APPROVED:
+            if final_intervention_level is None and strategy is not None:
+                final_intervention_level = strategy.get("intervention_level")
+            if final_cause is None and attribution is not None:
+                final_cause = attribution.get("primary_cause")
+            if final_actions is None and strategy is not None:
+                final_actions = strategy.get("actions")
         execution_note = next(
             (
                 item["result_json"].get("execution_note")

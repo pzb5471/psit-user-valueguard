@@ -41,7 +41,7 @@ from sqlalchemy.engine import Engine
 from app.contracts.data import CaseInput
 from app.contracts.states import BatchStatus, CaseRunStatus, CaseStatus
 
-from ..db.models import Batch, Case, CaseRun, Evidence, Review, StageResult
+from ..db.models import Batch, Case, CaseRun, Evidence, Review, ReviewOutcome, StageResult
 from ..repositories.case_query_repository import CaseQueryRepository
 from .views import (
     BatchListView,
@@ -201,16 +201,28 @@ def _batch_status(
     return BatchStatus.ANALYZING.value
 
 
-def _scan_flags(value: object, flags: dict[str, bool]) -> None:
-    """递归扫描结果 JSON 中的约定布尔标记键。"""
+def _scan_flags(
+    value: object, flags: dict[str, bool], *, derive_missing: bool = False
+) -> None:
+    """从冻结结果合同结构推导队列标记，并兼容早期布尔夹具。"""
     if isinstance(value, dict):
         for key, child in value.items():
             if key in _FLAG_KEYS and child is True:
                 flags[_FLAG_KEYS[key]] = True
-            _scan_flags(child, flags)
+            if key in {"conflicting_evidence", "conflict_evidence"} and child:
+                flags["conflict"] = True
+            if key == "relationship" and child == "CONFLICTS":
+                flags["conflict"] = True
+            # PerceptionResult 的 missing_evidence 表示该案例无法凭现有证据
+            # 可靠判断；策略阶段的同名早期测试辅助字段不属于冻结合同。
+            if key == "missing_evidence" and child and derive_missing:
+                flags["insufficient"] = True
+            if key == "cause_category" and child == "INSUFFICIENT_EVIDENCE":
+                flags["insufficient"] = True
+            _scan_flags(child, flags, derive_missing=derive_missing)
     elif isinstance(value, list):
         for child in value:
-            _scan_flags(child, flags)
+            _scan_flags(child, flags, derive_missing=derive_missing)
 
 
 def _run_flags(
@@ -219,7 +231,11 @@ def _run_flags(
     """队列标记：当前结果约定键 + 证据/图片类技术失败（规格 12.2）。"""
     flags = {"conflict": False, "insufficient": False, "modality": False}
     for result in results:
-        _scan_flags(result.result_json, flags)
+        _scan_flags(
+            result.result_json,
+            flags,
+            derive_missing=result.stage_name == "perception",
+        )
     if run is not None and run.error_code in _MODALITY_ERROR_CODES:
         flags["modality"] = True
     return flags["conflict"], flags["insufficient"], flags["modality"]
@@ -385,12 +401,13 @@ def _review_result(
     )
     final_cause = review.final_cause_json
     final_actions = review.final_actions_json
-    if final_intervention_level is None and strategy is not None:
-        final_intervention_level = strategy.get("intervention_level")
-    if final_cause is None and attribution is not None:
-        final_cause = attribution.get("primary_cause")
-    if final_actions is None and strategy is not None:
-        final_actions = strategy.get("actions")
+    if review.outcome == ReviewOutcome.APPROVED:
+        if final_intervention_level is None and strategy is not None:
+            final_intervention_level = strategy.get("intervention_level")
+        if final_cause is None and attribution is not None:
+            final_cause = attribution.get("primary_cause")
+        if final_actions is None and strategy is not None:
+            final_actions = strategy.get("actions")
     return ReviewResultView(
         outcome=review.outcome.value,
         final_intervention_level=final_intervention_level,
