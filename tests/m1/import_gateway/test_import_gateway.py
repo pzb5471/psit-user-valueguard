@@ -15,6 +15,7 @@ from __future__ import annotations
 import hashlib
 import io
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -200,6 +201,22 @@ def test_same_package_returns_existing_batch(
     formal_dir = _formal_dir(formal_root)
     file_count = sum(1 for path in formal_dir.rglob("*") if path.is_file())
     assert file_count == 7
+
+
+def test_concurrent_same_package_keeps_formal_files(
+    gateway: BatchImportGateway, formal_root: Path
+) -> None:
+    """同一应用实例的并发重复上传只能有一次发布，不能删掉成功包目录。"""
+    raw = make_zip(make_entries())
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(lambda _unused: gateway.import_zip(raw), range(2)))
+
+    assert all(result.ok for result in results)
+    assert sum(result.imported for result in results) == 1
+    assert sum(result.returned_existing for result in results) == 1
+    formal_dir = _formal_dir(formal_root)
+    assert (formal_dir / "manifest.json").is_file()
+    assert (formal_dir / "assets/demo_case_001/scratch_01.jpg").is_file()
 
 
 def test_same_data_version_reuses_version_row(
