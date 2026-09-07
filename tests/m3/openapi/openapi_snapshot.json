@@ -229,7 +229,7 @@
     "/api/v1/batches/{batch_id}/runs": {
       "post": {
         "summary": "Start Batch Run",
-        "description": "开始首次批量分析；无请求体，缺密钥时 503（M3-05 实现）。",
+        "description": "开始首次批量分析；无请求体，缺密钥时 503（M3-05）。",
         "operationId": "start_batch_run_api_v1_batches__batch_id__runs_post",
         "parameters": [
           {
