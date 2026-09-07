@@ -1,0 +1,45 @@
+.panel {
+  max-width: 560px;
+  margin: var(--psit-space-7) auto;
+  padding: var(--psit-space-6);
+  background: var(--psit-color-surface-page);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-card);
+}
+
+.title {
+  margin: 0 0 var(--psit-space-3);
+  font-size: var(--psit-font-section-title-size);
+  font-weight: var(--psit-font-section-title-weight);
+  line-height: var(--psit-font-section-title-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.description {
+  margin: 0 0 var(--psit-space-5);
+  font-size: var(--psit-font-body-size);
+  line-height: var(--psit-font-body-line-height);
+  color: var(--psit-color-text-secondary);
+}
+
+.reloadButton {
+  min-width: 88px;
+  min-height: 44px;
+  padding: 0 var(--psit-space-5);
+  border: none;
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-primary-action);
+  color: var(--psit-color-surface-page);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.reloadButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
