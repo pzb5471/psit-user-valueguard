@@ -10,6 +10,11 @@ function listSourceFiles(dir: string): string[] {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name)
     if (statSync(full).isDirectory()) {
+      // src/mocks 是测试替身：MSW handler 需要字面 URL 匹配地址，
+      // 且 Fake 不进入演示构建（规格 15.1），不属于运行时外部资源边界。
+      if (full.replace(/\\/g, '/').endsWith('src/mocks')) {
+        continue
+      }
       found.push(...listSourceFiles(full))
     } else if (['.html', '.ts', '.tsx', '.css'].includes(extname(name))) {
       found.push(full)

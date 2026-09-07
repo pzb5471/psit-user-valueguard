@@ -25,7 +25,7 @@ export default tseslint.config(
   },
   {
     extends: [js.configs.recommended],
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.node,
