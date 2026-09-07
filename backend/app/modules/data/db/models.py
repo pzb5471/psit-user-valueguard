@@ -333,7 +333,8 @@ class Review(Base):
     """reviews：正式人工确认结果（规格 11.1；review_id/submission_id 全局唯一）。
 
     v1 每个案例最多一份正式人工确认（唯一约束 case_id）；系统原结果通过
-    case_run_id 引用 stage_results，不在本表复制第二份决策包（规格第 8 节）。
+    case_run_id 引用 stage_results，不在本表复制第二份决策包（规格第 8 节）；
+    execution_note 保存人工填写的执行备注，缺失时由读模型回退系统建议。
     """
 
     __tablename__ = "reviews"
@@ -354,4 +355,5 @@ class Review(Base):
     final_cause_json: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
     final_actions_json: Mapped[list[Any] | None] = mapped_column(JSON, nullable=True)
     review_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    execution_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

@@ -277,6 +277,7 @@ def _insert_review(
     final_cause: dict[str, Any] | None = None,
     final_actions: list[Any] | None = None,
     review_reason: str | None = None,
+    execution_note: str | None = None,
 ) -> int:
     with Session(engine) as session:
         case = _case_row(session, batch_id=batch_id, case_id=case_id)
@@ -291,6 +292,7 @@ def _insert_review(
             final_cause_json=final_cause,
             final_actions_json=final_actions,
             review_reason=review_reason,
+            execution_note=execution_note,
             created_at=now,
         )
         session.add(review)
@@ -917,6 +919,7 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
         final_cause={"cause_category": "PRICE_OR_BENEFIT"},
         final_actions=[{"action_type": "NO_ACTION_MONITOR"}],
         review_reason="人工复核为价格或权益问题",
+        execution_note="已联系客户确认权益补偿方案",
     )
     detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
     assert detail.status == "COMPLETED"
@@ -927,8 +930,8 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
     assert review_result.final_cause == {"cause_category": "PRICE_OR_BENEFIT"}
     assert review_result.final_actions == [{"action_type": "NO_ACTION_MONITOR"}]
     assert review_result.review_reason == "人工复核为价格或权益问题"
-    assert review_result.execution_note == "已生成沟通要点"
-    assert "T" in review_result.created_at
+    assert review_result.execution_note == "已联系客户确认权益补偿方案"
+    assert review_result.created_at.endswith("+00:00")
     assert detail.can_review is False
     assert detail.review_token is None
     assert detail.review_options is None

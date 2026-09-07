@@ -22,7 +22,7 @@
   （规格 12.3：结果被重跑替换后 Token 必须变化）；
 - can_rerun=status∈(PENDING_REVIEW, PROCESSING_ERROR) 且无活动 case_run
   （规格 10.2：PENDING_ANALYSIS 不能走单案例重跑、COMPLETED 不允许重跑）；
-- execution_note 从策略结果约定键 "execution_note" 读取；
+- execution_note 优先读取人工确认记录，缺失时从策略结果约定键回退；
 - has_evidence_conflict/has_insufficient_evidence/has_modality_failure 从
   当前结果的约定布尔键读取，has_modality_failure 额外在证据读取/图片格式
   错误时置真（规格 12.2）；M2-01 冻结结果合同后对齐键名；
@@ -33,6 +33,7 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -380,6 +381,11 @@ def _customer_value_summary(case: Case) -> str:
     return f"非高价值客户（{base}）" if base else "非高价值客户"
 
 
+def _iso_utc(value: datetime) -> str:
+    """SQLite 读回时间无 tzinfo 时，按存储约定恢复为 UTC。"""
+    return (value if value.tzinfo is not None else value.replace(tzinfo=UTC)).isoformat()
+
+
 def _review_token(batch_id: str, case_id: str, run: CaseRun) -> str:
     """确定性不透明 review_token：随当前 run_id 变化（规格 12.3；M1-08 同法）。"""
     digest = hashlib.sha256(
@@ -413,9 +419,9 @@ def _review_result(
         final_intervention_level=final_intervention_level,
         final_cause=final_cause if isinstance(final_cause, dict) else None,
         final_actions=_requires_list(final_actions),
-        execution_note=_top_level(results, "execution_note"),
+        execution_note=review.execution_note or _top_level(results, "execution_note"),
         review_reason=review.review_reason,
-        created_at=review.created_at.isoformat(),
+        created_at=_iso_utc(review.created_at),
     )
 
 

@@ -23,8 +23,8 @@ cases.current_review_id/status/final_intervention_level 与批次当前投影
   {batch_id}:{case_id}:{run_id}")，本网关复制不 import；
 - final_cause 只允许 {"cause_category": 六类之一}、final_actions 1—3 项且每项
   只允许 {"action_type": 六类之一}（M2-01 未冻结，本卡取最严格形态，禁止自由
-  JSON/额外键）；execution_note 请求内按需出现但 reviews 表无对应列（规格 11.1
-  九表），不落库，视图从 case_run 引用的 stage_results 顶层键回填；
+  JSON/额外键）；execution_note 请求内按需出现并写入 reviews 表（规格 11.1
+  九表），缺失时视图从 case_run 引用的 stage_results 顶层键回填；
 - 状态转换机械不变式：同事务写 review + cases.current_review_id + status +
   final_intervention_level（仅人工提供时）；重跑只切换 current_case_run_id，
   已生成的人工确认仍指向旧运行（历史保留），因此重跑后该案例不可再提交；
@@ -254,7 +254,7 @@ def _review_result_view(
         final_intervention_level=final_intervention_level,
         final_cause=final_cause if isinstance(final_cause, dict) else None,
         final_actions=_requires_list(final_actions),
-        execution_note=_top_level(results, "execution_note"),
+        execution_note=review.execution_note or _top_level(results, "execution_note"),
         review_reason=review.review_reason,
         created_at=_iso_utc(review.created_at),
     )
@@ -401,6 +401,7 @@ class ReviewStore:
                     final_cause_json=data["final_cause"],
                     final_actions_json=data["final_actions"],
                     review_reason=data["review_reason"],
+                    execution_note=data["execution_note"],
                     now=now,
                 )
                 self.repository.update_case_review(
