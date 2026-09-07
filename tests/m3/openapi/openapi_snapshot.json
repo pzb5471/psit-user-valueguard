@@ -8,7 +8,7 @@
     "/api/v1/batches": {
       "post": {
         "summary": "Create Batch",
-        "description": "上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04 实现）。",
+        "description": "上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04）。",
         "operationId": "create_batch_api_v1_batches_post",
         "requestBody": {
           "required": true,
@@ -105,7 +105,7 @@
       },
       "get": {
         "summary": "List Batches",
-        "description": "按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04 实现）。",
+        "description": "按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04）。",
         "operationId": "list_batches_api_v1_batches_get",
         "parameters": [
           {
@@ -169,7 +169,7 @@
     "/api/v1/batches/{batch_id}": {
       "get": {
         "summary": "Get Batch",
-        "description": "读取单个批次工作台视图（M3-04 实现）。",
+        "description": "读取单个批次工作台视图（M3-04）。",
         "operationId": "get_batch_api_v1_batches__batch_id__get",
         "parameters": [
           {
@@ -309,7 +309,7 @@
     "/api/v1/batches/{batch_id}/cases": {
       "get": {
         "summary": "List Cases",
-        "description": "案例队列；服务端固定排序，不提供 sort_by（M3-04 实现）。",
+        "description": "案例队列；服务端固定排序，不提供 sort_by（M3-04）。",
         "operationId": "list_cases_api_v1_batches__batch_id__cases_get",
         "parameters": [
           {
@@ -428,7 +428,7 @@
     "/api/v1/batches/{batch_id}/cases/{case_id}": {
       "get": {
         "summary": "Get Case",
-        "description": "案例详情；can_review=true 时携带 review_token 与 review_options（M3-04 实现）。",
+        "description": "案例详情（M3-04）。",
         "operationId": "get_case_api_v1_batches__batch_id__cases__case_id__get",
         "parameters": [
           {
@@ -709,7 +709,7 @@
     "/api/v1/batches/{batch_id}/cases/{case_id}/evidence/{evidence_id}/content": {
       "get": {
         "summary": "Get Evidence Content",
-        "description": "按作用域标识读取证据图片；不返回本机路径（M3-04 实现）。",
+        "description": "按作用域标识读取证据图片；不返回本机路径（M3-04）。",
         "operationId": "get_evidence_content_api_v1_batches__batch_id__cases__case_id__evidence__evidence_id__content_get",
         "parameters": [
           {

@@ -1,20 +1,31 @@
-"""HTTP API v1 路由签名与 OpenAPI 真源（技术实施规格 12 节；M3-03）。
+"""HTTP API v1 路由签名与 OpenAPI 真源（技术实施规格 12 节；M3-03/04）。
 
-本模块只冻结十个接口的方法、路径、参数、成功码、允许状态码与
-请求/响应模型；处理器体是签名占位，业务实现分别由 M3-04（导入与
-读取）、M3-05（批次开始）、M3-06（重跑）、M3-07（人工确认）落地。
-health 路由由 M3-02 的 ``register_health`` 提供，本文件不重复注册，
-``create_contract_app`` 组合两者供 OpenAPI 快照与合同测试使用。
+方法、路径、参数、成功码、允许状态码与请求/响应模型由 M3-03 冻结；
+M3-04 把导入、查询、证据三个数据端口接进路由处理器（其余三个业务接口
+分别由 M3-05/06/07 落地，M3-08 接 RunStore/ReviewStore）。健康路由由
+M3-02 的 ``register_health`` 提供。
 
-开始批量分析和重跑没有 JSON 请求体；模型参数、并发、Prompt 和
-运行编号不能由页面传入（规格 12.1）。
+处理器通过依赖注入取得 M3 服务层（``ApplicationServices``，依赖 M1 公开
+端口）；服务层把 M1 的拒绝/异常映射为稳定 ``ApiErrorCode``，路由据此构造
+BusinessError 响应，不透传 M1 异常类、ORM 或供应商细节。
 """
 
 from __future__ import annotations
 
+import uuid
 from typing import Annotated, Any
 
-from fastapi import APIRouter, FastAPI, File, Query, Response, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    File,
+    HTTPException,
+    Query,
+    Request,
+    Response,
+    UploadFile,
+)
 from pydantic import Field
 
 from app.modules.application.api.contracts.errors import (
@@ -33,6 +44,7 @@ from app.modules.application.api.contracts.views import (
 )
 from app.modules.application.app_factory.health import register_health
 from app.modules.application.config.settings import Settings
+from app.modules.application.services.query import ApplicationServices, ServiceError
 
 __all__ = ["api_router", "create_contract_app"]
 
@@ -68,6 +80,40 @@ def _error_responses(*codes: ApiErrorCode) -> dict[int | str, dict[str, Any]]:
     return responses
 
 
+def _service_response_error(error: ServiceError) -> HTTPException:
+    """把服务层稳定错误信号构造为 BusinessError 响应（规格 12.4）。"""
+    body = BusinessError(
+        code=error.code.value,
+        message=error.message,
+        object_type=error.object_type,
+        object_id=error.object_id or None,
+        stage=error.stage,
+        next_action=error.next_action,
+    )
+    return HTTPException(
+        status_code=ERROR_HTTP_STATUS[error.code], detail=body.model_dump()
+    )
+
+
+def get_services(request: Request) -> ApplicationServices | None:
+    """从应用状态取 M3 服务层；未装配（M3-08 前）返回 None 由处理器兜底。"""
+    return getattr(request.app.state, "services", None)
+
+
+def _require_services(
+    services: ApplicationServices | None,
+) -> ApplicationServices:
+    if services is None:
+        raise _service_response_error(
+            ServiceError(
+                ApiErrorCode.INTERNAL_ERROR,
+                "服务尚未装配，请稍后重试",
+                next_action="检查应用装配后重试",
+            )
+        )
+    return services
+
+
 api_router = APIRouter(prefix="/api/v1")
 
 LimitParam = Annotated[int, Query(ge=1, le=100)]
@@ -96,9 +142,23 @@ OffsetParam = Annotated[int, Query(ge=0)]
 )
 async def create_batch(
     file: Annotated[UploadFile, File(description="标准 ZIP 运行包")],
+    response: Response,
+    services: ApplicationServices | None = Depends(get_services),
 ) -> BatchWorkspaceView:
-    """上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现导入")
+    """上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04）。"""
+    svc = _require_services(services)
+    raw = await file.read()
+    try:
+        outcome = svc.import_batch(
+            raw,
+            source_filename=file.filename or "upload.zip",
+            content_length=file.size,
+            trace_id=uuid.uuid4().hex,
+        )
+    except ServiceError as error:
+        raise _service_response_error(error) from None
+    response.status_code = 200 if outcome.returned_existing else 201
+    return outcome.workspace
 
 
 @api_router.get(
@@ -112,9 +172,14 @@ async def create_batch(
 async def list_batches(
     limit: LimitParam = 20,
     offset: OffsetParam = 0,
+    services: ApplicationServices | None = Depends(get_services),
 ) -> BatchListView:
-    """按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现批次列表")
+    """按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04）。"""
+    svc = _require_services(services)
+    try:
+        return svc.list_batches(limit=limit, offset=offset)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.get(
@@ -127,9 +192,16 @@ async def list_batches(
         ApiErrorCode.INTERNAL_ERROR,
     ),
 )
-async def get_batch(batch_id: str) -> BatchWorkspaceView:
-    """读取单个批次工作台视图（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现批次详情")
+async def get_batch(
+    batch_id: str,
+    services: ApplicationServices | None = Depends(get_services),
+) -> BatchWorkspaceView:
+    """读取单个批次工作台视图（M3-04）。"""
+    svc = _require_services(services)
+    try:
+        return svc.get_batch(batch_id)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.post(
@@ -145,7 +217,10 @@ async def get_batch(batch_id: str) -> BatchWorkspaceView:
         ApiErrorCode.INTERNAL_ERROR,
     ),
 )
-async def start_batch_run(batch_id: str) -> BatchWorkspaceView:
+async def start_batch_run(
+    batch_id: str,
+    services: ApplicationServices | None = Depends(get_services),
+) -> BatchWorkspaceView:
     """开始首次批量分析；无请求体，缺密钥时 503（M3-05 实现）。"""
     raise NotImplementedError("M3-05 实现批次开始")
 
@@ -172,9 +247,20 @@ async def list_cases(
     ] = None,
     limit: LimitParam = 50,
     offset: OffsetParam = 0,
+    services: ApplicationServices | None = Depends(get_services),
 ) -> CaseQueueView:
-    """案例队列；服务端固定排序，不提供 sort_by（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现案例队列")
+    """案例队列；服务端固定排序，不提供 sort_by（M3-04）。"""
+    svc = _require_services(services)
+    try:
+        return svc.list_cases(
+            batch_id,
+            status=status,
+            intervention_level=intervention_level,
+            limit=limit,
+            offset=offset,
+        )
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.get(
@@ -187,9 +273,17 @@ async def list_cases(
         ApiErrorCode.INTERNAL_ERROR,
     ),
 )
-async def get_case(batch_id: str, case_id: str) -> CaseDetailView:
-    """案例详情；can_review=true 时携带 review_token 与 review_options（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现案例详情")
+async def get_case(
+    batch_id: str,
+    case_id: str,
+    services: ApplicationServices | None = Depends(get_services),
+) -> CaseDetailView:
+    """案例详情（M3-04）。"""
+    svc = _require_services(services)
+    try:
+        return svc.get_case_detail(batch_id, case_id)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.post(
@@ -207,7 +301,11 @@ async def get_case(batch_id: str, case_id: str) -> CaseDetailView:
         ApiErrorCode.INTERNAL_ERROR,
     ),
 )
-async def rerun_case(batch_id: str, case_id: str) -> CaseDetailView:
+async def rerun_case(
+    batch_id: str,
+    case_id: str,
+    services: ApplicationServices | None = Depends(get_services),
+) -> CaseDetailView:
     """人工从头重跑单个案例；无请求体（M3-06 实现）。"""
     raise NotImplementedError("M3-06 实现重跑")
 
@@ -232,6 +330,7 @@ async def submit_review(
     batch_id: str,
     case_id: str,
     request: Annotated[ReviewRequest, Field(description="四种人工确认请求之一")],
+    services: ApplicationServices | None = Depends(get_services),
 ) -> ReviewResultView:
     """提交人工确认；相同 submission_id 返回第一次保存结果（M3-07 实现）。"""
     raise NotImplementedError("M3-07 实现人工确认")
@@ -254,20 +353,38 @@ async def submit_review(
     },
 )
 async def get_evidence_content(
-    batch_id: str, case_id: str, evidence_id: str
+    batch_id: str,
+    case_id: str,
+    evidence_id: str,
+    services: ApplicationServices | None = Depends(get_services),
 ) -> Response:
-    """按作用域标识读取证据图片；不返回本机路径（M3-04 实现）。"""
-    raise NotImplementedError("M3-04 实现证据读取")
+    """按作用域标识读取证据图片；不返回本机路径（M3-04）。"""
+    svc = _require_services(services)
+    try:
+        content = svc.get_evidence_content(batch_id, case_id, evidence_id)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
+    return Response(
+        content=content.content,
+        media_type=content.media_type,
+        headers={
+            "Content-Disposition": f'inline; filename="{content.filename}"',
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
-def create_contract_app(settings: Settings | None = None) -> FastAPI:
+def create_contract_app(
+    settings: Settings | None = None,
+    services: ApplicationServices | None = None,
+) -> FastAPI:
     """组合十个接口与错误边界，作为 OpenAPI 快照与合同测试的真源。
 
-    生产装配由应用工厂在 M3-04 接线；本函数不承载业务实现。
-    health 处理器读取 app.state.settings 判定分析可用性。
+    生产装配由应用工厂在 M3-08 注入真实 M1 端口；测试注入 Fake 端口。
     """
     app = FastAPI(title="PSIT 高价值客户异常售后决策支持 API 合同")
     app.state.settings = settings if settings is not None else Settings.load()
+    app.state.services = services
     app.include_router(api_router)
     register_health(app)
     install_error_boundary(app)
