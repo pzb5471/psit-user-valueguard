@@ -1,0 +1,29 @@
+{
+  "catalog_version": "v1",
+  "actions": [
+    {
+      "action_type": "EVIDENCE_CHECK",
+      "description": "补充或核实图片、物流、订单或退款证据"
+    },
+    {
+      "action_type": "CUSTOMER_CONTACT",
+      "description": "建议人工联系客户，并给出沟通重点"
+    },
+    {
+      "action_type": "FULFILLMENT_ESCALATION",
+      "description": "建议升级物流或订单履约处理"
+    },
+    {
+      "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+      "description": "建议补发、退货或退款核验"
+    },
+    {
+      "action_type": "APOLOGY_COMPENSATION_RETENTION_REQUEST",
+      "description": "提交但不执行道歉、补偿或挽留申请"
+    },
+    {
+      "action_type": "NO_ACTION_MONITOR",
+      "description": "暂不采取动作，并说明观察或复查理由"
+    }
+  ]
+}
