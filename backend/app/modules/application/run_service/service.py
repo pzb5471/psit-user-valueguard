@@ -20,12 +20,13 @@ from app.contracts.analysis import (
 from app.contracts.states import (
     BatchRunStatus,
     BatchStatus,
+    CaseStatus,
     TriggerType,
 )
 from app.modules.application.api.contracts.errors import (
     ApiErrorCode,
 )
-from app.modules.application.api.contracts.views import BatchWorkspaceView
+from app.modules.application.api.contracts.views import BatchWorkspaceView, CaseDetailView
 from app.modules.application.run_service.ports import (
     AnalysisEnginePort,
     RunQueryPort,
@@ -115,10 +116,56 @@ class RunService:
             )
         return mapper.to_batch_workspace(self._query.get_batch(batch_id))
 
+    # ---------- 单案例重跑（状态机：规格 10.2/10.3） ----------
+
+    def rerun_case(self, batch_id: str, case_id: str) -> CaseDetailView:
+        """待确认或异常案例从头重跑；PENDING_ANALYSIS/COMPLETED 禁止（规格 10.2）。"""
+        try:
+            detail = self._query.get_case_detail(batch_id, case_id)
+        except LookupError:
+            raise ServiceError(
+                ApiErrorCode.RESOURCE_NOT_FOUND,
+                f"案例不存在：{batch_id}/{case_id}",
+                object_type="case",
+                object_id=case_id,
+            ) from None
+        if detail.status in (
+            CaseStatus.PENDING_ANALYSIS.value,
+            CaseStatus.COMPLETED.value,
+        ):
+            code = (
+                ApiErrorCode.CASE_NOT_RERUNNABLE
+                if detail.status == CaseStatus.PENDING_ANALYSIS.value
+                else ApiErrorCode.CASE_ALREADY_COMPLETED
+            )
+            raise ServiceError(
+                code,
+                f"当前案例状态不允许重跑：{detail.status}",
+                object_type="case",
+                object_id=case_id,
+            )
+        try:
+            case_run = self._run_store.create_case_run(
+                batch_id=batch_id,
+                case_id=case_id,
+                run_id=_new_id("CR"),
+                trigger_type=TriggerType.MANUAL_RERUN,
+                batch_run_id=None,
+            )
+        except ActiveRunConflictError as error:
+            raise ServiceError(
+                ApiErrorCode.ACTIVE_CASE_RUN_EXISTS,
+                "同一案例已有活动运行",
+                object_type="case",
+                object_id=case_id,
+            ) from error
+        self._executor.submit(self._run_case, batch_id, case_id, case_run.id, None)
+        return mapper.to_case_detail(self._query.get_case_detail(batch_id, case_id))
+
     # ---------- 单案例执行（状态机：规格 10.2） ----------
 
     def _run_case(
-        self, batch_id: str, case_id: str, case_run_id: int, batch_run_id: int
+        self, batch_id: str, case_id: str, case_run_id: int, batch_run_id: int | None
     ) -> None:
         try:
             case_input = self._query.get_case_input(batch_id, case_id)
@@ -176,9 +223,11 @@ class RunService:
             error_stage=error_stage,
         )
 
-    # ---------- 批次结束判定（规格 10.3） ----------
+    # ---------- 批次结束判定（规格 10.3；MANUAL_RERUN 不改写首次批次历史） ----------
 
-    def _maybe_finish_batch(self, batch_id: str, batch_run_id: int) -> None:
+    def _maybe_finish_batch(self, batch_id: str, batch_run_id: int | None) -> None:
+        if batch_run_id is None:
+            return
         try:
             projection = self._query.get_batch(batch_id)
         except LookupError:

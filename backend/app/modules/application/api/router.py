@@ -321,10 +321,21 @@ async def get_case(
 async def rerun_case(
     batch_id: str,
     case_id: str,
-    services: ApplicationServices | None = Depends(get_services),
+    run_service: RunService | None = Depends(get_run_service),
 ) -> CaseDetailView:
-    """人工从头重跑单个案例；无请求体（M3-06 实现）。"""
-    raise NotImplementedError("M3-06 实现重跑")
+    """人工从头重跑单个案例；无请求体（M3-06）。"""
+    if run_service is None:
+        raise _service_response_error(
+            ServiceError(
+                ApiErrorCode.INTERNAL_ERROR,
+                "运行服务尚未装配，请稍后重试",
+                next_action="检查应用装配后重试",
+            )
+        )
+    try:
+        return run_service.rerun_case(batch_id, case_id)
+    except ServiceError as error:
+        raise _service_response_error(error) from None
 
 
 @api_router.post(

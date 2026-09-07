@@ -20,6 +20,9 @@ from app.modules.data.queries.views import (
     BatchWorkspaceView as DataBatchWorkspaceView,
 )
 from app.modules.data.queries.views import (
+    CaseDetailView as DataCaseDetailView,
+)
+from app.modules.data.queries.views import (
     CaseQueueView as DataCaseQueueView,
 )
 from app.modules.data.run_store.types import (
@@ -122,5 +125,7 @@ class RunQueryPort(Protocol):
     def list_cases(
         self, batch_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> DataCaseQueueView: ...
+
+    def get_case_detail(self, batch_id: str, case_id: str) -> DataCaseDetailView: ...
 
     def get_case_input(self, batch_id: str, case_id: str) -> CaseInputV1Protocol | None: ...

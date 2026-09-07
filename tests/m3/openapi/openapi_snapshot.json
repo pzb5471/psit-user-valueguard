@@ -497,7 +497,7 @@
     "/api/v1/batches/{batch_id}/cases/{case_id}/reruns": {
       "post": {
         "summary": "Rerun Case",
-        "description": "人工从头重跑单个案例；无请求体（M3-06 实现）。",
+        "description": "人工从头重跑单个案例；无请求体（M3-06）。",
         "operationId": "rerun_case_api_v1_batches__batch_id__cases__case_id__reruns_post",
         "parameters": [
           {

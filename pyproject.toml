@@ -54,4 +54,4 @@ known-first-party = ["app"]
 
 [tool.pyright]
 include = ["backend", "tests"]
-extraPaths = ["backend", "tests/m2/engine"]
+extraPaths = ["backend", "tests/m2/engine", "tests/m3/run_service"]
