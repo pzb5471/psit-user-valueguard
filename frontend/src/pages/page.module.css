@@ -1,0 +1,36 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--psit-space-6);
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: var(--psit-font-page-title-size);
+  font-weight: var(--psit-font-page-title-weight);
+  line-height: var(--psit-font-page-title-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.card {
+  padding: var(--psit-space-6);
+  background: var(--psit-color-surface-page);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-card);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--psit-space-3);
+  font-size: var(--psit-font-section-title-size);
+  font-weight: var(--psit-font-section-title-weight);
+  line-height: var(--psit-font-section-title-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.body {
+  margin: 0;
+  max-width: 72ch;
+  font-size: var(--psit-font-body-size);
+  line-height: var(--psit-font-body-line-height);
+  color: var(--psit-color-text-secondary);
+}

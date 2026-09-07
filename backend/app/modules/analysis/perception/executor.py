@@ -11,7 +11,7 @@ import time
 from dataclasses import dataclass
 
 from app.contracts.analysis import AnalysisStage, PerceptionResult
-from app.contracts.data import EvidenceRole
+from app.contracts.data import TextRole
 from app.modules.analysis.attribution import ModelAttemptRecord
 from app.modules.analysis.client import (
     AnalysisModelClient,
@@ -124,7 +124,7 @@ def validate_perception_response(
     customer_text_evidence_ids = frozenset(
         item.evidence_id
         for item in stage_input.case_input.evidence.text_items
-        if item.role is EvidenceRole.CUSTOMER
+        if item.role is TextRole.CUSTOMER
     )
     image_ids = frozenset(
         image.evidence_id for image in stage_input.case_input.evidence.image_items

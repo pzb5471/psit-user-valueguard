@@ -1,0 +1,103 @@
+/*
+ * 全局视觉令牌（技术实施规格 13.5/13.6）。
+ * 变量值必须与 src/theme/tokens.ts 一致，由 tests/theme.test.ts 校验。
+ */
+
+/* Inter 本地打包，运行时不请求任何 CDN（规格 13.5）。 */
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/InterVariable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* colors */
+  --psit-color-primary-action: #0066cc;
+  --psit-color-focus: #0071e3;
+  --psit-color-link-on-dark: #2997ff;
+  --psit-color-text-primary: #1d1d1f;
+  --psit-color-text-secondary: #333333;
+  --psit-color-text-disabled: #7a7a7a;
+  --psit-color-surface-page: #ffffff;
+  --psit-color-surface-gray: #f5f5f7;
+  --psit-color-surface-secondary: #fafafc;
+  --psit-color-divider: #e0e0e0;
+  --psit-color-top-bar: #000000;
+  --psit-color-success: #1f7a3d;
+  --psit-color-warning: #8a4b00;
+  --psit-color-danger: #b42318;
+
+  /* typography */
+  --psit-font-family: 'Inter', 'SF Pro Text', system-ui, 'Segoe UI', sans-serif;
+  --psit-font-page-title-size: 34px;
+  --psit-font-page-title-weight: 600;
+  --psit-font-page-title-line-height: 1.2;
+  --psit-font-section-title-size: 21px;
+  --psit-font-section-title-weight: 600;
+  --psit-font-section-title-line-height: 1.25;
+  --psit-font-body-size: 17px;
+  --psit-font-body-weight: 400;
+  --psit-font-body-line-height: 1.47;
+  --psit-font-control-size: 14px;
+  --psit-font-control-line-height: 1.43;
+  --psit-font-caption-size: 12px;
+
+  /* spacing（8px 基础节奏：4、8、12、17、24、32、48） */
+  --psit-space-1: 4px;
+  --psit-space-2: 8px;
+  --psit-space-3: 12px;
+  --psit-space-4: 17px;
+  --psit-space-5: 24px;
+  --psit-space-6: 32px;
+  --psit-space-7: 48px;
+  --psit-page-gutter: 32px;
+  --psit-page-gutter-narrow: 24px;
+
+  /* radius */
+  --psit-radius-card: 18px;
+  --psit-radius-control: 8px;
+  --psit-radius-pill: 999px;
+
+  /* motion（只过渡 transform 和 opacity，120—180ms） */
+  --psit-motion-duration-fast: 120ms;
+  --psit-motion-duration-base: 180ms;
+  --psit-motion-press-scale: 0.98;
+  --psit-motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* z-index */
+  --psit-z-base: 0;
+  --psit-z-sub-nav: 90;
+  --psit-z-top-bar: 100;
+  --psit-z-overlay: 200;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--psit-font-family);
+  font-size: var(--psit-font-body-size);
+  font-weight: var(--psit-font-body-weight);
+  line-height: var(--psit-font-body-line-height);
+  color: var(--psit-color-text-primary);
+  background: var(--psit-color-surface-gray);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 键盘焦点环（规格 13.3：键盘可见焦点完整） */
+:focus-visible {
+  outline: 2px solid var(--psit-color-focus);
+  outline-offset: 2px;
+}

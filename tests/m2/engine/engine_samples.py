@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from app.contracts.data import CaseInput
+from app.contracts.data import CASE_INPUT_SCHEMA_VERSION, CaseInput
 
 TRACE_ID = "trace-0001"
 CASE_ID = "case-0001"
@@ -28,7 +28,7 @@ _HASH_G = "89abcdef89abcdef89abcdef89abcdef89abcdef89abcdef89abcdef89abcdef"
 
 def case_input_raw(**overrides: Any) -> dict[str, Any]:
     sample: dict[str, Any] = {
-        "schema_version": "v1",
+        "schema_version": CASE_INPUT_SCHEMA_VERSION,
         "data_version": "mock_dataset_v1",
         "batch_id": "batch-demo-0001",
         "case_id": CASE_ID,

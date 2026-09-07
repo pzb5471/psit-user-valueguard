@@ -30,7 +30,6 @@ testpaths = ["tests"]
 addopts = "-m 'not live_glm'"
 markers = [
     "live_glm: 真实 GLM 调用验证（M2-10 专用，不进入普通 PR 门槛）",
-    "task_m1_01: M1-01 输入合同测试",
     "task_m2_01: M2-01 分析合同与动作目录测试",
     "task_m2_02: M2-02 提示词资产测试",
     "task_m2_03: M2-03 模型客户端测试",

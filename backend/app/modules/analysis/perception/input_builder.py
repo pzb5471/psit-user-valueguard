@@ -13,7 +13,7 @@ import base64
 from collections.abc import Callable
 
 from app.contracts.analysis import AnalysisStage
-from app.contracts.data import BehaviorEvidence, BehaviorFactType, CaseInput
+from app.contracts.data import BehaviorEvidenceItem, BehaviorFactType, CaseInput
 from app.modules.analysis.client import GlmRequest, ImageAttachment
 from app.modules.analysis.prompts import StagePrompt
 
@@ -111,7 +111,7 @@ def build_perception_request(
     for item in sorted(case.evidence.text_items, key=lambda text: text.sequence_no):
         sections.append(f"[{item.evidence_id}]（{item.role.value}）{item.text}")
 
-    facts: list[BehaviorEvidence] = [
+    facts: list[BehaviorEvidenceItem] = [
         item
         for item in case.evidence.behavior_items
         if item.fact_type not in _MODEL_EXCLUDED_FACTS
