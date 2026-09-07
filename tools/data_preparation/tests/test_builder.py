@@ -4,6 +4,7 @@
 测试在临时目录重建后逐项断言。
 """
 
+import hashlib
 import io
 import json
 import zipfile
@@ -154,6 +155,12 @@ def test_report_matches_packages_and_rfm(dataset) -> None:
     assert report["rfm"]["thresholds"]["r_p75"] == dataset.rfm.thresholds.r_p75_text
     assert report["rfm"]["thresholds"]["m_p80"] == dataset.rfm.thresholds.m_p80_text
     assert report["rfm"]["thresholds"]["m_p50"] == dataset.rfm.thresholds.m_p50_text
+    profiles = (dataset.out_root / report["rfm"]["profiles_file"]).read_bytes()
+    assert report["rfm"]["profiles_sha256"] == hashlib.sha256(profiles).hexdigest()
+    assert len(profiles.splitlines()) == dataset.rfm.customer_count
+    source_manifest = _read_json(dataset.out_root / report["source_manifest_file"])
+    assert report["source_manifest_sha256"]
+    assert source_manifest["files"]
 
 
 def test_mapping_manifest_covers_all_cases(dataset) -> None:

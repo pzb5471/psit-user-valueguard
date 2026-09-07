@@ -234,6 +234,7 @@ class FakeReviewStore:
             final_cause_json=data["final_cause"],
             final_actions_json=data["final_actions"],
             review_reason=data["review_reason"],
+            execution_note=data["execution_note"],
             now=now,
         )
         case["current_review_id"] = review["id"]
@@ -261,6 +262,7 @@ class FakeReviewStore:
         final_cause_json: dict[str, Any] | None,
         final_actions_json: list[Any] | None,
         review_reason: str | None,
+        execution_note: str | None,
         now: datetime,
     ) -> dict[str, Any]:
         """追加一份正式人工确认（review_id/submission_id/case_id 唯一语义）。"""
@@ -277,6 +279,7 @@ class FakeReviewStore:
             "final_cause_json": final_cause_json,
             "final_actions_json": final_actions_json,
             "review_reason": review_reason,
+            "execution_note": execution_note,
             "created_at": now,
         }
         self._reviews[internal_id] = review
@@ -368,7 +371,7 @@ class FakeReviewStore:
                 final_cause = attribution.get("primary_cause")
             if final_actions is None and strategy is not None:
                 final_actions = strategy.get("actions")
-        execution_note = next(
+        execution_note = review["execution_note"] or next(
             (
                 item["result_json"].get("execution_note")
                 for item in results

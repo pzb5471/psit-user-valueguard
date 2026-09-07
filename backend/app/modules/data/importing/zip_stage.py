@@ -82,6 +82,8 @@ _ANSWER_LEAK_KEYS = frozenset(
 # 未规范化即不得进入运行环境的内容字段（规格 5.4）。
 _UNSANITIZED_KEYS = frozenset({"user_address", "database"})
 _FIRST_QUERY_KEY = "first_query"
+_PHONE_PATTERN = re.compile(r"1[3-9]\d{9}")
+_URL_PATTERN = re.compile(r"https?://\S+", re.IGNORECASE)
 
 _EXPECTED_TOP_LEVEL = frozenset({"manifest.json", "checksums.json"})
 _REQUIRED_PREFIXES = ("cases/", "assets/")
@@ -130,6 +132,26 @@ def _leak_findings(payload: dict) -> list[_LeakFinding]:
         and len(set(first_query_texts)) < len(first_query_texts)
     ):
         findings.append(_LeakFinding("检测到重复 first_query 文本"))
+    return findings
+
+
+def _text_privacy_findings(payload: dict) -> list[_LeakFinding]:
+    """运行文本必须已脱敏；报告仅给字段位置，不回显客户正文。"""
+    findings: list[_LeakFinding] = []
+    evidence = payload.get("evidence")
+    if not isinstance(evidence, dict):
+        return findings
+    items = evidence.get("text_items")
+    if not isinstance(items, list):
+        return findings
+    for index, item in enumerate(items):
+        if not isinstance(item, dict) or not isinstance(item.get("text"), str):
+            continue
+        text = item["text"]
+        if _PHONE_PATTERN.search(text):
+            findings.append(_LeakFinding(f"text_items[{index}].text 包含未脱敏手机号"))
+        if _URL_PATTERN.search(text):
+            findings.append(_LeakFinding(f"text_items[{index}].text 包含未脱敏 URL"))
     return findings
 
 
@@ -553,7 +575,7 @@ class ZipImportStage:
                     next_action="按规格 5.5 修正案例 JSON 后重新组包",
                 )
                 continue
-            findings = _leak_findings(payload)
+            findings = _leak_findings(payload) + _text_privacy_findings(payload)
             if findings:
                 for finding in findings:
                     self._reject(

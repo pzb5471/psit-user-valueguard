@@ -561,7 +561,11 @@ def test_four_outcomes_submit_persist_and_project(harness: _Harness) -> None:
         )
         assert view.outcome == expected
         assert view.created_at == OCCURRED_AT.isoformat()
-        assert view.execution_note == "已生成沟通要点"
+        assert view.execution_note == (
+            "已与客户确认补发时间"
+            if expected == "MODIFIED_AND_APPROVED"
+            else "已生成沟通要点"
+        )
         if expected == "APPROVED":
             assert view.final_intervention_level == "MUST_INTERVENE"
             assert view.final_cause == {

@@ -105,6 +105,47 @@ def _selected_source_records(
     return records
 
 
+def _source_manifest(
+    source_root: Path, tasks: dict[str, dict[str, object]]
+) -> dict[str, object]:
+    """记录组包实际依赖的源文件字节哈希，源变化必然改变 provenance。"""
+    files = [
+        "dataprocessing/output/data_with_context.csv",
+        "data/service_tasks.json",
+    ]
+    for task_id in tasks_by_selection():
+        files.extend(str(path) for path in tasks[task_id].get("image_paths", []))
+    entries = [
+        {
+            "relative_path": relative_path,
+            "sha256": sha256_bytes((source_root / relative_path).read_bytes()),
+        }
+        for relative_path in sorted(set(files))
+    ]
+    return {"schema_version": "source_manifest.v1", "files": entries}
+
+
+def _rfm_profiles_bytes(rfm: RfmResult) -> bytes:
+    """逐客户 R/F/M 与判定结果，供审计复算，不进入运行 ZIP。"""
+    lines = []
+    for customer_id in sorted(rfm.profiles):
+        profile = rfm.profiles[customer_id]
+        lines.append(
+            json_bytes(
+                {
+                    "customer_unique_id": customer_id,
+                    "recency_days": profile.recency_days,
+                    "frequency_orders": profile.frequency_orders,
+                    "monetary_total": format(profile.monetary_total, "f"),
+                    "is_high_value": profile.is_high_value,
+                    "decision_reason": profile.decision_reason(rfm.thresholds),
+                }
+            )
+            + b"\n"
+        )
+    return b"".join(lines)
+
+
 def _asset_paths_for(
     source_root: Path, image_paths: list[str], case_id: str
 ) -> list[str]:
@@ -198,13 +239,10 @@ def build_dataset(
     mapping_bytes = json_bytes(mapping_manifest)
     mapping_manifest_sha256 = sha256_bytes(mapping_bytes)
 
-    source_records = _selected_source_records(rows, tasks)
-    source_manifest_sha256 = sha256_bytes(
-        b"".join(
-            sha256_bytes(json_bytes(record)).encode("ascii")
-            for record in source_records
-        )
-    )
+    source_manifest = _source_manifest(root, tasks)
+    source_manifest_bytes = json_bytes(source_manifest)
+    source_manifest_sha256 = sha256_bytes(source_manifest_bytes)
+    rfm_profiles_bytes = _rfm_profiles_bytes(rfm)
 
     # 构造 15 个完整案例 + 资产字节。
     cases: list[dict[str, object]] = []
@@ -353,6 +391,8 @@ def build_dataset(
     demo_zip_path.write_bytes(demo_bytes)
     acceptance_zip_path.write_bytes(acceptance_bytes)
     (out / "mapping_manifest.json").write_bytes(mapping_bytes)
+    (out / "source_manifest.json").write_bytes(source_manifest_bytes)
+    (out / "rfm_profiles.jsonl").write_bytes(rfm_profiles_bytes)
     (out / "control_case.json").write_bytes(json_bytes(control_case))
 
     report: dict[str, object] = {
@@ -369,8 +409,11 @@ def build_dataset(
             },
             "customer_count": rfm.customer_count,
             "high_value_count": rfm.high_value_count,
+            "profiles_file": "rfm_profiles.jsonl",
+            "profiles_sha256": sha256_bytes(rfm_profiles_bytes),
         },
         "source_manifest_sha256": source_manifest_sha256,
+        "source_manifest_file": "source_manifest.json",
         "mapping_manifest_sha256": mapping_manifest_sha256,
         "packages": {
             "demo": {

@@ -33,7 +33,7 @@ from collections.abc import Callable
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from enum import StrEnum
-from typing import Annotated, Literal
+from typing import Annotated, Any, BinaryIO, Literal, Protocol
 
 from pydantic import (
     AfterValidator,
@@ -362,3 +362,52 @@ class Checksums(RootModel[dict[RelativePath, Sha256Hex]]):
             raise ValueError("checksums.json 不得包含自身条目")
         self.root = dict(sorted(self.root.items()))
         return self
+
+
+class BatchImportGatewayPort(Protocol):
+    """M1 批次导入端口；实现不得要求调用方提供服务器路径。"""
+
+    def import_zip(
+        self,
+        source: bytes | BinaryIO,
+        *,
+        source_filename: str = "upload.zip",
+        content_length: int | None = None,
+        trace_id: str | None = None,
+    ) -> Any: ...
+
+
+class CaseQueryGatewayPort(Protocol):
+    """M1 当前批次、队列、详情与已校验 CaseInput 的只读端口。"""
+
+    def list_batches(self, *, limit: int | None = None, offset: int | None = None) -> Any: ...
+    def get_batch(self, batch_id: str) -> Any: ...
+    def list_cases(self, batch_id: str, **filters: Any) -> Any: ...
+    def get_case_detail(self, batch_id: str, case_id: str) -> Any: ...
+    def get_case_input(self, batch_id: str, case_id: str) -> CaseInput | None: ...
+
+
+class EvidenceGatewayPort(Protocol):
+    """M1 受控图片读取端口。"""
+
+    def get_evidence_content(self, batch_id: str, case_id: str, evidence_id: str) -> Any: ...
+
+
+class RunStorePort(Protocol):
+    """M1 运行历史与原子发布端口。具体命令载荷由其版本化 DTO 定义。"""
+
+    def create_batch_run(self, **command: Any) -> Any: ...
+    def create_case_run(self, **command: Any) -> Any: ...
+    def record_stage_started(self, **command: Any) -> None: ...
+    def record_model_attempt(self, **command: Any) -> None: ...
+    def record_stage_result(self, **command: Any) -> None: ...
+    def record_failure(self, **command: Any) -> Any: ...
+    def publish_complete_result(self, **command: Any) -> Any: ...
+    def finish_batch_run(self, **command: Any) -> Any: ...
+    def recover_interrupted(self, **command: Any) -> Any: ...
+
+
+class ReviewStorePort(Protocol):
+    """M1 人工确认端口；submission_id 与 review_token 由调用方提供。"""
+
+    def submit_review(self, **command: Any) -> Any: ...
