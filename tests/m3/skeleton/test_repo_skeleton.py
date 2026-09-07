@@ -33,11 +33,14 @@ SCRIPTS = ["bootstrap.ps1", "dev.ps1", "start.ps1", "test.ps1"]
 
 
 def git_tracked() -> list[str]:
+    # core.quotepath=off 让中文文件名原样输出；Windows 下显式按 UTF-8 解码，
+    # 否则默认代码页与引号转义会把顶层中文文件名解析成伪目录（如 '"docs'）。
     out = subprocess.run(
-        ["git", "ls-files"],
+        ["git", "-c", "core.quotepath=off", "ls-files"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=True,
     ).stdout
     return [line for line in out.splitlines() if line.strip()]
@@ -50,7 +53,10 @@ def test_frozen_directories_exist() -> None:
 
 def test_exactly_three_business_modules() -> None:
     modules = REPO_ROOT / "backend" / "app" / "modules"
-    actual = {p.name for p in modules.iterdir() if p.is_dir()}
+    # __pycache__ 是运行字节码缓存，不是业务模块；任何模块被导入后都会出现。
+    actual = {
+        p.name for p in modules.iterdir() if p.is_dir() and p.name != "__pycache__"
+    }
     assert actual == MODULE_DIRS, "不得建立第五个业务模块"
 
 
