@@ -10,7 +10,7 @@ from __future__ import annotations
 from enum import StrEnum
 from uuid import uuid4
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
@@ -138,6 +138,20 @@ def install_error_boundary(app: FastAPI) -> None:
             "请求字段、类型或枚举不合格",
             ProcessingErrorStage.INPUT_PREPARATION,
             "请检查请求参数后重试",
+        )
+
+    @app.exception_handler(HTTPException)
+    async def _business_http_error(
+        request: Request, exc: HTTPException
+    ) -> JSONResponse:
+        # 服务层已构造完整 BusinessError 时直接返回顶层结构；不再包成 {detail: ...}。
+        if isinstance(exc.detail, dict) and "code" in exc.detail:
+            return JSONResponse(status_code=exc.status_code, content=exc.detail)
+        return _boundary_error(
+            ApiErrorCode.INTERNAL_ERROR,
+            "服务内部错误，请稍后重试",
+            ProcessingErrorStage.APP_RECOVERY,
+            "请稍后重试；如持续失败请联系技术支持",
         )
 
     @app.exception_handler(Exception)
