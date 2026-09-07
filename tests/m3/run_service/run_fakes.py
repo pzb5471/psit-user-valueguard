@@ -31,6 +31,7 @@ from app.contracts.analysis import (
 )
 from app.modules.data.queries.views import (
     BatchWorkspaceView,
+    CaseDetailView,
     CaseQueueItemView,
     CaseQueueView,
 )
@@ -172,6 +173,7 @@ class FakeRunStore:
         self.calls: list[str] = []
         self.case_run_id = 0
         self.reject_start = False
+        self.reject_case = False
         self.published = 0
         self.failed = 0
 
@@ -199,6 +201,8 @@ class FakeRunStore:
         run_status=None,
         started_at=None,
     ) -> CaseRunView:
+        if self.reject_case:
+            raise ActiveRunConflictError(object_type="case", object_id=case_id)
         self.case_run_id += 1
         self.calls.append(f"create_case_run:{case_id}")
         return CaseRunView(
@@ -264,9 +268,11 @@ class FakeRunQuery:
         workspace: BatchWorkspaceView | None = None,
         queue: CaseQueueView | None = None,
         run_store: FakeRunStore | None = None,
+        detail: CaseDetailView | None = None,
     ) -> None:
         self.workspace = workspace or make_workspace()
         self.queue = queue or make_queue()
+        self.detail = detail
         self.missing = set()
         self._run_store = run_store
 
@@ -287,6 +293,12 @@ class FakeRunQuery:
     ) -> CaseQueueView:
         return self.queue
 
+    def get_case_detail(self, batch_id: str, case_id: str) -> CaseDetailView:
+        detail = self.detail
+        if detail is None or detail.batch_id != batch_id or detail.case_id != case_id:
+            raise LookupError(f"案例不存在: {batch_id}/{case_id}")
+        return detail
+
     def get_case_input(self, batch_id: str, case_id: str) -> CaseInputV1Protocol | None:
         if case_id in self.missing:
             return None
@@ -294,6 +306,22 @@ class FakeRunQuery:
             CaseInputV1Protocol,
             SimpleNamespace(case_id=case_id, batch_id=batch_id),
         )
+
+
+def make_detail(
+    *, batch_id: str = "b1", case_id: str = "c1", status: str = "PENDING_REVIEW"
+) -> CaseDetailView:
+    return CaseDetailView(
+        batch_id=batch_id,
+        case_id=case_id,
+        customer_display_id=f"客户-{case_id}",
+        is_high_value=True,
+        customer_value_summary="高价值客户：测试",
+        status=status,
+        is_mock=True,
+        can_rerun=True,
+        can_review=status == "PENDING_REVIEW",
+    )
 
 
 def make_versions() -> dict[str, str]:
