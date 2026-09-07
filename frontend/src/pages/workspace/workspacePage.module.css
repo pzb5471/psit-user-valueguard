@@ -1,0 +1,226 @@
+/* 工作台页面专属样式（页面壳共用样式见 ../page.module.css）。 */
+
+/* 文件选择：label 触发隐藏 input，保持 44px 点击区与键盘可用。 */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fileButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--psit-space-5);
+  border: 1px solid var(--psit-color-primary-action);
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-surface-page);
+  color: var(--psit-color-primary-action);
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.fileButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.fileButton:focus-within {
+  outline: 2px solid var(--psit-color-focus);
+  outline-offset: 2px;
+}
+
+.selectedFile {
+  margin: var(--psit-space-3) 0 0;
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-secondary);
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 44px;
+  margin-top: var(--psit-space-5);
+  padding: 0 var(--psit-space-5);
+  border: none;
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-primary-action);
+  color: var(--psit-color-surface-page);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.primaryButton:hover {
+  opacity: 0.92;
+}
+
+.primaryButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--psit-space-5);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-surface-page);
+  color: var(--psit-color-text-primary);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.secondaryButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--psit-space-4);
+}
+
+.summaryList {
+  width: 100%;
+  max-width: 480px;
+  margin: 0;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--psit-space-5);
+  padding: var(--psit-space-3) 0;
+  border-bottom: 1px solid var(--psit-color-divider);
+}
+
+.summaryRow dt {
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-secondary);
+}
+
+.summaryRow dd {
+  margin: 0;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-primary);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.passText {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  color: var(--psit-color-success) !important;
+}
+
+.mockNote {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  margin: 0;
+  padding: var(--psit-space-3) var(--psit-space-4);
+  border: 1px solid var(--psit-color-warning);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-secondary);
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-warning);
+}
+
+.staticNote {
+  margin: 0;
+  font-size: var(--psit-font-caption-size);
+  line-height: 1.5;
+  color: var(--psit-color-text-disabled);
+}
+
+.errorPanel {
+  width: 100%;
+  margin-bottom: var(--psit-space-5);
+  padding: var(--psit-space-4);
+  border: 1px solid var(--psit-color-danger);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-secondary);
+}
+
+.errorHeadline {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-danger);
+}
+
+.errorText {
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-danger);
+}
+
+.history {
+  width: 100%;
+}
+
+.historyTitle {
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.historyList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historyLink {
+  display: inline-block;
+  min-height: 44px;
+  padding: var(--psit-space-2) 0;
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-primary-action);
+}

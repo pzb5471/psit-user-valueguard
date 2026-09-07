@@ -129,6 +129,15 @@ const probes: Record<string, () => Promise<void>> = {
       throw new Error('应为 business 失败')
     }
   },
+  'import.validationFailed': async () => {
+    const r = await toResult(api.POST('/api/v1/batches', { body: undefined as never }))
+    if (!r.ok && r.failure.kind === 'business') {
+      expect(r.status).toBe(422)
+      expect(r.failure.error.code).toBe('REQUEST_VALIDATION_FAILED')
+    } else {
+      throw new Error('应为 business 失败')
+    }
+  },
 
   'run.analysisUnavailable': async () => {
     const r = await toResult(api.POST('/api/v1/batches/{batch_id}/runs', BATCH))

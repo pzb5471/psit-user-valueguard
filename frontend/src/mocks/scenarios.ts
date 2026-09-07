@@ -123,6 +123,18 @@ export const scenarios: Record<string, HttpHandler[]> = {
       ),
     ),
   ],
+  'import.validationFailed': [
+    http.post(mockUrl('/api/v1/batches'), () =>
+      HttpResponse.json(
+        businessError({
+          code: 'REQUEST_VALIDATION_FAILED',
+          message: '上传内容不符合接口要求。',
+          object_type: '运行包',
+        }),
+        { status: 422 },
+      ),
+    ),
+  ],
 
   /* ---- 开始分析 ---- */
   'run.analysisUnavailable': [
