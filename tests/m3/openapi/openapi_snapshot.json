@@ -1,0 +1,1919 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PSIT 高价值客户异常售后决策支持 API 合同",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/batches": {
+      "post": {
+        "summary": "Create Batch",
+        "description": "上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04 实现）。",
+        "operationId": "create_batch_api_v1_batches_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_batch_api_v1_batches_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchWorkspaceView"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "重复包幂等命中",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchWorkspaceView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ANSWER_LEAKAGE_DETECTED：运行包发现答案或答案性质字段",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ACTIVE_BATCH_EXISTS：已有首次批量分析正在运行",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "UPLOAD_TOO_LARGE：ZIP 超过冻结的上传上限",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE：上传或证据媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "List Batches",
+        "description": "按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04 实现）。",
+        "operationId": "list_batches_api_v1_batches_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchListView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}": {
+      "get": {
+        "summary": "Get Batch",
+        "description": "读取单个批次工作台视图（M3-04 实现）。",
+        "operationId": "get_batch_api_v1_batches__batch_id__get",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchWorkspaceView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/runs": {
+      "post": {
+        "summary": "Start Batch Run",
+        "description": "开始首次批量分析；无请求体，缺密钥时 503（M3-05 实现）。",
+        "operationId": "start_batch_run_api_v1_batches__batch_id__runs_post",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchWorkspaceView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ACTIVE_BATCH_EXISTS：已有首次批量分析正在运行",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "ANALYSIS_UNAVAILABLE：缺密钥、模型健康检查失败或应用正在正常关闭",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/cases": {
+      "get": {
+        "summary": "List Cases",
+        "description": "案例队列；服务端固定排序，不提供 sort_by（M3-04 实现）。",
+        "operationId": "list_cases_api_v1_batches__batch_id__cases_get",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "只允许一个案例状态筛选",
+              "title": "Status"
+            },
+            "description": "只允许一个案例状态筛选"
+          },
+          {
+            "name": "intervention_level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "只允许一个介入等级筛选",
+              "title": "Intervention Level"
+            },
+            "description": "只允许一个介入等级筛选"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseQueueView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/cases/{case_id}": {
+      "get": {
+        "summary": "Get Case",
+        "description": "案例详情；can_review=true 时携带 review_token 与 review_options（M3-04 实现）。",
+        "operationId": "get_case_api_v1_batches__batch_id__cases__case_id__get",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseDetailView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/cases/{case_id}/reruns": {
+      "post": {
+        "summary": "Rerun Case",
+        "description": "人工从头重跑单个案例；无请求体（M3-06 实现）。",
+        "operationId": "rerun_case_api_v1_batches__batch_id__cases__case_id__reruns_post",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseDetailView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CASE_ALREADY_COMPLETED：已完成案例收到新的审核或重跑请求",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "ANALYSIS_UNAVAILABLE：缺密钥、模型健康检查失败或应用正在正常关闭",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/cases/{case_id}/reviews": {
+      "post": {
+        "summary": "Submit Review",
+        "description": "提交人工确认；相同 submission_id 返回第一次保存结果（M3-07 实现）。",
+        "operationId": "submit_review_api_v1_batches__batch_id__cases__case_id__reviews_post",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ApprovedReviewRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ModifiedApprovedReviewRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RejectedWithJudgmentReviewRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/InsufficientEvidenceReviewRequest"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "outcome",
+                  "mapping": {
+                    "APPROVED": "#/components/schemas/ApprovedReviewRequest",
+                    "MODIFIED_AND_APPROVED": "#/components/schemas/ModifiedApprovedReviewRequest",
+                    "REJECTED_WITH_JUDGMENT": "#/components/schemas/RejectedWithJudgmentReviewRequest",
+                    "INSUFFICIENT_EVIDENCE": "#/components/schemas/InsufficientEvidenceReviewRequest"
+                  }
+                },
+                "description": "四种人工确认请求之一",
+                "title": "Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResultView"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "相同 submission_id 幂等命中",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResultView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CASE_ALREADY_COMPLETED：已完成案例收到新的审核或重跑请求",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/batches/{batch_id}/cases/{case_id}/evidence/{evidence_id}/content": {
+      "get": {
+        "summary": "Get Evidence Content",
+        "description": "按作用域标识读取证据图片；不返回本机路径（M3-04 实现）。",
+        "operationId": "get_evidence_content_api_v1_batches__batch_id__cases__case_id__evidence__evidence_id__content_get",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "evidence_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Evidence Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "受控证据图片流",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "RESOURCE_NOT_FOUND：批次、案例或证据不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE：上传或证据媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "REQUEST_VALIDATION_FAILED：HTTP 字段、联合请求、类型或枚举不合格",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR：未预期内部异常",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "summary": "Read Health",
+        "operationId": "read_health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthView"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActionType": {
+        "type": "string",
+        "enum": [
+          "EVIDENCE_CHECK",
+          "CUSTOMER_CONTACT",
+          "FULFILLMENT_ESCALATION",
+          "REPLACEMENT_RETURN_REFUND_CHECK",
+          "APOLOGY_COMPENSATION_RETENTION_REQUEST",
+          "NO_ACTION_MONITOR"
+        ],
+        "title": "ActionType",
+        "description": "动作目录 v1 的六个动作代码（规格第 7.3 节），与 config/action_catalog.v1.json 一一对应。"
+      },
+      "ActionView": {
+        "properties": {
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Ids"
+          },
+          "precondition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Precondition"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "action_type",
+          "description",
+          "reason"
+        ],
+        "title": "ActionView",
+        "description": "建议动作投影（规格 12.2；action_type 必须来自动作目录）。"
+      },
+      "ApprovedReviewRequest": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "review_token": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Token"
+          },
+          "outcome": {
+            "type": "string",
+            "const": "APPROVED",
+            "title": "Outcome"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "submission_id",
+          "review_token",
+          "outcome"
+        ],
+        "title": "ApprovedReviewRequest",
+        "description": "直接通过：只携带共同字段，禁止另一份人工结果和审核原因。"
+      },
+      "AttributionFallbackCause": {
+        "type": "string",
+        "enum": [
+          "INSUFFICIENT_EVIDENCE"
+        ],
+        "title": "AttributionFallbackCause",
+        "description": "归因无法可靠判断时的非原因兜底值。"
+      },
+      "BatchListView": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BatchWorkspaceView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "BatchListView",
+        "description": "批次列表（规格 12.2，只含 items 与 total）。"
+      },
+      "BatchStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING_ANALYSIS",
+          "ANALYZING",
+          "COMPLETED",
+          "COMPLETED_WITH_ERRORS"
+        ],
+        "title": "BatchStatus",
+        "description": "批次业务状态（规格 7.2）。"
+      },
+      "BatchWorkspaceView": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "source_filename": {
+            "type": "string",
+            "title": "Source Filename"
+          },
+          "is_mock": {
+            "type": "boolean",
+            "title": "Is Mock"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BatchStatus"
+          },
+          "case_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Case Count"
+          },
+          "evidence_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Evidence Count"
+          },
+          "analysis_succeeded_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Analysis Succeeded Count"
+          },
+          "error_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Error Count"
+          },
+          "imported_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Imported At"
+          },
+          "can_start_analysis": {
+            "type": "boolean",
+            "title": "Can Start Analysis"
+          },
+          "analysis_unavailable_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis Unavailable Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "batch_id",
+          "source_filename",
+          "is_mock",
+          "status",
+          "case_count",
+          "evidence_count",
+          "analysis_succeeded_count",
+          "error_count",
+          "imported_at",
+          "can_start_analysis"
+        ],
+        "title": "BatchWorkspaceView",
+        "description": "批次工作台视图（规格 12.2）。"
+      },
+      "Body_create_batch_api_v1_batches_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "标准 ZIP 运行包"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_create_batch_api_v1_batches_post"
+      },
+      "BusinessCause": {
+        "type": "string",
+        "enum": [
+          "LOGISTICS_FULFILLMENT",
+          "PRODUCT_ISSUE",
+          "RETURN_REFUND",
+          "SERVICE_COMMUNICATION",
+          "PRICE_OR_BENEFIT",
+          "OTHER"
+        ],
+        "title": "BusinessCause",
+        "description": "六个业务原因类别。"
+      },
+      "BusinessError": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "object_type": {
+            "type": "string",
+            "title": "Object Type"
+          },
+          "object_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Object Id"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ProcessingErrorStage"
+          },
+          "next_action": {
+            "type": "string",
+            "title": "Next Action"
+          },
+          "trace_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Trace Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "object_type",
+          "stage",
+          "next_action"
+        ],
+        "title": "BusinessError",
+        "description": "统一 JSON 错误结构（规格 12.4）。"
+      },
+      "CaseDetailView": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "customer_display_id": {
+            "type": "string",
+            "title": "Customer Display Id"
+          },
+          "is_high_value": {
+            "type": "boolean",
+            "title": "Is High Value"
+          },
+          "customer_value_summary": {
+            "type": "string",
+            "title": "Customer Value Summary"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CaseStatus"
+          },
+          "intervention_level": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterventionLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "risk_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Summary"
+          },
+          "primary_cause": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CauseView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "actions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ActionView"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actions"
+          },
+          "communication_points": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Communication Points"
+          },
+          "uncertainty": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty"
+          },
+          "missing_evidence": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Missing Evidence"
+          },
+          "cited_evidence": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CitedEvidenceView"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cited Evidence"
+          },
+          "is_mock": {
+            "type": "boolean",
+            "title": "Is Mock"
+          },
+          "review_result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReviewResultView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "processing_error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CaseProcessingErrorView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "can_rerun": {
+            "type": "boolean",
+            "title": "Can Rerun"
+          },
+          "can_review": {
+            "type": "boolean",
+            "title": "Can Review"
+          },
+          "review_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Token"
+          },
+          "review_options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReviewOptionsView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "batch_id",
+          "case_id",
+          "customer_display_id",
+          "is_high_value",
+          "customer_value_summary",
+          "status",
+          "is_mock",
+          "can_rerun",
+          "can_review"
+        ],
+        "title": "CaseDetailView",
+        "description": "案例详情（规格 12.2）。"
+      },
+      "CaseProcessingErrorCode": {
+        "type": "string",
+        "enum": [
+          "EVIDENCE_READ_FAILED",
+          "EVIDENCE_MEDIA_INVALID",
+          "MODEL_AUTH_FAILED",
+          "MODEL_TIMEOUT",
+          "MODEL_RATE_LIMITED",
+          "MODEL_RESPONSE_INVALID",
+          "MODEL_ATTEMPTS_EXHAUSTED",
+          "RESULT_PERSISTENCE_FAILED",
+          "APP_INTERRUPTED",
+          "UNEXPECTED_PROCESSING_ERROR"
+        ],
+        "title": "CaseProcessingErrorCode",
+        "description": "案例异步处理错误编号（规格 12.4），通过 processing_error 业务化展示。"
+      },
+      "CaseProcessingErrorView": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/CaseProcessingErrorCode"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ProcessingErrorStage"
+          },
+          "next_action": {
+            "type": "string",
+            "title": "Next Action"
+          },
+          "trace_id": {
+            "type": "string",
+            "title": "Trace Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "stage",
+          "next_action",
+          "trace_id"
+        ],
+        "title": "CaseProcessingErrorView",
+        "description": "仅 status=PROCESSING_ERROR 案例出现的业务化处理异常（规格 12.2/12.4）。"
+      },
+      "CaseQueueItemView": {
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "customer_display_id": {
+            "type": "string",
+            "title": "Customer Display Id"
+          },
+          "is_high_value": {
+            "type": "boolean",
+            "title": "Is High Value"
+          },
+          "risk_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Summary"
+          },
+          "intervention_level": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterventionLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "priority_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Reason"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CaseStatus"
+          },
+          "has_evidence_conflict": {
+            "type": "boolean",
+            "title": "Has Evidence Conflict"
+          },
+          "has_insufficient_evidence": {
+            "type": "boolean",
+            "title": "Has Insufficient Evidence"
+          },
+          "has_modality_failure": {
+            "type": "boolean",
+            "title": "Has Modality Failure"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "case_id",
+          "customer_display_id",
+          "is_high_value",
+          "status",
+          "has_evidence_conflict",
+          "has_insufficient_evidence",
+          "has_modality_failure"
+        ],
+        "title": "CaseQueueItemView",
+        "description": "案例队列条目（规格 12.2）；三个标记由当前有效结果或运行错误确定。"
+      },
+      "CaseQueueView": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CaseQueueItemView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "CaseQueueView",
+        "description": "案例队列（规格 12.2，只含 items 与 total）。"
+      },
+      "CaseStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING_ANALYSIS",
+          "ANALYZING",
+          "PENDING_REVIEW",
+          "COMPLETED",
+          "PROCESSING_ERROR"
+        ],
+        "title": "CaseStatus",
+        "description": "案例业务状态（规格 7.2）。"
+      },
+      "CauseView": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BusinessCause"
+              },
+              {
+                "$ref": "#/components/schemas/AttributionFallbackCause"
+              }
+            ],
+            "title": "Category"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Ids"
+          },
+          "counter_evidence_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counter Evidence Ids"
+          },
+          "uncertainty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "category",
+          "explanation"
+        ],
+        "title": "CauseView",
+        "description": "风险原因投影（规格 12.2；结构与 M2 归因 Cause 合同对齐）。"
+      },
+      "CitedEvidenceView": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/EvidenceModality"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "modality",
+          "label"
+        ],
+        "title": "CitedEvidenceView",
+        "description": "当前结果实际引用的业务证据（规格 12.2）。\n\n图片正文由 M4 用 batch_id、case_id、evidence_id 调用受控证据接口取得，\n不增加 content_url 字段。"
+      },
+      "EvidenceModality": {
+        "type": "string",
+        "enum": [
+          "TEXT",
+          "IMAGE",
+          "BEHAVIOR"
+        ],
+        "title": "EvidenceModality",
+        "description": "cited_evidence 的证据模态（规格 12.2，对应三类证据合同）。"
+      },
+      "HealthView": {
+        "properties": {
+          "app_status": {
+            "type": "string",
+            "title": "App Status"
+          },
+          "database_status": {
+            "type": "string",
+            "title": "Database Status"
+          },
+          "analysis_status": {
+            "type": "string",
+            "title": "Analysis Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "app_status",
+          "database_status",
+          "analysis_status",
+          "message"
+        ],
+        "title": "HealthView",
+        "description": "GET /api/v1/health 的唯一响应结构（规格 12.2 字段白名单）。\n\n业务 DTO 不返回密钥内容、供应商原始响应或本机绝对路径。"
+      },
+      "InsufficientEvidenceReviewRequest": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "review_token": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Token"
+          },
+          "outcome": {
+            "type": "string",
+            "const": "INSUFFICIENT_EVIDENCE",
+            "title": "Outcome"
+          },
+          "review_reason": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "submission_id",
+          "review_token",
+          "outcome",
+          "review_reason"
+        ],
+        "title": "InsufficientEvidenceReviewRequest",
+        "description": "标记证据不足：只说明证据缺口，禁止确定原因和处理动作。"
+      },
+      "InterventionLevel": {
+        "type": "string",
+        "enum": [
+          "MUST_INTERVENE",
+          "SHOULD_INTERVENE",
+          "NO_IMMEDIATE_INTERVENTION"
+        ],
+        "title": "InterventionLevel",
+        "description": "系统建议介入等级；等级语义与程序底线见规格第 7.4 节。"
+      },
+      "ModifiedApprovedReviewRequest": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "review_token": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Token"
+          },
+          "outcome": {
+            "type": "string",
+            "const": "MODIFIED_AND_APPROVED",
+            "title": "Outcome"
+          },
+          "final_intervention_level": {
+            "$ref": "#/components/schemas/InterventionLevel"
+          },
+          "final_cause": {
+            "$ref": "#/components/schemas/BusinessCause"
+          },
+          "final_actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionType"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Final Actions"
+          },
+          "review_reason": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Reason"
+          },
+          "execution_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "submission_id",
+          "review_token",
+          "outcome",
+          "final_intervention_level",
+          "final_cause",
+          "final_actions",
+          "review_reason"
+        ],
+        "title": "ModifiedApprovedReviewRequest",
+        "description": "修改后确认：必须给出完整人工判断与修改原因，执行说明按需。"
+      },
+      "OptionItem": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "value",
+          "label"
+        ],
+        "title": "OptionItem",
+        "description": "枚举或动作目录的单档选项（合同 value + 中文 label）。"
+      },
+      "ProcessingErrorStage": {
+        "type": "string",
+        "enum": [
+          "INPUT_PREPARATION",
+          "EVIDENCE_PROCESSING",
+          "AI_ANALYSIS",
+          "RESULT_PERSISTENCE",
+          "APP_RECOVERY"
+        ],
+        "title": "ProcessingErrorStage",
+        "description": "业务化阶段白名单（规格 12.2）；不把感知、归因、策略等内部阶段透传给运营人员。"
+      },
+      "RejectedWithJudgmentReviewRequest": {
+        "properties": {
+          "submission_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Submission Id"
+          },
+          "review_token": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Token"
+          },
+          "outcome": {
+            "type": "string",
+            "const": "REJECTED_WITH_JUDGMENT",
+            "title": "Outcome"
+          },
+          "final_intervention_level": {
+            "$ref": "#/components/schemas/InterventionLevel"
+          },
+          "final_cause": {
+            "$ref": "#/components/schemas/BusinessCause"
+          },
+          "final_actions": {
+            "items": {
+              "$ref": "#/components/schemas/ActionType"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Final Actions"
+          },
+          "review_reason": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Review Reason"
+          },
+          "execution_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "submission_id",
+          "review_token",
+          "outcome",
+          "final_intervention_level",
+          "final_cause",
+          "final_actions",
+          "review_reason"
+        ],
+        "title": "RejectedWithJudgmentReviewRequest",
+        "description": "驳回并给出判断：必须携带人工判断与驳回原因，不得只有驳回。"
+      },
+      "ReviewOptionsView": {
+        "properties": {
+          "intervention_levels": {
+            "items": {
+              "$ref": "#/components/schemas/OptionItem"
+            },
+            "type": "array",
+            "title": "Intervention Levels"
+          },
+          "cause_categories": {
+            "items": {
+              "$ref": "#/components/schemas/OptionItem"
+            },
+            "type": "array",
+            "title": "Cause Categories"
+          },
+          "action_catalog_version": {
+            "type": "string",
+            "title": "Action Catalog Version"
+          },
+          "action_types": {
+            "items": {
+              "$ref": "#/components/schemas/OptionItem"
+            },
+            "type": "array",
+            "title": "Action Types"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "intervention_levels",
+          "cause_categories",
+          "action_catalog_version",
+          "action_types"
+        ],
+        "title": "ReviewOptionsView",
+        "description": "人工确认表单只读选项（规格 12.2；仅 can_review=true 时出现）。"
+      },
+      "ReviewResultView": {
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "title": "Outcome"
+          },
+          "final_intervention_level": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterventionLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "final_cause": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CauseView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "final_actions": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ActionView"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Final Actions"
+          },
+          "execution_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Note"
+          },
+          "review_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Reason"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "outcome",
+          "created_at"
+        ],
+        "title": "ReviewResultView",
+        "description": "人工确认结果（规格 12.2）。"
+      }
+    }
+  }
+}
