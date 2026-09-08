@@ -1,0 +1,28 @@
+import createClient from 'openapi-fetch'
+import type { paths } from './schema.gen'
+
+/** 创建唯一形态的 HTTP 客户端（规格 12：生成类型 + openapi-fetch，禁止手写第二套 DTO）。 */
+export function createApiClient(baseUrl?: string) {
+  return createClient<paths>({
+    baseUrl,
+    // createClient 的默认参数会在创建时缓存全局 fetch；改为调用时解析，
+    // msw/node 在 listen 时替换的全局 fetch 才能生效。
+    // 运行时 openapi-fetch 以 (request, requestInit) 两参调用，第二参可选以匹配其类型声明。
+    fetch: (input: Request, init?: RequestInit) => globalThis.fetch(input, init),
+  })
+}
+
+/**
+ * 应用客户端：baseUrl 留空使用相对路径，生产由 FastAPI 同源提供 /api/v1；
+ * 开发代理在 M4-03 接线时配置。测试通过 createApiClient 注入绝对地址。
+ */
+export const api = createApiClient()
+
+/** 组装受控证据图片地址（规格 12.1；只使用公开业务字段，不新增 content_url 字段）。 */
+export function evidenceContentUrl(batchId: string, caseId: string, evidenceId: string): string {
+  return (
+    `/api/v1/batches/${encodeURIComponent(batchId)}` +
+    `/cases/${encodeURIComponent(caseId)}` +
+    `/evidence/${encodeURIComponent(evidenceId)}/content`
+  )
+}
