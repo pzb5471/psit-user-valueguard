@@ -95,13 +95,14 @@ def _to_api(view: DataReviewResultView) -> ReviewResultView:
     final_cause = None
     if view.final_cause is not None:
         category = view.final_cause.get("cause_category")
-        if category == AttributionFallbackCause.INSUFFICIENT_EVIDENCE.value:
-            cause: BusinessCause | AttributionFallbackCause = (
-                AttributionFallbackCause.INSUFFICIENT_EVIDENCE
-            )
-        else:
-            cause = BusinessCause(category)
-        final_cause = CauseView(category=cause, explanation="人工确认原因")
+        if category:
+            if category == AttributionFallbackCause.INSUFFICIENT_EVIDENCE.value:
+                cause: BusinessCause | AttributionFallbackCause = (
+                    AttributionFallbackCause.INSUFFICIENT_EVIDENCE
+                )
+            else:
+                cause = BusinessCause(category)
+            final_cause = CauseView(category=cause, explanation="人工确认原因")
     return ReviewResultView(
         outcome=view.outcome,
         final_intervention_level=(
