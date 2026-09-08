@@ -308,6 +308,32 @@
   color: var(--psit-color-text-secondary);
 }
 
+.reviewOutcome {
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-body-size);
+  font-weight: 600;
+  color: var(--psit-color-success);
+}
+
+.actionArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--psit-space-5);
+}
+
+.readonlyNote {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  margin: 0;
+  padding: var(--psit-space-4);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-secondary);
+  font-size: var(--psit-font-control-size);
+  color: var(--psit-color-text-secondary);
+}
+
 @media (max-width: 1024px) {
   .card {
     padding: var(--psit-space-5);

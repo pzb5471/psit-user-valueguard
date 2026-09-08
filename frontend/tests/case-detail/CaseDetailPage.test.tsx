@@ -63,7 +63,7 @@ test('证据不足：归因兜底标签 + 缺失说明', async () => {
     missing_evidence: ['缺少退换货记录，无法核实履约承诺'],
   })
   await screen.findByText('示例客户 C-1001')
-  expect(screen.getByText('证据不足')).toBeInTheDocument()
+  expect(screen.getAllByText('证据不足').length).toBeGreaterThanOrEqual(1)
   expect(screen.getByText('证据不足，无法可靠判断主要原因。')).toBeInTheDocument()
   expect(screen.getByText(/缺少退换货记录/)).toBeInTheDocument()
 })

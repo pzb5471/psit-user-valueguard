@@ -1,25 +1,30 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
   DownOutlined,
   ExclamationCircleFilled,
   FileImageOutlined,
+  LockOutlined,
   MessageOutlined,
   WarningFilled,
 } from '@ant-design/icons'
 import { evidenceContentUrl } from '../../api/client'
 import type { components } from '../../api/schema.gen'
 import { useCaseDetailQuery } from '../../queries/caseQueries'
+import { queryKeys } from '../../queries/queryKeys'
 import { presentAction, presentCause } from './businessLabels'
 import { presentCaseStatus } from '../batch/statusPresentation'
 import { presentInterventionLevel } from '../batch/statusPresentation'
 import { StatusBadge } from '../batch/StatusBadge'
+import { ReviewPanel, RerunButton } from './ReviewPanel'
 import shell from '../page.module.css'
 import styles from './caseDetailPage.module.css'
 
 type CitedEvidenceView = components['schemas']['CitedEvidenceView']
+type CaseDetailView = components['schemas']['CaseDetailView']
 
 function EvidenceImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false)
@@ -86,6 +91,7 @@ function EvidenceItem({
 /** 案例详情页（规格 12.2 / 13.2：结论优先、证据按需展开、图片受控加载）。 */
 export function CaseDetailPage() {
   const { batchId = '', caseId = '' } = useParams()
+  const queryClient = useQueryClient()
   const { data: result, refetch } = useCaseDetailQuery(batchId, caseId)
 
   if (result && !result.ok) {
@@ -276,6 +282,60 @@ export function CaseDetailPage() {
           以上为程序对当前证据的分析结论，供运营人员作人工决策初稿。
         </p>
       )}
+
+      {detail.review_result && (
+        <div className={shell.card}>
+          <h3 className={shell.sectionTitle}>人工确认结果</h3>
+          <p className={styles.reviewOutcome}>{reviewOutcomeLabel(detail.review_result.outcome)}</p>
+          {detail.review_result.review_reason && (
+            <p className={shell.body}>说明：{detail.review_result.review_reason}</p>
+          )}
+          {detail.review_result.execution_note && (
+            <p className={shell.body}>执行说明：{detail.review_result.execution_note}</p>
+          )}
+        </div>
+      )}
+
+      <ActionSection
+        detail={detail}
+        onDataChange={() => void queryClient.invalidateQueries({ queryKey: queryKeys.caseDetail(batchId, caseId) })}
+      />
     </section>
+  )
+}
+
+function reviewOutcomeLabel(outcome: string): string {
+  switch (outcome) {
+    case 'APPROVED':
+      return '直接通过'
+    case 'MODIFIED_AND_APPROVED':
+      return '修改后确认'
+    case 'REJECTED_WITH_JUDGMENT':
+      return '驳回并给出判断'
+    case 'INSUFFICIENT_EVIDENCE':
+      return '标记证据不足'
+    default:
+      return outcome
+  }
+}
+
+/** 案例操作区：可确认则显示表单，可重跑则显示重跑，已完成只读（规格 13.3）。 */
+function ActionSection({ detail, onDataChange }: { detail: CaseDetailView; onDataChange: () => void }) {
+  const readonly = detail.status === 'COMPLETED'
+  const canReview = detail.can_review && !!detail.review_token && !!detail.review_options
+  const canRerun = detail.can_rerun
+  if (readonly) {
+    return (
+      <p className={styles.readonlyNote}>
+        <LockOutlined aria-hidden />
+        该案例已完成人工确认，结果已锁定为只读。
+      </p>
+    )
+  }
+  return (
+    <div className={styles.actionArea}>
+      {canReview && <ReviewPanel detail={detail} onCompleted={() => void onDataChange()} />}
+      {canRerun && <RerunButton detail={detail} onStarted={() => void onDataChange()} />}
+    </div>
   )
 }
