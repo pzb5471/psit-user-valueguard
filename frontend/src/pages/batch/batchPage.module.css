@@ -1,0 +1,232 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--psit-space-6);
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: var(--psit-font-page-title-size);
+  font-weight: var(--psit-font-page-title-weight);
+  line-height: var(--psit-font-page-title-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.card {
+  padding: var(--psit-space-6);
+  background: var(--psit-color-surface-page);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-card);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--psit-font-section-title-size);
+  font-weight: var(--psit-font-section-title-weight);
+  line-height: var(--psit-font-section-title-line-height);
+  color: var(--psit-color-text-primary);
+}
+
+.body {
+  margin: var(--psit-space-4) 0 0;
+  max-width: 72ch;
+  font-size: var(--psit-font-body-size);
+  line-height: var(--psit-font-body-line-height);
+  color: var(--psit-color-text-secondary);
+}
+
+/* 横向摘要带（规格 13.6：一条摘要带，不用三个等宽统计卡）。 */
+.summaryBand {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--psit-space-6);
+}
+
+.summaryMain {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--psit-space-4);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--psit-space-4);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  padding: var(--psit-space-1) var(--psit-space-3);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-pill);
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  white-space: nowrap;
+}
+
+.neutralBadge {
+  color: var(--psit-color-text-secondary);
+}
+
+.infoBadge {
+  border-color: var(--psit-color-primary-action);
+  color: var(--psit-color-primary-action);
+}
+
+.successBadge {
+  border-color: var(--psit-color-success);
+  color: var(--psit-color-success);
+}
+
+.warningBadge {
+  border-color: var(--psit-color-warning);
+  color: var(--psit-color-warning);
+}
+
+.dangerBadge {
+  border-color: var(--psit-color-danger);
+  color: var(--psit-color-danger);
+}
+
+.mockTag {
+  padding: var(--psit-space-1) var(--psit-space-3);
+  border: 1px solid var(--psit-color-warning);
+  border-radius: var(--psit-radius-pill);
+  font-size: var(--psit-font-caption-size);
+  color: var(--psit-color-warning);
+}
+
+.statBand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--psit-space-6);
+  padding-top: var(--psit-space-3);
+  border-top: 1px solid var(--psit-color-divider);
+}
+
+.statItem {
+  display: flex;
+  align-items: baseline;
+  gap: var(--psit-space-2);
+}
+
+.statValue {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--psit-color-text-primary);
+}
+
+.statLabel {
+  font-size: var(--psit-font-caption-size);
+  color: var(--psit-color-text-secondary);
+}
+
+.unavailableText {
+  margin: 0;
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-warning);
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 120px;
+  min-height: 44px;
+  padding: 0 var(--psit-space-5);
+  border: none;
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-primary-action);
+  color: var(--psit-color-surface-page);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.primaryButton:hover {
+  opacity: 0.92;
+}
+
+.primaryButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--psit-space-5);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-pill);
+  background: var(--psit-color-surface-page);
+  color: var(--psit-color-text-primary);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.secondaryButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.errorPanel {
+  width: 100%;
+  margin-top: var(--psit-space-4);
+  padding: var(--psit-space-4);
+  border: 1px solid var(--psit-color-danger);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-secondary);
+}
+
+.errorHeadline {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-danger);
+}
+
+.errorText {
+  margin: 0 0 var(--psit-space-2);
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-danger);
+}
+
+@media (max-width: 1024px) {
+  .card {
+    padding: var(--psit-space-5);
+  }
+
+  .summaryBand {
+    flex-direction: column;
+  }
+}

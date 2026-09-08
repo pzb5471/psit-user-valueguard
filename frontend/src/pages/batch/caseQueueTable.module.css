@@ -1,0 +1,109 @@
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: var(--psit-space-3) var(--psit-space-4);
+  border-bottom: 1px solid var(--psit-color-divider);
+  text-align: left;
+  font-size: var(--psit-font-control-size);
+  font-weight: 600;
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-secondary);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--psit-space-3) var(--psit-space-4);
+  border-bottom: 1px solid var(--psit-color-divider);
+  font-size: var(--psit-font-control-size);
+  line-height: var(--psit-font-control-line-height);
+  color: var(--psit-color-text-primary);
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.customerCell {
+  white-space: nowrap;
+}
+
+.caseLink {
+  display: inline-block;
+  min-height: 44px;
+  padding: var(--psit-space-2) 0;
+  font-weight: 600;
+  color: var(--psit-color-primary-action);
+}
+
+.highValueTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--psit-space-1);
+  margin-left: var(--psit-space-3);
+  padding: 2px var(--psit-space-2);
+  border: 1px solid var(--psit-color-success);
+  border-radius: var(--psit-radius-control);
+  font-size: var(--psit-font-caption-size);
+  color: var(--psit-color-success);
+}
+
+.statusCell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--psit-space-2);
+  white-space: nowrap;
+}
+
+.neutralCell {
+  color: var(--psit-color-text-secondary);
+}
+
+.infoCell {
+  color: var(--psit-color-primary-action);
+}
+
+.successCell {
+  color: var(--psit-color-success);
+}
+
+.warningCell {
+  color: var(--psit-color-warning);
+}
+
+.dangerCell {
+  color: var(--psit-color-danger);
+}
+
+.noteCell {
+  max-width: 320px;
+  color: var(--psit-color-text-secondary);
+}
+
+.markerList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--psit-space-2);
+}
+
+.markerTag {
+  display: inline-flex;
+  padding: 2px var(--psit-space-2);
+  border: 1px solid var(--psit-color-danger);
+  border-radius: var(--psit-radius-control);
+  font-size: var(--psit-font-caption-size);
+  color: var(--psit-color-danger);
+  white-space: nowrap;
+}
+
+.emptyCell {
+  color: var(--psit-color-text-disabled);
+}
