@@ -8,13 +8,13 @@ export interface paths {
         };
         /**
          * List Batches
-         * @description 按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04 实现）。
+         * @description 按 imported_at 倒序、batch_id 稳定排序列出批次（M3-04）。
          */
         get: operations["list_batches_api_v1_batches_get"];
         put?: never;
         /**
          * Create Batch
-         * @description 上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04 实现）。
+         * @description 上传一个标准 ZIP 新建批次；重复包 200 幂等命中（M3-04）。
          */
         post: operations["create_batch_api_v1_batches_post"];
         delete?: never;
@@ -32,7 +32,7 @@ export interface paths {
         };
         /**
          * Get Batch
-         * @description 读取单个批次工作台视图（M3-04 实现）。
+         * @description 读取单个批次工作台视图（M3-04）。
          */
         get: operations["get_batch_api_v1_batches__batch_id__get"];
         put?: never;
@@ -54,7 +54,7 @@ export interface paths {
         put?: never;
         /**
          * Start Batch Run
-         * @description 开始首次批量分析；无请求体，缺密钥时 503（M3-05 实现）。
+         * @description 开始首次批量分析；无请求体，缺密钥时 503（M3-05）。
          */
         post: operations["start_batch_run_api_v1_batches__batch_id__runs_post"];
         delete?: never;
@@ -72,7 +72,7 @@ export interface paths {
         };
         /**
          * List Cases
-         * @description 案例队列；服务端固定排序，不提供 sort_by（M3-04 实现）。
+         * @description 案例队列；服务端固定排序，不提供 sort_by（M3-04）。
          */
         get: operations["list_cases_api_v1_batches__batch_id__cases_get"];
         put?: never;
@@ -92,7 +92,7 @@ export interface paths {
         };
         /**
          * Get Case
-         * @description 案例详情；can_review=true 时携带 review_token 与 review_options（M3-04 实现）。
+         * @description 案例详情（M3-04）。
          */
         get: operations["get_case_api_v1_batches__batch_id__cases__case_id__get"];
         put?: never;
@@ -114,7 +114,7 @@ export interface paths {
         put?: never;
         /**
          * Rerun Case
-         * @description 人工从头重跑单个案例；无请求体（M3-06 实现）。
+         * @description 人工从头重跑单个案例；无请求体（M3-06）。
          */
         post: operations["rerun_case_api_v1_batches__batch_id__cases__case_id__reruns_post"];
         delete?: never;
@@ -134,7 +134,7 @@ export interface paths {
         put?: never;
         /**
          * Submit Review
-         * @description 提交人工确认；相同 submission_id 返回第一次保存结果（M3-07 实现）。
+         * @description 提交人工确认；相同 submission_id 返回第一次保存结果（M3-07）。
          */
         post: operations["submit_review_api_v1_batches__batch_id__cases__case_id__reviews_post"];
         delete?: never;
@@ -152,7 +152,7 @@ export interface paths {
         };
         /**
          * Get Evidence Content
-         * @description 按作用域标识读取证据图片；不返回本机路径（M3-04 实现）。
+         * @description 按作用域标识读取证据图片；不返回本机路径（M3-04）。
          */
         get: operations["get_evidence_content_api_v1_batches__batch_id__cases__case_id__evidence__evidence_id__content_get"];
         put?: never;
