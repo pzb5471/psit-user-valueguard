@@ -14,5 +14,7 @@ export default defineConfig({
         url: 'http://psit-mock.local/',
       },
     },
+    // Playwright 浏览器旅程由 test:e2e 单独运行，排除出 vitest（jsdom 无法执行）。
+    exclude: ['tests/e2e-msw/**', 'node_modules/**', 'dist/**'],
   },
 })

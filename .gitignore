@@ -18,6 +18,8 @@ __pycache__/
 # 前端依赖与构建产物
 node_modules/
 frontend/dist/
+frontend/playwright-report/
+frontend/test-results/
 
 # 操作系统与编辑器
 .DS_Store
