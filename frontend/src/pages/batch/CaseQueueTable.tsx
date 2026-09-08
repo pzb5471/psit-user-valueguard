@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { CheckCircleFilled } from '@ant-design/icons'
 import type { components } from '../../api/schema.gen'
-import { StatusBadge, presentCaseStatus, presentInterventionLevel } from './statusPresentation'
+import { presentCaseStatus, presentInterventionLevel } from './statusPresentation'
+import { StatusBadge } from './StatusBadge'
 import styles from './caseQueueTable.module.css'
 
 type CaseQueueItemView = components['schemas']['CaseQueueItemView']

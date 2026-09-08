@@ -230,3 +230,76 @@
     flex-direction: column;
   }
 }
+
+/* 筛选与分页（规格 13.2：筛选与分页位置写入 URL；13.7：标签在上、44px 控件）。 */
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--psit-space-4);
+  margin: var(--psit-space-4) 0 var(--psit-space-5);
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--psit-space-1);
+}
+
+.filterLabel {
+  font-size: var(--psit-font-caption-size);
+  color: var(--psit-color-text-secondary);
+}
+
+.filterSelect {
+  min-height: 44px;
+  min-width: 160px;
+  padding: 0 var(--psit-space-3);
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-page);
+  font-family: inherit;
+  font-size: var(--psit-font-control-size);
+  color: var(--psit-color-text-primary);
+  cursor: pointer;
+}
+
+.paginationRow {
+  display: flex;
+  align-items: center;
+  gap: var(--psit-space-3);
+  margin-left: auto;
+}
+
+.pageButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--psit-color-divider);
+  border-radius: var(--psit-radius-control);
+  background: var(--psit-color-surface-page);
+  color: var(--psit-color-text-primary);
+  cursor: pointer;
+  transition:
+    transform var(--psit-motion-duration-fast) var(--psit-motion-ease),
+    opacity var(--psit-motion-duration-fast) var(--psit-motion-ease);
+}
+
+.pageButton:active {
+  transform: scale(var(--psit-motion-press-scale));
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pageText {
+  font-size: var(--psit-font-control-size);
+  color: var(--psit-color-text-secondary);
+  white-space: nowrap;
+}

@@ -1,9 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { delay, http, HttpResponse } from 'msw'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, expect, test } from 'vitest'
 import { BatchPage } from '../../src/pages/batch/BatchPage'
+import { createQueryClient } from '../../src/queries/queryClient'
 import { batchView, queueView } from '../../src/mocks/fixtures'
 import { mockUrl } from '../../src/mocks/handlers'
 import { scenarios } from '../../src/mocks/scenarios'
@@ -16,14 +18,16 @@ beforeEach(() => {
   calls.runs = 0
 })
 
-/** 与 main.tsx 装配一致：BatchPage 依赖 /batches/:batchId 路由参数。 */
+/** 与 main.tsx 装配一致：Provider + /batches/:batchId 路由参数。 */
 function renderBatch(batchId = 'batch-demo-001') {
   return render(
-    <MemoryRouter initialEntries={[`/batches/${batchId}`]}>
-      <Routes>
-        <Route path="/batches/:batchId" element={<BatchPage />} />
-      </Routes>
-    </MemoryRouter>,
+    <QueryClientProvider client={createQueryClient()}>
+      <MemoryRouter initialEntries={[`/batches/${batchId}`]}>
+        <Routes>
+          <Route path="/batches/:batchId" element={<BatchPage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
 }
 
@@ -95,13 +99,15 @@ test('无密钥：开始按钮禁用并显示业务说明', async () => {
   expect(screen.queryByRole('button', { name: '开始分析' })).not.toBeInTheDocument()
 })
 
-test('开始分析：202 后以服务端视图刷新为分析中', async () => {
+test('开始分析：202 后精确失效，批次进入分析中', async () => {
+  let runsStarted = false
   server.use(
     http.get(mockUrl('/api/v1/batches/:batchId'), () =>
-      HttpResponse.json(batchView('PENDING_ANALYSIS')),
+      HttpResponse.json(runsStarted ? batchView('ANALYZING') : batchView('PENDING_ANALYSIS')),
     ),
     http.post(mockUrl('/api/v1/batches/:batchId/runs'), () => {
       calls.runs += 1
+      runsStarted = true
       return HttpResponse.json(batchView('ANALYZING'), { status: 202 })
     }),
   )
@@ -109,19 +115,23 @@ test('开始分析：202 后以服务端视图刷新为分析中', async () => {
   renderBatch()
   const user = userEvent.setup()
   await user.click(await screen.findByRole('button', { name: '开始分析' }))
-  await waitFor(() => expect(screen.getByText('分析进行中；每个案例完成后将进入待确认。')).toBeInTheDocument())
+  await waitFor(() =>
+    expect(screen.getByText('分析进行中；每个案例完成后将进入待确认。')).toBeInTheDocument(),
+  )
   expect(calls.runs).toBe(1)
 })
 
 test('重复点击保护：请求进行中按钮禁用，仅发出一次', async () => {
+  let runsStarted = false
   server.use(
     http.get(mockUrl('/api/v1/batches/:batchId'), () =>
-      HttpResponse.json(batchView('PENDING_ANALYSIS')),
+      HttpResponse.json(runsStarted ? batchView('ANALYZING') : batchView('PENDING_ANALYSIS')),
     ),
     http.post(
       mockUrl('/api/v1/batches/:batchId/runs'),
       async () => {
         calls.runs += 1
+        runsStarted = true
         await delay(800)
         return HttpResponse.json(batchView('ANALYZING'), { status: 202 })
       },
@@ -167,15 +177,16 @@ test('队列呈现五种案例状态', async () => {
     ),
   )
   useDefaultQueue()
-  renderBatch()
-  const queue = await screen.findByText('案例队列')
-  const table = queue.nextElementSibling as HTMLElement
+  const { container } = renderBatch()
+  await screen.findByText('案例队列')
+  await waitFor(() => expect(container.querySelector('tbody')).not.toBeNull())
+  const tableText = container.querySelector('tbody')?.textContent ?? ''
   // 五种案例状态（服务端固定排序）：处理异常/待确认/已完成/分析中/待分析。
-  expect(table.textContent).toContain('处理异常')
-  expect(table.textContent).toContain('待确认')
-  expect(table.textContent).toContain('已完成')
-  expect(table.textContent).toContain('分析中')
-  expect(table.textContent).toContain('待分析')
+  expect(tableText).toContain('处理异常')
+  expect(tableText).toContain('待确认')
+  expect(tableText).toContain('已完成')
+  expect(tableText).toContain('分析中')
+  expect(tableText).toContain('待分析')
 })
 
 test('状态三重表达：徽章含文字、图标与颜色类', async () => {
@@ -199,11 +210,14 @@ test('介入等级与异常标记呈现', async () => {
     ),
   )
   useDefaultQueue()
-  renderBatch()
-  expect(await screen.findByText('必须介入')).toBeInTheDocument()
-  expect(screen.getByText('建议介入')).toBeInTheDocument()
-  expect(screen.getByText('证据读取失败，需要人工跟进。')).toBeInTheDocument()
-  expect(screen.getAllByText('处理异常').length).toBeGreaterThanOrEqual(2)
+  const { container } = renderBatch()
+  await screen.findByText('案例队列')
+  await waitFor(() => expect(container.querySelector('tbody')).not.toBeNull())
+  const tableText = container.querySelector('tbody')?.textContent ?? ''
+  expect(tableText).toContain('必须介入')
+  expect(tableText).toContain('建议介入')
+  expect(tableText).toContain('证据读取失败，需要人工跟进。')
+  expect(tableText).toContain('处理异常')
 })
 
 test('队列空态', async () => {
@@ -216,7 +230,7 @@ test('队列空态', async () => {
     ),
   )
   renderBatch()
-  expect(await screen.findByText('暂无案例。')).toBeInTheDocument()
+  expect(await screen.findByText('暂无符合条件的案例。')).toBeInTheDocument()
 })
 
 test('批次不存在显示错误态', async () => {
@@ -238,14 +252,15 @@ test('队列加载失败显示错误与重试', async () => {
       ),
     ),
   )
-  renderBatch()
+  const { container } = renderBatch()
   const user = userEvent.setup()
   expect(await screen.findByRole('alert')).toHaveTextContent('服务内部错误')
   server.use(
     http.get(mockUrl('/api/v1/batches/:batchId/cases'), () => HttpResponse.json(queueView())),
   )
   await user.click(screen.getByRole('button', { name: '重新加载' }))
-  expect(await screen.findByText('待确认')).toBeInTheDocument()
+  await waitFor(() => expect(container.querySelector('tbody')).not.toBeNull())
+  expect(container.querySelector('tbody')?.textContent).toContain('待确认')
 })
 
 test('页面不出现技术字段与内部概念', async () => {

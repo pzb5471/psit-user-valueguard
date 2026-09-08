@@ -8,8 +8,6 @@ import {
   WarningFilled,
 } from '@ant-design/icons'
 import type { components } from '../../api/schema.gen'
-import tableStyles from './caseQueueTable.module.css'
-import styles from './batchPage.module.css'
 
 type BatchStatus = components['schemas']['BatchStatus']
 type CaseStatus = components['schemas']['CaseStatus']
@@ -23,7 +21,7 @@ export type StatusPresentation<Kind extends string> = {
   className: string
 }
 
-type AnyPresentation =
+export type AnyPresentation =
   | StatusPresentation<BatchStatus>
   | StatusPresentation<CaseStatus>
   | StatusPresentation<InterventionLevel>
@@ -107,25 +105,4 @@ export function presentInterventionLevel(
   level: InterventionLevel,
 ): StatusPresentation<InterventionLevel> {
   return INTERVENTION_MAP[level]
-}
-
-/** 状态徽章：图标 + 文字 + 颜色类三重表达（供批次摘要带与队列表格共用）。 */
-export function StatusBadge({
-  presentation,
-  tone = 'batch',
-}: {
-  presentation: AnyPresentation
-  tone?: 'batch' | 'table'
-}) {
-  const { Icon, label, className } = presentation
-  const toneClass =
-    tone === 'batch'
-      ? styles[`${className}Badge` as keyof typeof styles]
-      : tableStyles[`${className}Cell` as keyof typeof tableStyles]
-  return (
-    <span className={`${tone === 'batch' ? styles.statusBadge : tableStyles.statusCell} ${toneClass ?? ''}`}>
-      <Icon aria-hidden />
-      {label}
-    </span>
-  )
 }

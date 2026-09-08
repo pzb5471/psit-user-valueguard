@@ -1,17 +1,26 @@
-import { useCallback, useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
-import { useParams } from 'react-router-dom'
-import { ExclamationCircleFilled } from '@ant-design/icons'
+import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSearchParams, useParams } from 'react-router-dom'
+import { ExclamationCircleFilled, LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { api } from '../../api/client'
 import { toResult } from '../../api/errors'
-import type { RequestFailure, RequestResult } from '../../api/errors'
-import type { components } from '../../api/schema.gen'
-import { StatusBadge, presentBatchStatus } from './statusPresentation'
-import styles from './batchPage.module.css'
+import type { RequestFailure } from '../../api/errors'
+import {
+  INTERVENTION_LEVEL_VALUES,
+  CASE_STATUS_VALUES,
+  parseCaseQueueParams,
+  writeCaseQueueParams,
+} from '../../routing/caseQueueParams'
+import { ACTIVE_POLL_MS, useBatchDetailQuery, useCaseQueueQuery } from '../../queries/batchQueries'
+import { queryKeys } from '../../queries/queryKeys'
+import {
+  presentCaseStatus,
+  presentInterventionLevel,
+  presentBatchStatus,
+} from './statusPresentation'
+import { StatusBadge } from './StatusBadge'
 import { CaseQueueTable } from './CaseQueueTable'
-
-type BatchWorkspaceView = components['schemas']['BatchWorkspaceView']
-type CaseQueueView = components['schemas']['CaseQueueView']
+import styles from './batchPage.module.css'
 
 function ErrorPanel({ failure }: { failure: RequestFailure }) {
   const suggestion =
@@ -40,91 +49,50 @@ function ErrorPanel({ failure }: { failure: RequestFailure }) {
   )
 }
 
-function StatItem({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className={styles.statItem}>
-      <span className={styles.statValue}>{value}</span>
-      <span className={styles.statLabel}>{label}</span>
-    </div>
-  )
-}
-
-/** 批次页（规格 13.2：批次摘要、分析进度、案例队列、筛选和开始分析）。 */
+/** 批次页（规格 13.2）：批次摘要、案例队列、筛选与分页写入 URL，活动批次按唯一节奏轮询。 */
 export function BatchPage() {
   const { batchId = '' } = useParams()
-  const [batch, setBatch] = useState<BatchWorkspaceView | null>(null)
-  const [batchFailure, setBatchFailure] = useState<RequestFailure | null>(null)
-  const [queue, setQueue] = useState<CaseQueueView | null>(null)
-  const [queueFailure, setQueueFailure] = useState<RequestFailure | null>(null)
-  const [starting, setStarting] = useState(false)
+  const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [startFailure, setStartFailure] = useState<RequestFailure | null>(null)
 
-  const applyBatchResult = useCallback(
-    (result: RequestResult<BatchWorkspaceView>) => {
+  const queueParams = parseCaseQueueParams(searchParams)
+  const batchQuery = useBatchDetailQuery(batchId)
+  // 分析中按唯一节奏轮询；终态与待分析不轮询（后台暂停由 TanStack 默认行为保证）。
+  const pollMs = batchQuery.data?.ok && batchQuery.data.data.status === 'ANALYZING' ? ACTIVE_POLL_MS : false
+  const queueQuery = useCaseQueueQuery(batchId, queueParams, pollMs)
+
+  const batchResult = batchQuery.data
+  const queueResult = queueQuery.data
+  const batch = batchResult?.ok ? batchResult.data : null
+  const batchFailure = batchResult && !batchResult.ok ? batchResult.failure : null
+  const queue = queueResult?.ok ? queueResult.data : null
+  const queueFailure = queueResult && !queueResult.ok ? queueResult.failure : null
+
+  const updateParams = (patch: Parameters<typeof writeCaseQueueParams>[1]) => {
+    setSearchParams(writeCaseQueueParams(searchParams, patch), { preventScrollReset: true })
+  }
+
+  const startMutation = useMutation({
+    mutationFn: () =>
+      toResult(api.POST('/api/v1/batches/{batch_id}/runs', { params: { path: { batch_id: batchId } } })),
+    onSuccess: async (result) => {
       if (result.ok) {
-        setBatch(result.data)
-        setBatchFailure(null)
-      } else {
-        setBatchFailure(result.failure)
-      }
-    },
-    [],
-  )
-
-  const applyQueueResult = useCallback((result: RequestResult<CaseQueueView>) => {
-    if (result.ok) {
-      setQueue(result.data)
-      setQueueFailure(null)
-    } else {
-      setQueueFailure(result.failure)
-    }
-  }, [])
-
-  const fetchBatch = useCallback(async () => {
-    return toResult(api.GET('/api/v1/batches/{batch_id}', { params: { path: { batch_id: batchId } } }))
-  }, [batchId])
-
-  const fetchQueue = useCallback(async () => {
-    return toResult(
-      api.GET('/api/v1/batches/{batch_id}/cases', {
-        params: { path: { batch_id: batchId }, query: { limit: 50, offset: 0 } },
-      }),
-    )
-  }, [batchId])
-
-  useEffect(() => {
-    let active = true
-    void fetchBatch().then((result) => {
-      if (active) applyBatchResult(result)
-    })
-    void fetchQueue().then((result) => {
-      if (active) applyQueueResult(result)
-    })
-    return () => {
-      active = false
-    }
-  }, [fetchBatch, fetchQueue, applyBatchResult, applyQueueResult])
-
-  const onStartAnalysis = () => {
-    if (starting || !batch?.can_start_analysis) return
-    setStarting(true)
-    setStartFailure(null)
-    void toResult(
-      api.POST('/api/v1/batches/{batch_id}/runs', { params: { path: { batch_id: batchId } } }),
-    ).then((result) => {
-      setStarting(false)
-      if (result.ok) {
-        // 202 返回开始后的批次视图（ANALYZING），以服务端结果为准更新。
-        setBatch(result.data)
+        // 精确失效：只失效该批次的详情与队列（全部筛选变体）。
+        await queryClient.invalidateQueries({ queryKey: queryKeys.batchDetail(batchId) })
+        await queryClient.invalidateQueries({ queryKey: queryKeys.caseQueueRoot(batchId) })
       } else {
         setStartFailure(result.failure)
       }
-    })
-  }
+    },
+  })
 
+  const starting = startMutation.isPending
+  const retryBatch = () => {
+    void batchQuery.refetch()
+  }
   const retryQueue = () => {
-    setQueueFailure(null)
-    void fetchQueue().then(applyQueueResult)
+    void queueQuery.refetch()
   }
 
   if (batchFailure) {
@@ -135,10 +103,7 @@ export function BatchPage() {
         </h1>
         <div className={styles.card}>
           <ErrorPanel failure={batchFailure} />
-          <button type="button" className={styles.secondaryButton} onClick={() => {
-            setBatchFailure(null)
-            void fetchBatch().then(applyBatchResult)
-          }}>
+          <button type="button" className={styles.secondaryButton} onClick={retryBatch}>
             重新加载
           </button>
         </div>
@@ -163,7 +128,11 @@ export function BatchPage() {
 
   const status = presentBatchStatus(batch.status)
   const analyzing = batch.status === 'ANALYZING'
-  const canStart = batch.can_start_analysis && !starting
+
+  const total = queue?.total ?? 0
+  const rangeEnd = Math.min(queueParams.offset + queueParams.limit, total)
+  const prevDisabled = queueParams.offset === 0
+  const nextDisabled = queueParams.offset + queueParams.limit >= total
 
   return (
     <section className={styles.page} aria-labelledby="batch-title">
@@ -180,14 +149,19 @@ export function BatchPage() {
               {batch.is_mock && <span className={styles.mockTag}>Mock 数据</span>}
             </div>
             <div className={styles.statBand}>
-              <StatItem label="案例数" value={batch.case_count} />
-              <StatItem label="已出结果" value={batch.analysis_succeeded_count} />
-              <StatItem label="处理异常" value={batch.error_count} />
-              <StatItem label="证据数" value={batch.evidence_count} />
+              {[
+                { label: '案例数', value: batch.case_count },
+                { label: '已出结果', value: batch.analysis_succeeded_count },
+                { label: '处理异常', value: batch.error_count },
+                { label: '证据数', value: batch.evidence_count },
+              ].map((stat) => (
+                <div key={stat.label} className={styles.statItem}>
+                  <span className={styles.statValue}>{stat.value}</span>
+                  <span className={styles.statLabel}>{stat.label}</span>
+                </div>
+              ))}
             </div>
-            {analyzing && (
-              <p className={styles.body}>分析进行中；每个案例完成后将进入待确认。</p>
-            )}
+            {analyzing && <p className={styles.body}>分析进行中；每个案例完成后将进入待确认。</p>}
             {!analyzing && !batch.can_start_analysis && batch.analysis_unavailable_message && (
               <p className={styles.unavailableText}>{batch.analysis_unavailable_message}</p>
             )}
@@ -196,8 +170,8 @@ export function BatchPage() {
             <button
               type="button"
               className={styles.primaryButton}
-              disabled={!canStart}
-              onClick={onStartAnalysis}
+              disabled={starting}
+              onClick={() => startMutation.mutate()}
             >
               {starting ? '正在开始…' : '开始分析'}
             </button>
@@ -208,6 +182,67 @@ export function BatchPage() {
 
       <div className={styles.card}>
         <h2 className={styles.sectionTitle}>案例队列</h2>
+
+        <div className={styles.filterRow}>
+          <label className={styles.filterField}>
+            <span className={styles.filterLabel}>案例状态</span>
+            <select
+              className={styles.filterSelect}
+              value={queueParams.status ?? ''}
+              onChange={(event) => updateParams({ status: event.target.value || null, offset: 0 })}
+            >
+              <option value="">全部</option>
+              {CASE_STATUS_VALUES.map((value) => (
+                <option key={value} value={value}>
+                  {presentCaseStatus(value).label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.filterField}>
+            <span className={styles.filterLabel}>介入等级</span>
+            <select
+              className={styles.filterSelect}
+              value={queueParams.interventionLevel ?? ''}
+              onChange={(event) =>
+                updateParams({ intervention_level: event.target.value || null, offset: 0 })
+              }
+            >
+              <option value="">全部</option>
+              {INTERVENTION_LEVEL_VALUES.map((value) => (
+                <option key={value} value={value}>
+                  {presentInterventionLevel(value).label}
+                </option>
+              ))}
+            </select>
+          </label>
+          {total > 0 && (
+            <div className={styles.paginationRow}>
+              <button
+                type="button"
+                className={styles.pageButton}
+                disabled={prevDisabled}
+                aria-label="上一页"
+                onClick={() => updateParams({ offset: Math.max(0, queueParams.offset - queueParams.limit) })}
+              >
+                <LeftOutlined aria-hidden />
+              </button>
+              <span className={styles.pageText}>
+                第 {queueParams.offset + 1}–{rangeEnd} 个，共 {total} 个
+              </span>
+              <button
+                type="button"
+                className={styles.pageButton}
+                disabled={nextDisabled}
+                aria-label="下一页"
+                onClick={() => updateParams({ offset: queueParams.offset + queueParams.limit })}
+              >
+                <RightOutlined aria-hidden />
+              </button>
+            </div>
+          )}
+        </div>
+
         {queueFailure && (
           <div>
             <ErrorPanel failure={queueFailure} />
@@ -222,7 +257,7 @@ export function BatchPage() {
           </p>
         )}
         {!queueFailure && queue && queue.items.length === 0 && (
-          <p className={styles.body}>暂无案例。</p>
+          <p className={styles.body}>暂无符合条件的案例。</p>
         )}
         {!queueFailure && queue && queue.items.length > 0 && (
           <CaseQueueTable batchId={batchId} items={queue.items} />
