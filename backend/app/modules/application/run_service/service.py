@@ -13,6 +13,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 
 from app.contracts.analysis import (
+    AnalysisErrorCode,
     AnalysisFailure,
     AnalysisRequest,
     AnalysisSuccess,
@@ -25,6 +26,7 @@ from app.contracts.states import (
 )
 from app.modules.application.api.contracts.errors import (
     ApiErrorCode,
+    CaseProcessingErrorCode,
 )
 from app.modules.application.api.contracts.views import BatchWorkspaceView, CaseDetailView
 from app.modules.application.run_service.ports import (
@@ -38,6 +40,18 @@ from app.modules.application.services.query import mapper
 from app.modules.application.services.query.errors import ServiceError
 from app.modules.data.run_store.errors import ActiveRunConflictError
 from app.modules.data.run_store.types import StageResultInput
+
+#: M2 稳定错误码 → M1 对外 processing_error 十类码（规格 12.4）。
+_M2_TO_PROCESSING: dict[AnalysisErrorCode, CaseProcessingErrorCode] = {
+    AnalysisErrorCode.MODEL_TIMEOUT: CaseProcessingErrorCode.MODEL_TIMEOUT,
+    AnalysisErrorCode.MODEL_RATE_LIMITED: CaseProcessingErrorCode.MODEL_RATE_LIMITED,
+    AnalysisErrorCode.MODEL_AUTH_REJECTED: CaseProcessingErrorCode.MODEL_AUTH_FAILED,
+    AnalysisErrorCode.MODEL_OUTPUT_INVALID: CaseProcessingErrorCode.MODEL_RESPONSE_INVALID,
+    AnalysisErrorCode.MODEL_REQUEST_INVALID: CaseProcessingErrorCode.MODEL_RESPONSE_INVALID,
+    AnalysisErrorCode.INPUT_CONTRACT_INVALID: CaseProcessingErrorCode.EVIDENCE_MEDIA_INVALID,
+    AnalysisErrorCode.EVENT_SINK_FAILED: CaseProcessingErrorCode.RESULT_PERSISTENCE_FAILED,
+    AnalysisErrorCode.APP_INTERRUPTED: CaseProcessingErrorCode.APP_INTERRUPTED,
+}
 
 
 def _new_id(prefix: str) -> str:
@@ -191,7 +205,7 @@ class RunService:
             elif isinstance(outcome, AnalysisFailure):
                 self._record_failure(
                     case_run_id,
-                    outcome.error_code.value,
+                    _processing_code(outcome.error_code),
                     outcome.error_stage.value,
                 )
         except ServiceError:
@@ -247,3 +261,10 @@ def _sha256(data: dict) -> str:
     return hashlib.sha256(
         json.dumps(data, ensure_ascii=False, sort_keys=True).encode("utf-8")
     ).hexdigest()
+
+
+def _processing_code(error_code: AnalysisErrorCode) -> str:
+    """把 M2 稳定错误码映射为 M1 对外 processing_error 码（规格 12.4 十类）。"""
+    return _M2_TO_PROCESSING.get(
+        error_code, CaseProcessingErrorCode.UNEXPECTED_PROCESSING_ERROR
+    ).value
