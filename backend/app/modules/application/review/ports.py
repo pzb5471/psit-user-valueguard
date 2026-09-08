@@ -9,6 +9,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Protocol
 
+from app.contracts.states import CaseStatus
 from app.modules.data.queries.views import ReviewResultView as DataReviewResultView
 from app.modules.data.review_store.types import ReviewSubmitInput
 
@@ -23,6 +24,6 @@ class ReviewStorePort(Protocol):
         case_run_id: int,
         review_token: str,
         payload: ReviewSubmitInput,
-        case_status: object = ...,
+        case_status: CaseStatus = CaseStatus.COMPLETED,
         occurred_at: datetime | None = None,
     ) -> DataReviewResultView: ...

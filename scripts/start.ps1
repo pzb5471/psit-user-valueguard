@@ -1,5 +1,17 @@
-﻿# 本机演示启动入口（技术实施规格第 14 节：构建前端、校验配置、取得锁、迁移、恢复并启动）。
-# M3-01 骨架占位：由 M3-08 完成运行目录锁、迁移启动、启动恢复与正常关闭后开放使用。
+# 本机演示启动入口（技术实施规格第 14 节；M3-08）。
+# 仅负责发现项目根与启动 Python 入口；配置、迁移、锁和恢复由 M3 生命周期适配层统一处理。
+[CmdletBinding()]
+param()
+
 $ErrorActionPreference = 'Stop'
-Write-Error 'start.ps1 尚未实现：等待 M3-08（启动恢复与正常关闭）。'
-exit 1
+$repoRoot = Split-Path -Parent $PSScriptRoot
+Push-Location $repoRoot
+try {
+    & uv run python -m app.modules.application.launcher
+    if ($LASTEXITCODE -ne 0) {
+        throw "本机演示启动失败（exit $LASTEXITCODE）。"
+    }
+}
+finally {
+    Pop-Location
+}
