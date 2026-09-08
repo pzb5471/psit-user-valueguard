@@ -22,7 +22,7 @@ from app.modules.data.db.models import Base
 BACKEND_DIR = Path(__file__).resolve().parents[3] / "backend"
 ALEMBIC_INI = BACKEND_DIR / "alembic" / "alembic.ini"
 
-HEAD_REVISION = "dc4c1050e0af"
+HEAD_REVISION = "b6d9f2a7c103"
 
 ENUM_COLUMN_NAMES = {
     "batches": {"status"},

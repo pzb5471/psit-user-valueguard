@@ -9,6 +9,8 @@ ANSWER_LEAKAGE_DETECTED（M1-03 验收：报告不含客户正文）。
 
 from __future__ import annotations
 
+import hashlib
+
 import pytest
 from zip_fixtures import (
     GIF_BYTES,
@@ -155,6 +157,22 @@ def test_duplicate_first_query_rejected(stage) -> None:
     joined = "；".join(_messages(result))
     assert "重复 first_query" in joined
     assert "请问有什么可以帮您" not in joined
+
+
+@pytest.mark.parametrize("secret", ("请联系 13800000000", "请访问 https://example.test/order"))
+def test_unredacted_text_content_rejected(stage, secret: str) -> None:
+    def builder(case_id: str) -> dict:
+        payload = make_case(case_id)
+        payload["evidence"]["text_items"][0]["text"] = secret
+        payload["evidence"]["text_items"][0]["content_hash"] = hashlib.sha256(
+            secret.encode()
+        ).hexdigest()
+        return payload
+
+    result = stage.stage(make_zip(make_entries(case_builder=builder)))
+    assert not result.ok
+    assert ImportRejectionCode.ANSWER_LEAKAGE_DETECTED.value in _codes(result)
+    assert secret not in "；".join(_messages(result))
 
 
 # ---------- 上传大小上限（ADR-0055 占位值可参数化） ----------

@@ -561,7 +561,11 @@ def test_four_outcomes_submit_persist_and_project(harness: _Harness) -> None:
         )
         assert view.outcome == expected
         assert view.created_at == OCCURRED_AT.isoformat()
-        assert view.execution_note == "已生成沟通要点"
+        assert view.execution_note == (
+            "已与客户确认补发时间"
+            if expected == "MODIFIED_AND_APPROVED"
+            else "已生成沟通要点"
+        )
         if expected == "APPROVED":
             assert view.final_intervention_level == "MUST_INTERVENE"
             assert view.final_cause == {
@@ -586,14 +590,9 @@ def test_four_outcomes_submit_persist_and_project(harness: _Harness) -> None:
             ]
             assert view.review_reason == "商品问题明确，建议换货并联系客户"
         else:  # INSUFFICIENT_EVIDENCE
-            assert view.final_intervention_level == "MUST_INTERVENE"
-            assert view.final_cause == {
-                "cause_category": "PRODUCT_ISSUE",
-                "confidence": 0.9,
-            }
-            assert view.final_actions == [
-                {"action_type": "CUSTOMER_CONTACT", "content": "联系客户"}
-            ]
+            assert view.final_intervention_level is None
+            assert view.final_cause is None
+            assert view.final_actions is None
             assert view.review_reason == "图片与订单信息不足以判定责任归属"
         snapshot = harness.case_snapshot(batch_id=batch_id, case_id="demo_case_001")
         assert snapshot["status"] == "COMPLETED"

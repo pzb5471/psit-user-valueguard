@@ -22,7 +22,7 @@
   （规格 12.3：结果被重跑替换后 Token 必须变化）；
 - can_rerun=status∈(PENDING_REVIEW, PROCESSING_ERROR) 且无活动 case_run
   （规格 10.2：PENDING_ANALYSIS 不能走单案例重跑、COMPLETED 不允许重跑）；
-- execution_note 从策略结果约定键 "execution_note" 读取；
+- execution_note 优先读取人工确认记录，缺失时从策略结果约定键回退；
 - has_evidence_conflict/has_insufficient_evidence/has_modality_failure 从
   当前结果的约定布尔键读取，has_modality_failure 额外在证据读取/图片格式
   错误时置真（规格 12.2）；M2-01 冻结结果合同后对齐键名；
@@ -33,6 +33,7 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +42,7 @@ from sqlalchemy.engine import Engine
 from app.contracts.data import CaseInput
 from app.contracts.states import BatchStatus, CaseRunStatus, CaseStatus
 
-from ..db.models import Batch, Case, CaseRun, Evidence, Review, StageResult
+from ..db.models import Batch, Case, CaseRun, Evidence, Review, ReviewOutcome, StageResult
 from ..repositories.case_query_repository import CaseQueryRepository
 from .views import (
     BatchListView,
@@ -201,16 +202,28 @@ def _batch_status(
     return BatchStatus.ANALYZING.value
 
 
-def _scan_flags(value: object, flags: dict[str, bool]) -> None:
-    """递归扫描结果 JSON 中的约定布尔标记键。"""
+def _scan_flags(
+    value: object, flags: dict[str, bool], *, derive_missing: bool = False
+) -> None:
+    """从冻结结果合同结构推导队列标记，并兼容早期布尔夹具。"""
     if isinstance(value, dict):
         for key, child in value.items():
             if key in _FLAG_KEYS and child is True:
                 flags[_FLAG_KEYS[key]] = True
-            _scan_flags(child, flags)
+            if key in {"conflicting_evidence", "conflict_evidence"} and child:
+                flags["conflict"] = True
+            if key == "relationship" and child == "CONFLICTS":
+                flags["conflict"] = True
+            # PerceptionResult 的 missing_evidence 表示该案例无法凭现有证据
+            # 可靠判断；策略阶段的同名早期测试辅助字段不属于冻结合同。
+            if key == "missing_evidence" and child and derive_missing:
+                flags["insufficient"] = True
+            if key == "cause_category" and child == "INSUFFICIENT_EVIDENCE":
+                flags["insufficient"] = True
+            _scan_flags(child, flags, derive_missing=derive_missing)
     elif isinstance(value, list):
         for child in value:
-            _scan_flags(child, flags)
+            _scan_flags(child, flags, derive_missing=derive_missing)
 
 
 def _run_flags(
@@ -219,7 +232,11 @@ def _run_flags(
     """队列标记：当前结果约定键 + 证据/图片类技术失败（规格 12.2）。"""
     flags = {"conflict": False, "insufficient": False, "modality": False}
     for result in results:
-        _scan_flags(result.result_json, flags)
+        _scan_flags(
+            result.result_json,
+            flags,
+            derive_missing=result.stage_name == "perception",
+        )
     if run is not None and run.error_code in _MODALITY_ERROR_CODES:
         flags["modality"] = True
     return flags["conflict"], flags["insufficient"], flags["modality"]
@@ -364,6 +381,11 @@ def _customer_value_summary(case: Case) -> str:
     return f"非高价值客户（{base}）" if base else "非高价值客户"
 
 
+def _iso_utc(value: datetime) -> str:
+    """SQLite 读回时间无 tzinfo 时，按存储约定恢复为 UTC。"""
+    return (value if value.tzinfo is not None else value.replace(tzinfo=UTC)).isoformat()
+
+
 def _review_token(batch_id: str, case_id: str, run: CaseRun) -> str:
     """确定性不透明 review_token：随当前 run_id 变化（规格 12.3；M1-08 同法）。"""
     digest = hashlib.sha256(
@@ -385,20 +407,21 @@ def _review_result(
     )
     final_cause = review.final_cause_json
     final_actions = review.final_actions_json
-    if final_intervention_level is None and strategy is not None:
-        final_intervention_level = strategy.get("intervention_level")
-    if final_cause is None and attribution is not None:
-        final_cause = attribution.get("primary_cause")
-    if final_actions is None and strategy is not None:
-        final_actions = strategy.get("actions")
+    if review.outcome == ReviewOutcome.APPROVED:
+        if final_intervention_level is None and strategy is not None:
+            final_intervention_level = strategy.get("intervention_level")
+        if final_cause is None and attribution is not None:
+            final_cause = attribution.get("primary_cause")
+        if final_actions is None and strategy is not None:
+            final_actions = strategy.get("actions")
     return ReviewResultView(
         outcome=review.outcome.value,
         final_intervention_level=final_intervention_level,
         final_cause=final_cause if isinstance(final_cause, dict) else None,
         final_actions=_requires_list(final_actions),
-        execution_note=_top_level(results, "execution_note"),
+        execution_note=review.execution_note or _top_level(results, "execution_note"),
         review_reason=review.review_reason,
-        created_at=review.created_at.isoformat(),
+        created_at=_iso_utc(review.created_at),
     )
 
 
