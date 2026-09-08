@@ -19,4 +19,6 @@ export const queryKeys = {
       },
     ] as const,
   caseQueueRoot: (batchId: string) => ['batches', batchId, 'cases'] as const,
+  caseDetail: (batchId: string, caseId: string) =>
+    ['batches', batchId, 'cases', caseId] as const,
 }
