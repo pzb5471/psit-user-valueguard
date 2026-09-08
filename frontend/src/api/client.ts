@@ -12,11 +12,16 @@ export function createApiClient(baseUrl?: string) {
   })
 }
 
+/** 默认基址：浏览器与组件测试取同源绝对地址（FastAPI 单机同源提供 /api/v1）；纯 Node 环境无 window，由调用方显式传入。 */
+function defaultBaseUrl(): string {
+  return typeof window === 'undefined' ? '' : window.location.origin
+}
+
 /**
- * 应用客户端：baseUrl 留空使用相对路径，生产由 FastAPI 同源提供 /api/v1；
- * 开发代理在 M4-03 接线时配置。测试通过 createApiClient 注入绝对地址。
+ * 应用客户端：生产由 FastAPI 同源提供 /api/v1；
+ * 测试通过 createApiClient 注入绝对地址。
  */
-export const api = createApiClient()
+export const api = createApiClient(defaultBaseUrl())
 
 /** 组装受控证据图片地址（规格 12.1；只使用公开业务字段，不新增 content_url 字段）。 */
 export function evidenceContentUrl(batchId: string, caseId: string, evidenceId: string): string {
