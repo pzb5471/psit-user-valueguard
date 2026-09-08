@@ -16,6 +16,7 @@ from app.contracts.analysis import (
     AnalysisRequest,
     CaseInputV1Protocol,
 )
+from app.contracts.states import BatchRunStatus, BatchStatus, CaseRunStatus, CaseStatus, TriggerType
 from app.modules.data.queries.views import (
     BatchWorkspaceView as DataBatchWorkspaceView,
 )
@@ -53,7 +54,7 @@ class RunStorePort(Protocol):
         batch_id: str,
         run_id: str,
         total_case_count: int,
-        batch_status: object = ...,
+        batch_status: BatchStatus = BatchStatus.ANALYZING,
         started_at: datetime | None = None,
     ) -> BatchRunView: ...
 
@@ -63,10 +64,10 @@ class RunStorePort(Protocol):
         batch_id: str,
         case_id: str,
         run_id: str,
-        trigger_type: object,
+        trigger_type: TriggerType,
         batch_run_id: str | None = None,
-        case_status: object = ...,
-        run_status: object = ...,
+        case_status: CaseStatus = CaseStatus.ANALYZING,
+        run_status: CaseRunStatus = CaseRunStatus.STARTING,
         started_at: datetime | None = None,
     ) -> CaseRunView: ...
 
@@ -75,7 +76,7 @@ class RunStorePort(Protocol):
         *,
         case_run_id: int,
         stage_name: str,
-        status: object,
+        status: CaseRunStatus,
         occurred_at: datetime | None = None,
     ) -> None: ...
 
@@ -94,8 +95,8 @@ class RunStorePort(Protocol):
         error_code: str,
         error_stage: str,
         error_detail_json: dict | None = None,
-        case_status: object = ...,
-        run_status: object = ...,
+        case_status: CaseStatus = CaseStatus.ANALYZING,
+        run_status: CaseRunStatus = CaseRunStatus.STARTING,
         occurred_at: datetime | None = None,
     ) -> FailureResult: ...
 
@@ -105,13 +106,13 @@ class RunStorePort(Protocol):
         case_run_id: int,
         final_stage: StageResultInput,
         system_intervention_level: str | None = None,
-        case_status: object = ...,
-        run_status: object = ...,
+        case_status: CaseStatus = CaseStatus.ANALYZING,
+        run_status: CaseRunStatus = CaseRunStatus.STARTING,
         occurred_at: datetime | None = None,
     ) -> PublishResult: ...
 
     def finish_batch_run(
-        self, *, batch_run_id: int, status: object, finished_at: datetime | None = None
+        self, *, batch_run_id: int, status: BatchRunStatus, finished_at: datetime | None = None
     ) -> BatchRunView: ...
 
     def recover_interrupted(self, *, now: datetime | None = None) -> RecoverySummary: ...
