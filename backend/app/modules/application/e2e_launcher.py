@@ -27,13 +27,13 @@ from engine_samples import (  # noqa: E402
     strategy_json,
 )
 from fastapi import Response  # noqa: E402
-from fastapi.staticfiles import StaticFiles  # noqa: E402
-from zip_fixtures import JPEG_BYTES, make_entries, make_zip, sha256_bytes  # noqa: E402
+from zip_fixtures import PNG_BYTES, make_entries, make_zip, sha256_bytes  # noqa: E402
 
 from app.modules.analysis.client import GlmResponse, ScriptedGlmClient  # noqa: E402
 from app.modules.application.api.router import create_contract_app  # noqa: E402
 from app.modules.application.config.settings import Settings  # noqa: E402
 from app.modules.application.m2_wiring import build_analysis_engine  # noqa: E402
+from app.modules.application.static_frontend import mount_frontend  # noqa: E402
 from app.modules.application.wiring import build_runtime, build_services  # noqa: E402
 
 BATCH_ID = "batch-demo-0001"
@@ -52,9 +52,9 @@ def _with_image(raw: dict) -> dict:
                 "record_key": "dialog-0001",
                 "field": "image",
             },
-            "content_hash": sha256_bytes(JPEG_BYTES),
-            "asset_relative_path": f"assets/{CASE_ID}/scratch_01.jpg",
-            "media_type": "image/jpeg",
+            "content_hash": sha256_bytes(PNG_BYTES),
+            "asset_relative_path": f"assets/{CASE_ID}/scratch_01.png",
+            "media_type": "image/png",
         }
     ]
     return raw
@@ -65,6 +65,8 @@ def demo_zip_bytes() -> bytes:
         case_ids=(CASE_ID,),
         case_builder=lambda _case_id: _with_image(case_input_raw()),
         manifest_overrides={"batch_id": BATCH_ID, "evidence_count": 4},
+        image_bytes=PNG_BYTES,
+        image_suffix=".png",
     )
     return make_zip(entries)
 
@@ -84,7 +86,7 @@ def _perception_response() -> str:
 
 
 def _resolve_image(_asset: str) -> tuple[str, bytes]:
-    return "image/jpeg", JPEG_BYTES
+    return "image/png", PNG_BYTES
 
 
 def build_app():
@@ -109,9 +111,8 @@ def build_app():
     def get_demo_zip() -> Response:
         return Response(content=demo_zip_bytes(), media_type="application/zip")
 
-    if FRONTEND_DIST.is_dir():
-        # /api 与 /e2e 已先注册，静态兜底不遮蔽接口。
-        app.mount("/", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="frontend")
+    # /api 与 /e2e 已先注册，静态兜底不遮蔽接口。
+    mount_frontend(app, FRONTEND_DIST)
     return app, services, runtime
 
 

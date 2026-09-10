@@ -1,10 +1,10 @@
 // @vitest-environment node
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { createApiClient, evidenceContentUrl } from '../../src/api/client'
 import { toResult } from '../../src/api/errors'
 import { startMsw } from './mswServer'
 
-const server = startMsw()
+startMsw()
 
 /** 测试用绝对地址：Node fetch 无法解析相对 URL，MSW 按路径匹配处理器。 */
 const api = createApiClient('http://psit-mock.local')
@@ -138,7 +138,9 @@ test('接口十：GET /api/v1/health 返回 HealthView', async () => {
 })
 
 test('集中错误层：请求未到达后端时归入 network', async () => {
-  server.close()
+  const fetchFailure = vi
+    .spyOn(globalThis, 'fetch')
+    .mockRejectedValueOnce(new TypeError('simulated network failure'))
   try {
     const result = await toResult(api.GET('/api/v1/health'))
     expect(result.ok).toBe(false)
@@ -147,6 +149,6 @@ test('集中错误层：请求未到达后端时归入 network', async () => {
       expect(result.status).toBe(0)
     }
   } finally {
-    server.listen({ onUnhandledRequest: 'error' })
+    fetchFailure.mockRestore()
   }
 })

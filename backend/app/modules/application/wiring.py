@@ -190,6 +190,8 @@ def build_services(
     analysis_engine: AnalysisEnginePort,
     versions: AnalysisVersionConfig | None = None,
     max_concurrency: int = 2,
+    analysis_available: bool = True,
+    analysis_unavailable_message: str | None = None,
 ) -> RealServices:
     """将真实 M1 端口接入 M3；M2 引擎由 M3-09 注入。"""
     query = M1RunQueryGateway(runtime.query, runtime.run_store)
@@ -198,7 +200,9 @@ def build_services(
             importer=runtime.importer,
             query=runtime.query,
             evidence=runtime.evidence,
-        )
+        ),
+        analysis_available=analysis_available,
+        analysis_unavailable_message=analysis_unavailable_message,
     )
     run = RunService(
         run_store=runtime.run_store,
@@ -206,6 +210,8 @@ def build_services(
         query=query,
         versions=versions or build_versions(),
         max_concurrency=max_concurrency,
+        analysis_available=analysis_available,
+        analysis_unavailable_message=analysis_unavailable_message,
     )
     review = ReviewService(query=query, review_store=runtime.review_store)
     return RealServices(application=application, run=run, review=review)

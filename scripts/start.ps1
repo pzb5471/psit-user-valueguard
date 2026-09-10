@@ -5,13 +5,26 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$previousPythonPath = $env:PYTHONPATH
 Push-Location $repoRoot
 try {
+    & pnpm --dir frontend run build
+    if ($LASTEXITCODE -ne 0) {
+        throw "PSIT frontend build failed (exit $LASTEXITCODE)."
+    }
+
+    $env:PYTHONPATH = Join-Path $repoRoot 'backend'
     & uv run python -m app.modules.application.launcher
     if ($LASTEXITCODE -ne 0) {
-        throw "本机演示启动失败（exit $LASTEXITCODE）。"
+        throw "PSIT demo startup failed (exit $LASTEXITCODE)."
     }
 }
 finally {
+    if ($null -eq $previousPythonPath) {
+        Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:PYTHONPATH = $previousPythonPath
+    }
     Pop-Location
 }

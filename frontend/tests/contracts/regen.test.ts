@@ -56,6 +56,13 @@ test('重新生成无差异（真实文件检查）', async () => {
   expect(result.ok).toBe(true)
 })
 
+test('Windows 换行符不被误判为合同漂移', async () => {
+  const regenerated = await generateTypes()
+  const windowsCheckout = regenerated.replaceAll('\n', '\r\n')
+
+  expect(compareSources(regenerated, windowsCheckout).ok).toBe(true)
+})
+
 test('旧生成物可被检查发现（漂移检测自证）', async () => {
   const regenerated = await generateTypes()
   const committed = readFileSync(GENERATED_URL, 'utf-8')

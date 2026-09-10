@@ -23,6 +23,27 @@ def test_start_batch_run_returns_view(run_store, engine, run_query, service_fact
     assert run_store.calls.count("create_batch_run:b1") == 1  # 一个活动批次
 
 
+def test_unavailable_analysis_rejects_start_without_writes(
+    run_store, engine, run_query, service_factory
+) -> None:
+    run_query.workspace = make_workspace("b1", case_count=1)
+    service = service_factory(
+        analysis_available=False,
+        analysis_unavailable_message="真实分析引擎尚未装配",
+    )
+
+    try:
+        service.start_batch_run("b1")
+        assert False, "应当抛出 ANALYSIS_UNAVAILABLE"
+    except ServiceError as error:
+        assert error.code == ApiErrorCode.ANALYSIS_UNAVAILABLE
+        assert error.message == "真实分析引擎尚未装配"
+        assert run_store.calls == []
+        assert engine.requests == []
+    finally:
+        service.close()
+
+
 def test_start_creates_one_case_run_per_case(run_store, engine, run_query, service_factory) -> None:
     run_query.queue = make_queue("b1", case_ids=["c1", "c2", "c3"])
     run_query.workspace = make_workspace("b1", case_count=3)

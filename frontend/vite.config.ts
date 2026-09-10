@@ -22,6 +22,6 @@ export default defineConfig({
       },
     },
     // Playwright 浏览器旅程由 test:e2e 单独运行，排除出 vitest（jsdom 无法执行）。
-    exclude: ['tests/e2e-msw/**', 'node_modules/**', 'dist/**'],
+    exclude: ['tests/e2e-msw/**', 'tests/e2e-real/**', 'node_modules/**', 'dist/**'],
   },
 })

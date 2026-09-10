@@ -67,8 +67,28 @@ class ImportOutcome:
 class ApplicationServices:
     """M3 面向 M1 端口的数据服务；以显式端口注入构造（无可变全局装配）。"""
 
-    def __init__(self, ports: M1Ports) -> None:
+    def __init__(
+        self,
+        ports: M1Ports,
+        *,
+        analysis_available: bool = True,
+        analysis_unavailable_message: str | None = None,
+    ) -> None:
         self.ports = ports
+        self._analysis_available = analysis_available
+        self._analysis_unavailable_message = analysis_unavailable_message
+
+    def _apply_analysis_availability(
+        self, view: BatchWorkspaceView
+    ) -> BatchWorkspaceView:
+        if self._analysis_available:
+            return view
+        return view.model_copy(
+            update={
+                "can_start_analysis": False,
+                "analysis_unavailable_message": self._analysis_unavailable_message,
+            }
+        )
 
     # ---------- 导入 ----------
 
@@ -92,14 +112,23 @@ class ApplicationServices:
         workspace = self.ports.query.get_batch(result.batch_id)
         return ImportOutcome(
             returned_existing=result.returned_existing,
-            workspace=mapper.to_batch_workspace(workspace),
+            workspace=self._apply_analysis_availability(
+                mapper.to_batch_workspace(workspace)
+            ),
         )
 
     # ---------- 查询 ----------
 
     def list_batches(self, *, limit: int, offset: int) -> BatchListView:
-        return mapper.to_batch_list(
+        view = mapper.to_batch_list(
             self.ports.query.list_batches(limit=limit, offset=offset)
+        )
+        return view.model_copy(
+            update={
+                "items": [
+                    self._apply_analysis_availability(item) for item in view.items
+                ]
+            }
         )
 
     def get_batch(self, batch_id: str) -> BatchWorkspaceView:
@@ -112,7 +141,7 @@ class ApplicationServices:
                 object_type="batch",
                 object_id=batch_id,
             ) from None
-        return mapper.to_batch_workspace(view)
+        return self._apply_analysis_availability(mapper.to_batch_workspace(view))
 
     def list_cases(
         self,

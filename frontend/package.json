@@ -11,7 +11,7 @@
     "gen:api": "node scripts/generateApiTypes.mjs",
     "check:api": "node scripts/checkApiTypes.mjs",
     "test": "tsc -b && eslint . && node scripts/checkApiTypes.mjs && vitest run",
-    "test:e2e": "pnpm run build && playwright test"
+    "test:e2e": "pnpm run build && playwright test && playwright test --config playwright.real.config.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.4",

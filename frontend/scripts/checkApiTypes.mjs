@@ -12,13 +12,16 @@ import { generateTypes, GENERATED_URL } from './generateApiTypes.mjs'
  * @returns {{ ok: true } | { ok: false, message: string }}
  */
 export function compareSources(regenerated, committed) {
-  if (regenerated === committed) {
+  // Git 在 Windows 上可能把已跟踪文件检出为 CRLF；换行符不是 API 合同变更。
+  const normalizedRegenerated = regenerated.replaceAll('\r\n', '\n')
+  const normalizedCommitted = committed.replaceAll('\r\n', '\n')
+  if (normalizedRegenerated === normalizedCommitted) {
     return { ok: true }
   }
   let firstDiff = -1
-  const shorter = Math.min(regenerated.length, committed.length)
+  const shorter = Math.min(normalizedRegenerated.length, normalizedCommitted.length)
   for (let i = 0; i <= shorter; i += 1) {
-    if (regenerated[i] !== committed[i]) {
+    if (normalizedRegenerated[i] !== normalizedCommitted[i]) {
       firstDiff = i
       break
     }

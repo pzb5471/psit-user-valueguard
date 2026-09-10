@@ -119,7 +119,7 @@ def _standard_stages(
             "risk_summary": risk_summary,
             "image_observations": [
                 {
-                    "evidence_id": f"ev_image_{case_id}",
+                    "image_evidence_id": f"ev_image_{case_id}",
                     "observable_facts": ["商品外观有划痕"],
                 }
             ],

@@ -69,12 +69,25 @@ class RunService:
         query: RunQueryPort,
         versions: AnalysisVersionConfig,
         max_concurrency: int,
+        analysis_available: bool = True,
+        analysis_unavailable_message: str | None = None,
     ) -> None:
         self._run_store = run_store
         self._engine = analysis_engine
         self._query = query
         self._versions = versions
+        self._analysis_available = analysis_available
+        self._analysis_unavailable_message = analysis_unavailable_message
         self._executor = ThreadPoolExecutor(max_workers=max_concurrency)
+
+    def _require_analysis_available(self) -> None:
+        if self._analysis_available:
+            return
+        raise ServiceError(
+            ApiErrorCode.ANALYSIS_UNAVAILABLE,
+            self._analysis_unavailable_message or "分析服务当前不可用",
+            next_action="完成真实分析引擎装配后重试",
+        )
 
     def close(self) -> None:
         """正常关闭：等待在途案例完成后释放执行器（规格 10.6）。"""
@@ -92,6 +105,8 @@ class RunService:
                 object_type="batch",
                 object_id=batch_id,
             ) from None
+
+        self._require_analysis_available()
 
         # 幂等：批次已在分析中，重复开始返回当前视图（规格 10.1 一个活动批次）。
         if projection.status == BatchStatus.ANALYZING.value:
@@ -143,6 +158,7 @@ class RunService:
                 object_type="case",
                 object_id=case_id,
             ) from None
+        self._require_analysis_available()
         if detail.status in (
             CaseStatus.PENDING_ANALYSIS.value,
             CaseStatus.COMPLETED.value,

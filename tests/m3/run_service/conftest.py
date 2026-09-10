@@ -30,6 +30,8 @@ def build_service(
     run_query: FakeRunQuery,
     *,
     max_concurrency: int = 2,
+    analysis_available: bool = True,
+    analysis_unavailable_message: str | None = None,
 ) -> RunService:
     return RunService(
         run_store=run_store,
@@ -37,6 +39,8 @@ def build_service(
         query=run_query,
         versions=AnalysisVersionConfig(**make_versions()),
         max_concurrency=max_concurrency,
+        analysis_available=analysis_available,
+        analysis_unavailable_message=analysis_unavailable_message,
     )
 
 
