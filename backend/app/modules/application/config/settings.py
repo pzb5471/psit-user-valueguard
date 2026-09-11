@@ -97,6 +97,7 @@ class StorageConfig(_StrictModel):
 class AnalysisConfig(_StrictModel):
     """GLM 连接与响应上限（规格 3.2；最终值由 M2-10 PoC 冻结）。"""
 
+    production_enabled: bool
     connect_timeout_seconds: float = Field(gt=0)
     response_timeout_seconds: float = Field(gt=0)
     max_tokens: int = Field(gt=0)

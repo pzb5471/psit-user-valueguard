@@ -44,6 +44,16 @@ def test_unavailable_analysis_rejects_start_without_writes(
         service.close()
 
 
+def test_interrupting_close_stops_engine_before_waiting_for_workers(
+    engine, service_factory
+) -> None:
+    service = service_factory()
+
+    service.close(interrupt=True)
+
+    assert engine.closed is True
+
+
 def test_start_creates_one_case_run_per_case(run_store, engine, run_query, service_factory) -> None:
     run_query.queue = make_queue("b1", case_ids=["c1", "c2", "c3"])
     run_query.workspace = make_workspace("b1", case_count=3)

@@ -10,9 +10,13 @@
 | DEMO | 10 | `demo_batch_v1.zip` | 规格 5.5 演示批次（含图片案例） |
 | ACCEPTANCE | 5 | `acceptance_batch_v1.zip` | 验收批次（000003/000006/000009/000051/000074） |
 
-重建命令（仓库根目录）：
+推荐重建命令（仓库根目录，会自动发现仓库同级源数据并执行 M1-09）：
 
-    python -m tools.data_preparation --source-root <逻辑源目录>
+    powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\prepare-demo-data.ps1
+
+源数据位于其他目录时：
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\prepare-demo-data.ps1 -SourceRoot <逻辑源目录>
 
 ZIP 结构（规格 5.4）：`manifest.json`、`checksums.json`、`cases/<case_id>.json`、
 `assets/<case_id>/NN.<ext>`（扩展名按图片魔数推导）。结构、泄漏、媒体与清单

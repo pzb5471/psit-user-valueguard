@@ -82,6 +82,7 @@ _REPAIR_NOTE_HEADER = "上次输出未通过严格校验，错误如下："
 _REPAIR_NOTE_TAIL = "请只输出修正后的 JSON 对象，不要输出任何其他内容。"
 
 _ImageResolver = Callable[[str], tuple[str, bytes]]
+_CaseImageResolver = Callable[[CaseInput, str], tuple[str, bytes]]
 _ShutdownRequested = Callable[[], bool]
 
 
@@ -93,6 +94,7 @@ class AnalysisEngine:
         *,
         model_client: AnalysisModelClient,
         image_data_resolver: _ImageResolver,
+        case_image_data_resolver: _CaseImageResolver | None = None,
         action_catalog: ActionCatalogView,
         prompts: dict[AnalysisStage, StagePrompt] | None = None,
         params: GlmCallParams | None = None,
@@ -102,6 +104,7 @@ class AnalysisEngine:
     ) -> None:
         self._model_client = model_client
         self._image_data_resolver = image_data_resolver
+        self._case_image_data_resolver = case_image_data_resolver
         self._action_catalog = action_catalog
         self._prompts: dict[AnalysisStage, StagePrompt] = prompts or {
             stage: load_stage_prompt(stage) for stage in AnalysisStage
@@ -264,9 +267,16 @@ class _StageRunner:
         ):
             return self._sink_failure(stage)
 
+        image_resolver = self._engine._image_data_resolver
+        case_image_resolver = self._engine._case_image_data_resolver
+        if case_image_resolver is not None:
+            def resolve_current_case(path: str) -> tuple[str, bytes]:
+                return case_image_resolver(case, path)
+
+            image_resolver = resolve_current_case
         stage_input = PerceptionStageInput(
             case_input=case,
-            image_data_resolver=self._engine._image_data_resolver,
+            image_data_resolver=image_resolver,
         )
 
         def executor() -> Any:

@@ -15,6 +15,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from app.contracts.analysis import (
+    ActionType,
     AnalysisStage,
     AttributionResult,
     DecisionPackage,
@@ -419,6 +420,22 @@ def _check_action_catalog(
 def _check_minimum_intervention(
     result: DecisionPackage, context: StrategyValidationContext
 ) -> list[StageValidationError]:
+    if (
+        result.intervention_level is not InterventionLevel.NO_IMMEDIATE_INTERVENTION
+        and all(
+            action.action_type is ActionType.NO_ACTION_MONITOR
+            for action in result.actions
+        )
+    ):
+        return [
+            StageValidationError(
+                code=ValidationErrorCode.MINIMUM_INTERVENTION_VIOLATION,
+                stage=AnalysisStage.STRATEGY,
+                field_path="actions",
+                message="建议或必须介入时，动作不能只有 NO_ACTION_MONITOR",
+                repairable=True,
+            )
+        ]
     if result.intervention_level is not InterventionLevel.NO_IMMEDIATE_INTERVENTION:
         return []
     errors: list[StageValidationError] = []
@@ -439,6 +456,19 @@ def _check_minimum_intervention(
                 stage=AnalysisStage.STRATEGY,
                 field_path="intervention_level",
                 message="严重问题存在证据冲突或不足时至少为 SHOULD_INTERVENE，并明确需要人工核验",
+                repairable=True,
+            )
+        )
+    if any(
+        action.action_type is not ActionType.NO_ACTION_MONITOR
+        for action in result.actions
+    ):
+        errors.append(
+            StageValidationError(
+                code=ValidationErrorCode.MINIMUM_INTERVENTION_VIOLATION,
+                stage=AnalysisStage.STRATEGY,
+                field_path="actions",
+                message="NO_IMMEDIATE_INTERVENTION 只能搭配 NO_ACTION_MONITOR",
                 repairable=True,
             )
         )

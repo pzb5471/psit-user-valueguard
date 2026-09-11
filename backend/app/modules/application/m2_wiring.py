@@ -12,6 +12,8 @@ import json
 from collections.abc import Callable
 from pathlib import Path
 
+from app.contracts.data import CaseInput
+from app.modules.analysis.client import GlmCallParams
 from app.modules.analysis.client.client import AnalysisModelClient
 from app.modules.analysis.engine.engine import AnalysisEngine
 from app.modules.analysis.strategy.input_builder import (
@@ -20,6 +22,7 @@ from app.modules.analysis.strategy.input_builder import (
 )
 
 ImageResolver = Callable[[str], tuple[str, bytes]]
+CaseImageResolver = Callable[[CaseInput, str], tuple[str, bytes]]
 
 
 def _missing_image_resolver(_asset_relative_path: str) -> tuple[str, bytes]:
@@ -50,14 +53,18 @@ def build_analysis_engine(
     model_client: AnalysisModelClient,
     *,
     image_data_resolver: ImageResolver | None = None,
+    case_image_data_resolver: CaseImageResolver | None = None,
     connect_timeout_seconds: float = 10.0,
     response_timeout_seconds: float = 300.0,
+    params: GlmCallParams | None = None,
 ) -> AnalysisEngine:
     """构造真实 M2 引擎；图片字节由装配方按 asset_relative_path 提供。"""
     return AnalysisEngine(
         model_client=model_client,
         image_data_resolver=image_data_resolver or _missing_image_resolver,
+        case_image_data_resolver=case_image_data_resolver,
         action_catalog=load_action_catalog(),
         connect_timeout_seconds=connect_timeout_seconds,
         response_timeout_seconds=response_timeout_seconds,
+        params=params,
     )

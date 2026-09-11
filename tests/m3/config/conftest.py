@@ -14,6 +14,7 @@ def base_config() -> dict[str, Any]:
         "frontend": {"dev_port": 5173},
         "storage": {"runtime_dir": "runtime_data"},
         "analysis": {
+            "production_enabled": False,
             "connect_timeout_seconds": 10,
             "response_timeout_seconds": 300,
             "max_tokens": 4096,

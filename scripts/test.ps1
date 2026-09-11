@@ -2,7 +2,7 @@
 #   .\scripts\test.ps1 -Task <Task-ID>          运行单张卡声明的测试
 #   .\scripts\test.ps1 -Module <M1|M2|M3|M4>    合并前运行所属模块
 #   .\scripts\test.ps1                          无参数运行全量确定性测试（M3-09 / M4-09 门槛）
-# 分发注册表：config\test_tasks.json。本入口不调用真实 GLM；M2-10 的 live_glm 验证独立运行。
+# 分发注册表：config\test_tasks.json。仅 M2-10 调用真实 GLM，其余入口均为确定性测试。
 param(
     [string]$Task,
     [ValidateSet('M1', 'M2', 'M3', 'M4')]
@@ -73,7 +73,21 @@ try {
                 }
                 Invoke-Checked 'Ruff' 'uv' @('run', 'ruff', 'check', '.')
                 Invoke-Checked 'Pyright' 'uv' @('run', 'pyright')
-                Invoke-Checked "Pytest（$scopeLabel）" 'uv' $pytestArgs
+                $previousRequireSource = $env:PSIT_REQUIRE_SOURCE_ROOT
+                try {
+                    if ($Task -eq 'M1-09') {
+                        $env:PSIT_REQUIRE_SOURCE_ROOT = '1'
+                    }
+                    Invoke-Checked "Pytest（$scopeLabel）" 'uv' $pytestArgs
+                }
+                finally {
+                    if ($null -eq $previousRequireSource) {
+                        Remove-Item Env:PSIT_REQUIRE_SOURCE_ROOT -ErrorAction SilentlyContinue
+                    }
+                    else {
+                        $env:PSIT_REQUIRE_SOURCE_ROOT = $previousRequireSource
+                    }
+                }
             }
             'frontend' {
                 if (-not (Test-Path 'frontend\package.json')) {
@@ -105,5 +119,6 @@ finally {
     Pop-Location
 }
 
-Write-Host "[PASS] $scopeLabel 确定性测试通过。" -ForegroundColor Green
+$passKind = if ($Task -eq 'M2-10') { '真实模型验证' } else { '确定性测试' }
+Write-Host "[PASS] $scopeLabel 已通过$passKind。" -ForegroundColor Green
 exit 0

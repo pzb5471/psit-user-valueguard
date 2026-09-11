@@ -40,10 +40,15 @@ def register_health(app: FastAPI) -> None:
         gateway: AnalysisHealthPort | None = getattr(app.state, "analysis_health", None)
         if gateway is not None:
             available = gateway.health_check()
-            message = "分析服务健康检查通过" if available else "分析服务健康检查失败"
+            message_reader = getattr(gateway, "health_message", None)
+            default_message = (
+                "分析服务健康检查通过" if available else "分析服务健康检查失败"
+            )
+            custom_message = message_reader() if callable(message_reader) else None
+            message = custom_message if isinstance(custom_message, str) else default_message
         elif settings.zai_api_key is not None:
-            available = True
-            message = "分析服务已配置"
+            available = False
+            message = "已配置 ZAI_API_KEY，但真实分析引擎尚未装配"
         else:
             available = False
             message = "未配置 ZAI_API_KEY，分析不可用；历史结果仍可查看"

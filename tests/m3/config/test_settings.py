@@ -30,6 +30,7 @@ def test_default_toml_matches_spec_3_2_defaults() -> None:
     assert settings.analysis.connect_timeout_seconds == 10
     assert settings.analysis.response_timeout_seconds == 300
     assert settings.analysis.max_tokens == 4096
+    assert settings.analysis.production_enabled is False
     assert settings.retry.max_attempts == 3
     assert settings.executor.case_concurrency == 2
     assert settings.polling.active_batch_interval_seconds == 2

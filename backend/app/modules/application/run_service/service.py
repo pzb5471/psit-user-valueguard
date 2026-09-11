@@ -89,9 +89,14 @@ class RunService:
             next_action="完成真实分析引擎装配后重试",
         )
 
-    def close(self) -> None:
-        """正常关闭：等待在途案例完成后释放执行器（规格 10.6）。"""
-        self._executor.shutdown(wait=True, cancel_futures=False)
+    def close(self, *, interrupt: bool = False) -> None:
+        """关闭执行器；应用退出时阻止新阶段并取消尚未开始的案例。"""
+        if interrupt:
+            self._analysis_available = False
+            close_engine = getattr(self._engine, "close", None)
+            if callable(close_engine):
+                close_engine()
+        self._executor.shutdown(wait=True, cancel_futures=interrupt)
 
     # ---------- 批次开始（规格 10.1/10.3） ----------
 

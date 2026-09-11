@@ -153,6 +153,10 @@ class FakeEngine:
         self.outcomes = outcomes or {}
         self.requests: list[AnalysisRequest] = []
         self.emitted_sinks: list[Any] = []
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
 
     def analyze_case(
         self, request: AnalysisRequest, event_sink

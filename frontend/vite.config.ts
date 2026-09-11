@@ -2,13 +2,15 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+const apiOrigin = process.env.VITE_API_ORIGIN ?? 'http://127.0.0.1:8000'
+
 export default defineConfig({
   plugins: [react()],
   // M4 API 装配层：开发环境下将 /api 与证据图片代理到真实后端（config/default.toml port=8000）。
   // 生产演示由 FastAPI 同源提供前端静态文件与 /api（规格 14），无需代理。
   server: {
     proxy: {
-      '/api': 'http://127.0.0.1:8000',
+      '/api': apiOrigin,
     },
   },
   test: {

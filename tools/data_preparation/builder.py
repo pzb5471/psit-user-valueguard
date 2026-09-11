@@ -20,6 +20,7 @@ runtime_data/mock_dataset_v1/（ADR-0033，不入 Git）。
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from dataclasses import dataclass, field
@@ -130,17 +131,16 @@ def _rfm_profiles_bytes(rfm: RfmResult) -> bytes:
     lines = []
     for customer_id in sorted(rfm.profiles):
         profile = rfm.profiles[customer_id]
+        payload = {
+            "customer_unique_id": customer_id,
+            "recency_days": profile.recency_days,
+            "frequency_orders": profile.frequency_orders,
+            "monetary_total": format(profile.monetary_total, "f"),
+            "is_high_value": profile.is_high_value,
+            "decision_reason": profile.decision_reason(rfm.thresholds),
+        }
         lines.append(
-            json_bytes(
-                {
-                    "customer_unique_id": customer_id,
-                    "recency_days": profile.recency_days,
-                    "frequency_orders": profile.frequency_orders,
-                    "monetary_total": format(profile.monetary_total, "f"),
-                    "is_high_value": profile.is_high_value,
-                    "decision_reason": profile.decision_reason(rfm.thresholds),
-                }
-            )
+            json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
             + b"\n"
         )
     return b"".join(lines)

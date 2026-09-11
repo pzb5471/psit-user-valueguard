@@ -45,6 +45,7 @@ def test_free_port_passes_and_occupied_port_fails_explicitly() -> None:
         with pytest.raises(PortInUseError) as exc_info:
             ensure_port_available("127.0.0.1", occupied_port)
         # ADR 0083：不随机换号，错误指明受控出口。
+        assert str(exc_info.value).startswith("PORT_IN_USE:")
         assert "不随机换号" in str(exc_info.value)
         assert "local.toml" in str(exc_info.value)
 
@@ -102,13 +103,14 @@ def test_fake_health_injection_only_from_test_boundary(
     assert body["analysis_status"] == "UNAVAILABLE"
 
 
-def test_env_key_reports_available_without_fake(
+def test_env_key_without_production_wiring_remains_unavailable(
     base_config: dict[str, Any], monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("ZAI_API_KEY", "test-key-123")
     settings = make_settings(base_config)
     body = TestClient(create_app(settings)).get("/api/v1/health").json()
-    assert body["analysis_status"] == "AVAILABLE"
+    assert body["analysis_status"] == "UNAVAILABLE"
+    assert "尚未装配" in body["message"]
 
 
 def test_local_toml_port_flows_into_settings(

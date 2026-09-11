@@ -33,7 +33,7 @@ def ensure_port_available(host: str, port: int) -> None:
             probe.bind((host, port))
         except OSError as error:
             raise PortInUseError(
-                f"端口 {host}:{port} 已被占用；按 ADR 0083 不随机换号，"
+                f"PORT_IN_USE: 端口 {host}:{port} 已被占用；按 ADR 0083 不随机换号，"
                 "请在不入 Git 的 config/local.toml 中显式更换端口。"
             ) from error
 
