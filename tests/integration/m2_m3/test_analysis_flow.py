@@ -26,7 +26,7 @@ from app.modules.application.m2_wiring import build_analysis_engine
 from app.modules.application.services.query.errors import ServiceError
 from app.modules.application.wiring import build_runtime, build_services
 
-BATCH_ID = "batch-demo-0001"
+BATCH_ID = "batch-mvp-0001"
 CASE_ID = "case-0001"
 EVIDENCE_COUNT = 4  # msg-0001/0002 + beh-0001 + img-0001
 
@@ -73,7 +73,7 @@ def _with_image(raw: dict) -> dict:
     return raw
 
 
-def import_demo_zip(runtime) -> str:
+def import_mvp_zip(runtime) -> str:
     entries = make_entries(
         case_ids=(CASE_ID,),
         case_builder=lambda _cid: _with_image(case_input_raw()),
@@ -81,7 +81,7 @@ def import_demo_zip(runtime) -> str:
     )
     package = make_zip(entries)
     result = runtime.importer.import_zip(
-        package, source_filename="demo.zip", content_length=len(package)
+        package, source_filename="mvp.zip", content_length=len(package)
     )
     assert result.ok, result.rejections
     assert result.batch_id is not None
@@ -98,7 +98,7 @@ def runtime(tmp_path: Path):
 
 
 def test_import_analyze_review_full_flow(runtime) -> None:
-    batch_id = import_demo_zip(runtime)
+    batch_id = import_mvp_zip(runtime)
     scripted = ScriptedGlmClient(
         [
             GlmResponse(content=perception_response()),
@@ -141,7 +141,7 @@ def test_import_analyze_review_full_flow(runtime) -> None:
 
 
 def test_model_failure_maps_to_processing_error(runtime) -> None:
-    batch_id = import_demo_zip(runtime)
+    batch_id = import_mvp_zip(runtime)
     scripted = ScriptedGlmClient(
         [
             GlmClientError(AnalysisErrorCode.MODEL_TIMEOUT, "超时"),
@@ -169,7 +169,7 @@ def test_model_failure_maps_to_processing_error(runtime) -> None:
 
 
 def test_failed_case_rerun_succeeds(runtime) -> None:
-    batch_id = import_demo_zip(runtime)
+    batch_id = import_mvp_zip(runtime)
     fail_engine = build_analysis_engine(
         ScriptedGlmClient(
             [
@@ -209,7 +209,7 @@ def test_failed_case_rerun_succeeds(runtime) -> None:
 
 
 def test_completed_case_rejects_review_and_rerun(runtime) -> None:
-    batch_id = import_demo_zip(runtime)
+    batch_id = import_mvp_zip(runtime)
     engine = build_analysis_engine(
         ScriptedGlmClient(
             [
@@ -243,7 +243,7 @@ def test_completed_case_rejects_review_and_rerun(runtime) -> None:
 
 
 def test_recovery_after_interrupted_run_zero_model_calls(runtime) -> None:
-    batch_id = import_demo_zip(runtime)
+    batch_id = import_mvp_zip(runtime)
     calls: list = []
 
     class CountingClient:

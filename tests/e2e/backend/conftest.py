@@ -16,7 +16,7 @@ from app.modules.analysis.client import GlmResponse, ScriptedGlmClient
 from app.modules.application.m2_wiring import build_analysis_engine
 from app.modules.application.wiring import build_runtime, build_services
 
-BATCH_ID = "batch-demo-0001"
+BATCH_ID = "batch-mvp-0001"
 CASE_ID = "case-0001"
 _JPEG = JPEG_BYTES
 _PNG_HASH = sha256_bytes(JPEG_BYTES)

@@ -365,9 +365,28 @@ class TestActionCatalogAndFloor:
         assert not outcome.ok
         assert ValidationErrorCode.MINIMUM_INTERVENTION_VIOLATION in error_codes(outcome)
 
+    def test_intervention_level_cannot_conflict_with_no_action_only(self) -> None:
+        raw = strategy_raw(
+            intervention_level="SHOULD_INTERVENE",
+            actions=[strategy_action_raw(action_type="NO_ACTION_MONITOR")],
+        )
+
+        outcome = validate_stage_result(
+            AnalysisStage.STRATEGY,
+            to_raw_json(raw),
+            strategy_context(
+                severe_unresolved_present=False,
+                evidence_conflict_or_insufficient=False,
+            ),
+        )
+
+        assert not outcome.ok
+        assert ValidationErrorCode.MINIMUM_INTERVENTION_VIOLATION in error_codes(outcome)
+
     def test_no_intervention_allowed_without_severe_or_conflict(self) -> None:
         raw = strategy_raw(
-            intervention_level=InterventionLevel.NO_IMMEDIATE_INTERVENTION.value
+            intervention_level=InterventionLevel.NO_IMMEDIATE_INTERVENTION.value,
+            actions=[strategy_action_raw(action_type="NO_ACTION_MONITOR")],
         )
 
         outcome = validate_stage_result(
@@ -379,6 +398,23 @@ class TestActionCatalogAndFloor:
         )
 
         assert outcome.ok
+
+    def test_no_intervention_cannot_include_active_action(self) -> None:
+        raw = strategy_raw(
+            intervention_level=InterventionLevel.NO_IMMEDIATE_INTERVENTION.value
+        )
+
+        outcome = validate_stage_result(
+            AnalysisStage.STRATEGY,
+            to_raw_json(raw),
+            strategy_context(
+                severe_unresolved_present=False,
+                evidence_conflict_or_insufficient=False,
+            ),
+        )
+
+        assert not outcome.ok
+        assert ValidationErrorCode.MINIMUM_INTERVENTION_VIOLATION in error_codes(outcome)
 
 
 class TestPerceptionCitedDerivation:

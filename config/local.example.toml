@@ -1,0 +1,8 @@
+# Copy to config/local.toml for machine-specific, non-secret overrides.
+# Keep ZAI_API_KEY in the environment; never write it here.
+
+[http]
+port = 8001
+
+[frontend]
+dev_port = 5174

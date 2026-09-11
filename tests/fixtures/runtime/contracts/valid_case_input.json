@@ -1,12 +1,12 @@
 {
   "schema_version": "case_input.v1",
   "data_version": "mock_dataset_v1",
-  "batch_id": "demo_batch_v1",
-  "case_id": "demo_case_001",
+  "batch_id": "mvp_batch_v1",
+  "case_id": "mvp_case_001",
   "data_identity": "simulated",
   "primary_order": {
     "source_order_id": "29b3f3f3f8b74d5f9a4d9f2b0e0e4b72",
-    "order_display_id": "ORD-DEMO-000001",
+    "order_display_id": "ORD-MVP-000001",
     "order_status": "delivered",
     "order_purchase_timestamp": "2018-03-12T09:24:00",
     "payment_total": "918.16",
@@ -16,7 +16,7 @@
     "order_estimated_delivery_date": "2018-03-20T23:59:59"
   },
   "customer": {
-    "customer_ref": "CUST-DEMO-000001"
+    "customer_ref": "CUST-MVP-000001"
   },
   "customer_value": {
     "is_high_value": true,
@@ -80,7 +80,7 @@
           "field": "image_paths"
         },
         "content_hash": "782da515ca02b373d6b21ccf3ea8d6dfa0c843ba7d9096238dacd20703c7699f",
-        "asset_relative_path": "assets/demo_case_001/scratch_01.jpg",
+        "asset_relative_path": "assets/mvp_case_001/scratch_01.jpg",
         "media_type": "image/jpeg"
       }
     ],

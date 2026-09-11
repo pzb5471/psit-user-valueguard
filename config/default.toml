@@ -15,7 +15,9 @@ dev_port = 5173
 runtime_dir = "runtime_data"
 
 [analysis]
-# GLM 连接与响应上限（规格 3.2）；最终值由 M2-10 PoC 冻结。
+# GLM 连接与响应上限（规格 3.2）；2026-09-11 自动 PoC 已选定 high + 并发 2。
+# 15 案例自动结构门和项目负责人多轮演示验收已通过，默认启用真实分析。
+production_enabled = true
 connect_timeout_seconds = 10
 response_timeout_seconds = 300
 max_tokens = 4096
@@ -24,7 +26,7 @@ max_tokens = 4096
 max_attempts = 3
 
 [executor]
-# 案例并发，规格 3.2 允许 1—3，最终值由 PoC 决定。
+# 案例并发，规格 3.2 允许 1—3；真实 PoC 对照后正式值为 2。
 case_concurrency = 2
 
 [polling]

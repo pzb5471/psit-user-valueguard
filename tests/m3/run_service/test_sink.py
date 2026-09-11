@@ -68,21 +68,26 @@ def test_events_forward_in_order(run_store: FakeRunStore) -> None:
     ]
 
 
-def test_model_attempt_sets_stable_call_id(run_store: FakeRunStore) -> None:
-    sink = RunStoreEventSink(run_store, 1)
-    sink.emit(
-        ModelAttemptFinishedEvent(
-            event_type="MODEL_ATTEMPT_FINISHED",
-            stage=AnalysisStage.STRATEGY,
-            attempt_no=2,
-            model_name="glm-5.3-flash",
-            prompt_version="v1",
-            status="SUCCEEDED",
-            started_at=_now(),
-            finished_at=_now(),
-            request_manifest={},
-            response_json={"ok": True},
-        )
+def test_model_attempt_call_id_is_stable_per_run_and_unique_across_runs(
+    run_store: FakeRunStore,
+) -> None:
+    event = ModelAttemptFinishedEvent(
+        event_type="MODEL_ATTEMPT_FINISHED",
+        stage=AnalysisStage.STRATEGY,
+        attempt_no=2,
+        model_name="glm-5.3-flash",
+        prompt_version="v1",
+        status="SUCCEEDED",
+        started_at=_now(),
+        finished_at=_now(),
+        request_manifest={},
+        response_json={"ok": True},
     )
-    # 事件转发不重复触发；稳定性通过 call_id 幂等由 M1 保证
-    assert "model_attempt:1" in run_store.calls
+
+    RunStoreEventSink(run_store, 1).emit(event)
+    RunStoreEventSink(run_store, 1).emit(event)
+    RunStoreEventSink(run_store, 2).emit(event)
+
+    call_ids = [attempt.call_id for _, attempt in run_store.model_attempts]
+    assert call_ids[0] == call_ids[1]
+    assert call_ids[0] != call_ids[2]

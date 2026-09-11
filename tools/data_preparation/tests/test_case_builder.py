@@ -152,14 +152,14 @@ def test_build_image_items_infers_extension_and_hash(tmp_path) -> None:
         source_root=tmp_path,
         task_id="t1",
         image_paths=["pic.dat"],
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
     )
     assert len(items) == 1
     item = items[0]
-    assert item["asset_relative_path"] == "assets/demo_case_001/01.png"
+    assert item["asset_relative_path"] == "assets/mvp_case_001/01.png"
     assert item["media_type"] == "image/png"
     assert item["content_hash"] == sha256_bytes(png)
-    assert assets == {"assets/demo_case_001/01.png": png}
+    assert assets == {"assets/mvp_case_001/01.png": png}
 
 
 def test_build_image_items_unknown_magic_raises(tmp_path) -> None:

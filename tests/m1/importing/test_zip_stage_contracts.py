@@ -54,7 +54,7 @@ def test_manifest_contract_violation_rejected(stage, override: dict) -> None:
 
 def test_case_files_missing_from_zip_rejected(stage) -> None:
     result = stage.stage(
-        make_zip(make_entries(drop=("cases/demo_case_002.json",)))
+        make_zip(make_entries(drop=("cases/mvp_case_002.json",)))
     )
     assert not result.ok
     assert any(r.stage == ImportStage.MANIFEST for r in result.rejections)
@@ -68,7 +68,7 @@ def test_case_file_not_listed_in_manifest_rejected(stage) -> None:
 
 
 def test_over_twenty_cases_rejected(stage) -> None:
-    case_ids = tuple(f"demo_case_{i:03d}" for i in range(1, 22))
+    case_ids = tuple(f"mvp_case_{i:03d}" for i in range(1, 22))
     result = stage.stage(make_zip(make_entries(case_ids=case_ids)))
     assert not result.ok
     assert ImportRejectionCode.INVALID_ZIP.value in _codes(result)
@@ -76,7 +76,7 @@ def test_over_twenty_cases_rejected(stage) -> None:
 
 
 def test_twenty_one_files_with_short_manifest_rejected(stage) -> None:
-    case_ids = tuple(f"demo_case_{i:03d}" for i in range(1, 22))
+    case_ids = tuple(f"mvp_case_{i:03d}" for i in range(1, 22))
     extra = {
         f"cases/{case_id}.json": json_bytes(make_case(case_id))
         for case_id in case_ids
@@ -88,14 +88,14 @@ def test_twenty_one_files_with_short_manifest_rejected(stage) -> None:
 
 def test_wrong_checksum_rejected(stage) -> None:
     entries = make_entries()
-    entries["cases/demo_case_001.json"] = entries["cases/demo_case_001.json"] + b" "
+    entries["cases/mvp_case_001.json"] = entries["cases/mvp_case_001.json"] + b" "
     result = stage.stage(make_zip(entries))
     assert not result.ok
     assert any(
         r.stage == ImportStage.CHECKSUMS and r.code == ImportRejectionCode.INVALID_ZIP
         for r in result.rejections
     )
-    assert any(r.object_id == "cases/demo_case_001.json" for r in result.rejections)
+    assert any(r.object_id == "cases/mvp_case_001.json" for r in result.rejections)
 
 
 def test_checksums_missing_key_rejected(stage) -> None:
@@ -130,7 +130,7 @@ def test_checksums_self_entry_rejected(stage) -> None:
 
 def test_invalid_case_json_rejected(stage) -> None:
     entries = make_entries()
-    entries["cases/demo_case_001.json"] = b"not json"
+    entries["cases/mvp_case_001.json"] = b"not json"
     result = stage.stage(make_zip(entries))
     assert not result.ok
     assert any(
@@ -170,8 +170,8 @@ def test_case_contract_violation_rejected(stage, loc: tuple, value: object) -> N
 
 def test_duplicate_case_id_rejected(stage) -> None:
     def same_id(file_case_id: str) -> dict:
-        # 两个文件共用 demo_case_001，但保留各自资产路径，避免文件清单先行拒绝。
-        payload = make_case("demo_case_001")
+        # 两个文件共用 mvp_case_001，但保留各自资产路径，避免文件清单先行拒绝。
+        payload = make_case("mvp_case_001")
         payload["evidence"]["image_items"][0]["asset_relative_path"] = (
             f"assets/{file_case_id}/scratch_01.jpg"
         )
@@ -237,7 +237,7 @@ def test_unreferenced_asset_rejected(stage) -> None:
 
 def test_referenced_asset_missing_rejected(stage) -> None:
     result = stage.stage(
-        make_zip(make_entries(drop=("assets/demo_case_002/scratch_01.jpg",)))
+        make_zip(make_entries(drop=("assets/mvp_case_002/scratch_01.jpg",)))
     )
     assert not result.ok
     assert any(
@@ -253,7 +253,7 @@ def test_image_evidence_hash_mismatch_rejected(stage) -> None:
     assert not result.ok
     assert ImportRejectionCode.INVALID_ZIP.value in _codes(result)
     assert any(
-        r.object_id == "assets/demo_case_001/scratch_01.jpg"
+        r.object_id == "assets/mvp_case_001/scratch_01.jpg"
         and r.stage == ImportStage.RELATIONSHIP
         for r in result.rejections
     )

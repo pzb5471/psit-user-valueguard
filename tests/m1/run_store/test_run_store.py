@@ -84,7 +84,7 @@ def _import_batch(
     gateway,
     *,
     batch_id: str,
-    case_ids: tuple[str, ...] = ("demo_case_001", "demo_case_002"),
+    case_ids: tuple[str, ...] = ("mvp_case_001", "mvp_case_002"),
     source_filename: str = "upload.zip",
 ) -> str:
     """导入一个由 zip_fixtures 构造的完整标准 ZIP，返回 batch_id。"""
@@ -116,7 +116,7 @@ def _case_row(session: Session, *, batch_id: str, case_id: str) -> Case:
     return case
 
 
-def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, Any]]:
+def _standard_stages(*, case_id: str = "mvp_case_001") -> dict[str, dict[str, Any]]:
     """生成 perception/attribution/strategy 三个标准阶段结果（约定键）。"""
     return {
         "perception": {
@@ -150,7 +150,7 @@ def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, A
 def _stage_input(
     stage_name: str,
     *,
-    case_id: str = "demo_case_001",
+    case_id: str = "mvp_case_001",
     result_json: dict[str, Any] | None = None,
 ) -> StageResultInput:
     """构造一份标准阶段结果输入；sha256 与实际 JSON 内容自洽。"""
@@ -200,7 +200,7 @@ def test_record_stage_events_persist_and_idempotent(
     )
     case_run = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="evt-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id=batch_view.run_id,
@@ -261,14 +261,14 @@ def test_active_run_uniqueness_and_idempotent_create(
 
     case_run = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="uniq-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id="uniq-batch-1",
     )
     again = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="uniq-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id="uniq-batch-1",
@@ -277,7 +277,7 @@ def test_active_run_uniqueness_and_idempotent_create(
     with pytest.raises(ActiveRunConflictError) as err:
         run_store.create_case_run(
             batch_id=batch_id,
-            case_id="demo_case_001",
+            case_id="mvp_case_001",
             run_id="uniq-cr-2",
             trigger_type=TriggerType.BATCH,
             batch_run_id="uniq-batch-1",
@@ -285,7 +285,7 @@ def test_active_run_uniqueness_and_idempotent_create(
     assert err.value.code == "ACTIVE_RUN_CONFLICT"
     assert err.value.object_type == "case"
     with Session(engine) as session:
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         rows = list(
             session.scalars(select(CaseRun).where(CaseRun.case_id == case.id))
         )
@@ -297,13 +297,13 @@ def test_active_run_uniqueness_and_idempotent_create(
 def test_publish_incomplete_package_rolls_back(
     run_store: RunStore, gateway, engine: Engine
 ) -> None:
-    batch_id = _import_batch(gateway, batch_id="rb1", case_ids=("demo_case_001",))
+    batch_id = _import_batch(gateway, batch_id="rb1", case_ids=("mvp_case_001",))
     batch_view = run_store.create_batch_run(
         batch_id=batch_id, run_id="rb1-batch-1", total_case_count=1
     )
     case_run = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rb1-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id=batch_view.run_id,
@@ -322,7 +322,7 @@ def test_publish_incomplete_package_rolls_back(
         assert run_row is not None
         assert run_row.status == CaseRunStatus.STARTING
         assert run_row.finished_at is None
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.status == CaseStatus.ANALYZING
         assert case.current_case_run_id == case_run.id
         results = list(
@@ -342,13 +342,13 @@ def test_publish_incomplete_package_rolls_back(
 def test_stage_result_conflict_rolls_back(
     run_store: RunStore, gateway, engine: Engine
 ) -> None:
-    batch_id = _import_batch(gateway, batch_id="rb2", case_ids=("demo_case_001",))
+    batch_id = _import_batch(gateway, batch_id="rb2", case_ids=("mvp_case_001",))
     batch_view = run_store.create_batch_run(
         batch_id=batch_id, run_id="rb2-batch-1", total_case_count=1
     )
     case_run = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rb2-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id=batch_view.run_id,
@@ -369,7 +369,7 @@ def test_stage_result_conflict_rolls_back(
         assert run_row is not None
         assert run_row.status == CaseRunStatus.STARTING
         assert run_row.finished_at is None
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.status == CaseStatus.ANALYZING
         results = list(
             session.scalars(
@@ -390,7 +390,7 @@ def test_publish_complete_result_atomic(
         batch_id=batch_id, run_id="pub-batch-1", total_case_count=2
     )
     runs = []
-    for case_id in ("demo_case_001", "demo_case_002"):
+    for case_id in ("mvp_case_001", "mvp_case_002"):
         case_run = run_store.create_case_run(
             batch_id=batch_id,
             case_id=case_id,
@@ -407,7 +407,7 @@ def test_publish_complete_result_atomic(
             )
     result = run_store.publish_complete_result(
         case_run_id=runs[0].id,
-        final_stage=_stage_input("strategy", case_id="demo_case_001"),
+        final_stage=_stage_input("strategy", case_id="mvp_case_001"),
         system_intervention_level="MUST_INTERVENE",
     )
     assert result.batch_status == BatchStatus.ANALYZING  # 案例二仍 ANALYZING
@@ -415,7 +415,7 @@ def test_publish_complete_result_atomic(
 
     result = run_store.publish_complete_result(
         case_run_id=runs[1].id,
-        final_stage=_stage_input("strategy", case_id="demo_case_002"),
+        final_stage=_stage_input("strategy", case_id="mvp_case_002"),
         system_intervention_level="SHOULD_INTERVENE",
     )
     assert result.batch_status == BatchStatus.COMPLETED
@@ -423,7 +423,7 @@ def test_publish_complete_result_atomic(
     assert result.error_count == 0
     again = run_store.publish_complete_result(
         case_run_id=runs[1].id,
-        final_stage=_stage_input("strategy", case_id="demo_case_002"),
+        final_stage=_stage_input("strategy", case_id="mvp_case_002"),
         system_intervention_level="SHOULD_INTERVENE",
     )
     assert again.analysis_succeeded_count == 2  # 幂等重入不重复计数
@@ -438,9 +438,9 @@ def test_publish_complete_result_atomic(
             case = _case_row(session, batch_id=batch_id, case_id=case_run.case_id)
             assert case.status == CaseStatus.PENDING_REVIEW
             assert case.current_case_run_id == case_run.id
-        case1 = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case1 = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case1.system_intervention_level == InterventionLevel.MUST_INTERVENE
-        case2 = _case_row(session, batch_id=batch_id, case_id="demo_case_002")
+        case2 = _case_row(session, batch_id=batch_id, case_id="mvp_case_002")
         assert case2.system_intervention_level == InterventionLevel.SHOULD_INTERVENE
         batch = _batch_row(session, batch_id=batch_id)
         assert batch.status == BatchStatus.COMPLETED
@@ -459,13 +459,13 @@ def test_publish_complete_result_atomic(
 def test_record_failure_updates_projection_and_counts(
     run_store: RunStore, gateway, engine: Engine
 ) -> None:
-    batch_id = _import_batch(gateway, batch_id="fail", case_ids=("demo_case_001",))
+    batch_id = _import_batch(gateway, batch_id="fail", case_ids=("mvp_case_001",))
     batch_view = run_store.create_batch_run(
         batch_id=batch_id, run_id="fail-batch-1", total_case_count=1
     )
     case_run = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="fail-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id=batch_view.run_id,
@@ -489,7 +489,7 @@ def test_record_failure_updates_projection_and_counts(
         assert run_row.error_stage == "attribution"
         assert run_row.error_detail_json == {"trace_id": "tr-fail"}
         assert run_row.finished_at is not None
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.status == CaseStatus.PROCESSING_ERROR
         batch_run = session.scalar(
             select(BatchRun).where(BatchRun.run_id == "fail-batch-1")
@@ -507,14 +507,14 @@ def test_recover_interrupted_marks_and_preserves_history(
     run_store.create_batch_run(batch_id=batch_id, run_id="rcv-batch-1", total_case_count=2)
     case_run_1 = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rcv-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id="rcv-batch-1",
     )
     case_run_2 = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_002",
+        case_id="mvp_case_002",
         run_id="rcv-cr-2",
         trigger_type=TriggerType.BATCH,
         batch_run_id="rcv-batch-1",
@@ -545,7 +545,7 @@ def test_recover_interrupted_marks_and_preserves_history(
         run_row_2 = session.get(CaseRun, case_run_2.id)
         assert run_row_2 is not None
         assert run_row_2.status == CaseRunStatus.INTERRUPTED
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.status == CaseStatus.PROCESSING_ERROR
         batch = _batch_row(session, batch_id=batch_id)
         assert batch.status == BatchStatus.COMPLETED_WITH_ERRORS
@@ -559,7 +559,7 @@ def test_recover_interrupted_marks_and_preserves_history(
 
     batch_history = run_store.batch_run_history(batch_id)
     assert [h.run_id for h in batch_history] == ["rcv-batch-1"]
-    case_history = run_store.case_run_history(batch_id, "demo_case_001")
+    case_history = run_store.case_run_history(batch_id, "mvp_case_001")
     assert [h.run_id for h in case_history] == ["rcv-cr-1"]
 
 
@@ -568,13 +568,13 @@ def test_recover_interrupted_marks_and_preserves_history(
 def test_manual_rerun_keeps_batch_history_and_counts(
     run_store: RunStore, gateway, engine: Engine
 ) -> None:
-    batch_id = _import_batch(gateway, batch_id="rr", case_ids=("demo_case_001",))
+    batch_id = _import_batch(gateway, batch_id="rr", case_ids=("mvp_case_001",))
     batch_view = run_store.create_batch_run(
         batch_id=batch_id, run_id="rr-batch-1", total_case_count=1
     )
     case_run_1 = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rr-cr-1",
         trigger_type=TriggerType.BATCH,
         batch_run_id=batch_view.run_id,
@@ -582,11 +582,11 @@ def test_manual_rerun_keeps_batch_history_and_counts(
     for stage_name in COMPLETE_PACKAGE_STAGES:
         run_store.record_stage_result(
             case_run_id=case_run_1.id,
-            stage=_stage_input(stage_name, case_id="demo_case_001"),
+            stage=_stage_input(stage_name, case_id="mvp_case_001"),
         )
     run_store.publish_complete_result(
         case_run_id=case_run_1.id,
-        final_stage=_stage_input("strategy", case_id="demo_case_001"),
+        final_stage=_stage_input("strategy", case_id="mvp_case_001"),
         system_intervention_level="MUST_INTERVENE",
     )
     finished = run_store.finish_batch_run(
@@ -598,7 +598,7 @@ def test_manual_rerun_keeps_batch_history_and_counts(
 
     case_run_2 = run_store.create_case_run(
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rr-cr-2",
         trigger_type=TriggerType.MANUAL_RERUN,
     )
@@ -607,7 +607,7 @@ def test_manual_rerun_keeps_batch_history_and_counts(
     with pytest.raises(ValueError):
         run_store.create_case_run(
             batch_id=batch_id,
-            case_id="demo_case_001",
+            case_id="mvp_case_001",
             run_id="rr-cr-3",
             trigger_type=TriggerType.MANUAL_RERUN,
             batch_run_id="rr-batch-1",
@@ -640,6 +640,6 @@ def test_manual_rerun_keeps_batch_history_and_counts(
 
     batch_history = run_store.batch_run_history(batch_id)
     assert [h.run_id for h in batch_history] == ["rr-batch-1"]
-    case_history = run_store.case_run_history(batch_id, "demo_case_001")
+    case_history = run_store.case_run_history(batch_id, "mvp_case_001")
     assert [h.run_id for h in case_history] == ["rr-cr-1", "rr-cr-2"]
 

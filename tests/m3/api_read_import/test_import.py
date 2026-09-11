@@ -11,7 +11,7 @@ def test_new_import_returns_201_and_workspace(client, importer, query) -> None:
     query.batches = [make_workspace("b1", case_count=2, evidence_count=3)]
     response = client.post(
         "/api/v1/batches",
-        files={"file": ("demo.zip", b"zip-content", "application/zip")},
+        files={"file": ("mvp.zip", b"zip-content", "application/zip")},
     )
     assert response.status_code == 201
     body = response.json()
@@ -20,7 +20,7 @@ def test_new_import_returns_201_and_workspace(client, importer, query) -> None:
     assert body["evidence_count"] == 3
     assert body["is_mock"] is True
     assert body["status"] == "PENDING_ANALYSIS"
-    assert importer.calls[0][1] == "demo.zip"
+    assert importer.calls[0][1] == "mvp.zip"
 
 
 def test_duplicate_import_returns_200(client, importer, query) -> None:

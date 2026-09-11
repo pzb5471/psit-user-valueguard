@@ -19,7 +19,7 @@ beforeEach(() => {
 })
 
 /** 与 main.tsx 装配一致：Provider + /batches/:batchId 路由参数。 */
-function renderBatch(batchId = 'batch-demo-001') {
+function renderBatch(batchId = 'batch-mvp-001') {
   return render(
     <QueryClientProvider client={createQueryClient()}>
       <MemoryRouter initialEntries={[`/batches/${batchId}`]}>

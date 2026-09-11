@@ -1,5 +1,7 @@
 # 每阶段最多四次请求，正式参数经 PoC 冻结
 
+> 演讲版 MVP 的双人复核条款已由 ADR 0087 取代；本 ADR 的请求上限、自动 PoC 和参数冻结规则继续有效。
+
 关闭 SDK 自动重试，由 `RunService` 统一控制。连接中断、读取超时、HTTP 429 和 HTTP 5xx 最多重试两次；401、403、请求参数、图片格式、图片大小和输入合同错误不重试。每阶段供应商请求硬上限为四次：首次一次、可重试网络故障最多两次、收到不合格结果后的定向修复最多一次。修复请求本身发生网络错误后不继续重试。
 
 PoC 初始配置为 `stream=false`、`response_format={"type":"json_object"}`、`thinking.type=enabled`、`reasoning_effort=high`、`do_sample=false`、`max_tokens=4096`、连接超时 10 秒、完整响应上限 300 秒、案例并发 2。这些数值只是起跑配置，不是最佳参数或验收结论。

@@ -23,11 +23,11 @@ def runtime(tmp_path: Path):
 
 
 def test_real_zip_import_and_read_back(runtime) -> None:
-    entries = make_entries(case_ids=("demo_case_001",))
+    entries = make_entries(case_ids=("mvp_case_001",))
     package = make_zip(entries)
 
     result = runtime.importer.import_zip(
-        package, source_filename="demo.zip", content_length=len(package)
+        package, source_filename="mvp.zip", content_length=len(package)
     )
     assert result.ok, result.rejections
     assert result.imported is True
@@ -38,7 +38,7 @@ def test_real_zip_import_and_read_back(runtime) -> None:
     assert batches.total == 1
     batch = runtime.query.get_batch(result.batch_id)
     assert batch.batch_id == result.batch_id
-    assert batch.source_filename == "demo.zip"
+    assert batch.source_filename == "mvp.zip"
     assert batch.case_count == 1
     assert batch.evidence_count > 0
 
@@ -51,7 +51,7 @@ def test_real_zip_import_and_read_back(runtime) -> None:
 
 
 def test_duplicate_reimport_is_idempotent(runtime) -> None:
-    entries = make_entries(case_ids=("demo_case_001",))
+    entries = make_entries(case_ids=("mvp_case_001",))
     package = make_zip(entries)
     first = runtime.importer.import_zip(package, source_filename="a.zip")
     assert first.imported is True

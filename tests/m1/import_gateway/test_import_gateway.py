@@ -30,8 +30,8 @@ from app.modules.data.db.models import Batch, Case, DataVersion, Evidence
 from app.modules.data.importing.errors import ImportRejectionCode, ImportStage
 from app.modules.data.importing.gateway import BatchImportGateway
 
-DEMO_BATCH_ID = "demo_batch_v1"
-DEMO_DATA_VERSION = "mock_dataset_v1"
+MVP_BATCH_ID = "mvp_batch_v1"
+MVP_DATA_VERSION = "mock_dataset_v1"
 TRACE = "trace-import"
 
 
@@ -68,8 +68,8 @@ def _counts(engine: Engine) -> tuple[int, int, int, int]:
 
 
 
-def _formal_dir(formal_root: Path, batch_id: str = DEMO_BATCH_ID) -> Path:
-    return formal_root / "batches" / batch_id / DEMO_DATA_VERSION
+def _formal_dir(formal_root: Path, batch_id: str = MVP_BATCH_ID) -> Path:
+    return formal_root / "batches" / batch_id / MVP_DATA_VERSION
 
 
 def _single_rejection(result) -> Any:
@@ -85,14 +85,14 @@ def test_new_package_creates_pending_batch_and_formal_files(
     gateway: BatchImportGateway, engine: Engine, formal_root: Path
 ) -> None:
     raw = make_zip(make_entries())
-    result = gateway.import_zip(raw, source_filename="demo_batch_v1.zip", trace_id=TRACE)
+    result = gateway.import_zip(raw, source_filename="mvp_batch_v1.zip", trace_id=TRACE)
 
     assert result.ok
     assert result.imported and not result.returned_existing
-    assert result.source_filename == "demo_batch_v1.zip"
-    assert result.batch_id == DEMO_BATCH_ID
+    assert result.source_filename == "mvp_batch_v1.zip"
+    assert result.batch_id == MVP_BATCH_ID
     assert result.status == "PENDING_ANALYSIS"
-    assert result.package_type is not None and result.package_type.value == "DEMO"
+    assert result.package_type is not None and result.package_type.value == "MVP"
     assert result.package_sha256 == hashlib.sha256(raw).hexdigest()
     assert result.case_count == 2
     assert result.evidence_count == 14
@@ -101,29 +101,29 @@ def test_new_package_creates_pending_batch_and_formal_files(
     assert result.trace_id == TRACE
 
     assert _counts(engine) == (1, 1, 2, 14)
-    batch = next(row for row in _rows(engine, Batch) if row.batch_id == DEMO_BATCH_ID)
+    batch = next(row for row in _rows(engine, Batch) if row.batch_id == MVP_BATCH_ID)
     assert batch.status.value == "PENDING_ANALYSIS"
     assert batch.analysis_succeeded_count == 0
     assert batch.error_count == 0
     assert batch.case_count == 2
     assert batch.package_sha256 == hashlib.sha256(raw).hexdigest()
-    assert batch.package_relative_path == f"batches/{DEMO_BATCH_ID}/{DEMO_DATA_VERSION}"
+    assert batch.package_relative_path == f"batches/{MVP_BATCH_ID}/{MVP_DATA_VERSION}"
 
     data_version_rows = _rows(engine, DataVersion)
     assert len(data_version_rows) == 1
-    assert data_version_rows[0].data_version == DEMO_DATA_VERSION
+    assert data_version_rows[0].data_version == MVP_DATA_VERSION
 
     cases = _rows(engine, Case)
-    assert {case.case_id for case in cases} == {"demo_case_001", "demo_case_002"}
+    assert {case.case_id for case in cases} == {"mvp_case_001", "mvp_case_002"}
     for case in cases:
-        assert case.customer_display_id == "CUST-DEMO-000001"
+        assert case.customer_display_id == "CUST-MVP-000001"
         assert case.is_high_value is True
         assert case.status.value == "PENDING_ANALYSIS"
 
     evidence = _rows(engine, Evidence)
     assert Counter(row.modality for row in evidence) == {"text": 4, "image": 2, "behavior": 8}
 
-    case_one = next(case for case in cases if case.case_id == "demo_case_001")
+    case_one = next(case for case in cases if case.case_id == "mvp_case_001")
     ev = [row for row in evidence if row.case_id == case_one.id]
     text_rows = [row for row in ev if row.modality == "text"]
     assert {row.sequence_no for row in text_rows} == {1, 2}
@@ -131,7 +131,7 @@ def test_new_package_creates_pending_batch_and_formal_files(
     assert any("收到的商品有划痕" in row.payload_json["text"] for row in text_rows)
     image_rows = [row for row in ev if row.modality == "image"]
     assert len(image_rows) == 1
-    assert image_rows[0].relative_path == "assets/demo_case_001/scratch_01.jpg"
+    assert image_rows[0].relative_path == "assets/mvp_case_001/scratch_01.jpg"
     assert image_rows[0].media_type == "image/jpeg"
     assert image_rows[0].sequence_no == 0
     behavior_rows = [row for row in ev if row.modality == "behavior"]
@@ -146,10 +146,10 @@ def test_new_package_creates_pending_batch_and_formal_files(
     expected_files = {
         "manifest.json",
         "checksums.json",
-        "cases/demo_case_001.json",
-        "cases/demo_case_002.json",
-        "assets/demo_case_001/scratch_01.jpg",
-        "assets/demo_case_002/scratch_01.jpg",
+        "cases/mvp_case_001.json",
+        "cases/mvp_case_002.json",
+        "assets/mvp_case_001/scratch_01.jpg",
+        "assets/mvp_case_002/scratch_01.jpg",
         "source_filename.txt",
     }
     actual_files = {
@@ -159,7 +159,7 @@ def test_new_package_creates_pending_batch_and_formal_files(
     }
     assert actual_files == expected_files
     assert (formal_dir / "source_filename.txt").read_text(encoding="utf-8") == (
-        "demo_batch_v1.zip"
+        "mvp_batch_v1.zip"
     )
 
 
@@ -189,7 +189,7 @@ def test_same_package_returns_existing_batch(
     second = gateway.import_zip(raw, source_filename="second.zip", trace_id="trace-2")
     assert second.ok
     assert second.returned_existing and not second.imported
-    assert second.batch_id == DEMO_BATCH_ID
+    assert second.batch_id == MVP_BATCH_ID
     assert second.package_sha256 == first.package_sha256
     assert second.evidence_count == 14
     assert second.case_count == 2
@@ -216,7 +216,7 @@ def test_concurrent_same_package_keeps_formal_files(
     assert sum(result.returned_existing for result in results) == 1
     formal_dir = _formal_dir(formal_root)
     assert (formal_dir / "manifest.json").is_file()
-    assert (formal_dir / "assets/demo_case_001/scratch_01.jpg").is_file()
+    assert (formal_dir / "assets/mvp_case_001/scratch_01.jpg").is_file()
 
 
 def test_same_data_version_reuses_version_row(
@@ -240,7 +240,7 @@ def test_same_data_version_reuses_version_row(
     assert _counts(engine) == (1, 2, 4, 28)
     data_version_rows = _rows(engine, DataVersion)
     assert len(data_version_rows) == 1
-    assert data_version_rows[0].data_version == DEMO_DATA_VERSION
+    assert data_version_rows[0].data_version == MVP_DATA_VERSION
 
 
 def test_same_batch_id_different_content_conflict(
@@ -263,12 +263,12 @@ def test_same_batch_id_different_content_conflict(
     assert rejection.code == ImportRejectionCode.BATCH_ID_CONFLICT
     assert rejection.stage == ImportStage.IMPORT
     assert rejection.object_type == "batch"
-    assert rejection.object_id == DEMO_BATCH_ID
+    assert rejection.object_id == MVP_BATCH_ID
     assert rejection.trace_id == "trace-conflict"
     assert conflicting.trace_id == "trace-conflict"
 
     assert _counts(engine) == (1, 1, 2, 14)
-    assert sorted(path.name for path in (formal_root / "batches").glob("*")) == [DEMO_BATCH_ID]
+    assert sorted(path.name for path in (formal_root / "batches").glob("*")) == [MVP_BATCH_ID]
 
 
 # ---------- 故障回滚 ----------
@@ -287,7 +287,7 @@ def test_file_write_failure_leaves_no_semifinished_state(
     assert rejection.code == ImportRejectionCode.INTERNAL_ERROR
     assert rejection.stage == ImportStage.IMPORT
     assert rejection.trace_id == "trace-file"
-    assert not (formal_root / "batches" / DEMO_BATCH_ID).exists()
+    assert not (formal_root / "batches" / MVP_BATCH_ID).exists()
     assert _counts(engine) == (0, 0, 0, 0)
 
 
@@ -304,7 +304,7 @@ def test_transaction_failure_rolls_back_workspace(
     assert rejection.code == ImportRejectionCode.INTERNAL_ERROR
     assert rejection.stage == ImportStage.IMPORT
     assert rejection.trace_id == "trace-tx"
-    assert not (formal_root / "batches" / DEMO_BATCH_ID).exists()
+    assert not (formal_root / "batches" / MVP_BATCH_ID).exists()
     assert _counts(engine) == (0, 0, 0, 0)
 
 
@@ -359,8 +359,8 @@ def test_unsafe_dir_component_rejected(
     bad_value: str,
 ) -> None:
     overrides: dict[str, object] = {
-        "batch_id": DEMO_BATCH_ID,
-        "data_version": DEMO_DATA_VERSION,
+        "batch_id": MVP_BATCH_ID,
+        "data_version": MVP_DATA_VERSION,
     }
     overrides[field] = bad_value
     wrapped = (

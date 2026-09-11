@@ -57,7 +57,7 @@ def make_workspace(
 ) -> BatchWorkspaceView:
     return BatchWorkspaceView(
         batch_id=batch_id,
-        source_filename="demo.zip",
+        source_filename="mvp.zip",
         is_mock=True,
         status=status,
         case_count=case_count,
@@ -153,6 +153,10 @@ class FakeEngine:
         self.outcomes = outcomes or {}
         self.requests: list[AnalysisRequest] = []
         self.emitted_sinks: list[Any] = []
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
 
     def analyze_case(
         self, request: AnalysisRequest, event_sink
@@ -171,6 +175,7 @@ class FakeRunStore:
 
     def __init__(self) -> None:
         self.calls: list[str] = []
+        self.model_attempts: list[tuple[int, Any]] = []
         self.case_run_id = 0
         self.reject_start = False
         self.reject_case = False
@@ -217,6 +222,7 @@ class FakeRunStore:
 
     def record_model_attempt(self, *, case_run_id, attempt) -> None:
         self.calls.append(f"model_attempt:{case_run_id}")
+        self.model_attempts.append((case_run_id, attempt))
 
     def record_stage_result(self, *, case_run_id, stage, occurred_at=None) -> None:
         self.calls.append(f"stage_result:{case_run_id}:{stage.stage_name}")

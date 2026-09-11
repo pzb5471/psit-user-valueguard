@@ -77,7 +77,7 @@ def _import_batch(
     gateway,
     *,
     batch_id: str,
-    case_ids: tuple[str, ...] = ("demo_case_001", "demo_case_002"),
+    case_ids: tuple[str, ...] = ("mvp_case_001", "mvp_case_002"),
     source_filename: str = "upload.zip",
 ) -> str:
     """导入一个由 zip_fixtures 构造的完整标准 ZIP，返回 batch_id。"""
@@ -109,7 +109,7 @@ def _case_row(session: Session, *, batch_id: str, case_id: str) -> Case:
     return case
 
 
-def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, Any]]:
+def _standard_stages(*, case_id: str = "mvp_case_001") -> dict[str, dict[str, Any]]:
     """生成 perception/attribution/strategy 三个标准阶段结果（约定键）。"""
     return {
         "perception": {
@@ -143,7 +143,7 @@ def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, A
 def _stage_input(
     stage_name: str,
     *,
-    case_id: str = "demo_case_001",
+    case_id: str = "mvp_case_001",
     result_json: dict[str, Any] | None = None,
 ) -> StageResultInput:
     """构造一份标准阶段结果输入；sha256 与实际 JSON 内容自洽。"""
@@ -201,7 +201,7 @@ def _ready_case(
     gateway,
     run_store: RunStore,
     batch_id: str,
-    case_id: str = "demo_case_001",
+    case_id: str = "mvp_case_001",
 ) -> tuple[int, str]:
     """导入单案例批次、创建首次批次运行并发布完整决策包，返回 (case_run_id, token)。"""
     _import_batch(gateway, batch_id=batch_id, case_ids=(case_id,))
@@ -336,7 +336,7 @@ def test_four_outcomes_submit_persist_and_project(
                 else None
             )
             assert review.created_at.replace(tzinfo=UTC) == OCCURRED_AT
-            case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+            case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
             assert case.status == CaseStatus.COMPLETED
             assert case.current_review_id == review.id
             assert case.system_intervention_level == InterventionLevel.MUST_INTERVENE
@@ -426,7 +426,7 @@ def test_invalid_field_payload_rejected_and_rolled_back(
     assert message_fragment in err.value.message
     with Session(engine) as session:
         assert list(session.scalars(select(Review))) == []
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.status == CaseStatus.PENDING_REVIEW
         assert case.current_review_id is None
         batch = _batch_row(session, batch_id=batch_id)
@@ -482,11 +482,11 @@ def test_rerun_makes_old_token_stale_and_blocks_new_review(
     case_run_2, run_id_2 = _publish_review_ready(
         run_store,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="stale-cr-2",
         batch_run_id=None,
     )
-    token_2 = _review_token(batch_id, "demo_case_001", run_id_2)
+    token_2 = _review_token(batch_id, "mvp_case_001", run_id_2)
     with pytest.raises(StaleCaseResultError) as err_1:
         review_store.submit_review(
             submission_id="stale-sub-2",
@@ -506,7 +506,7 @@ def test_rerun_makes_old_token_stale_and_blocks_new_review(
     with Session(engine) as session:
         rows = list(session.scalars(select(Review)))
         assert len(rows) == 1
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         assert case.current_case_run_id == case_run_2
         assert case.current_review_id is not None
 
@@ -553,7 +553,7 @@ def test_concurrent_race_same_case_yields_already_completed(
         gateway=gateway, run_store=run_store, batch_id=batch_id
     )
     with Session(engine) as session:
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         concurrent = Review(
             review_id="review-race-other",
             submission_id="race-other",
@@ -585,7 +585,7 @@ def test_concurrent_race_same_submission_returns_existing(
         gateway=gateway, run_store=run_store, batch_id=batch_id
     )
     with Session(engine) as session:
-        case = _case_row(session, batch_id=batch_id, case_id="demo_case_001")
+        case = _case_row(session, batch_id=batch_id, case_id="mvp_case_001")
         existing = Review(
             review_id="review-race2-sub",
             submission_id="race2-sub",

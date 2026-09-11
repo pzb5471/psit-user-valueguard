@@ -1,0 +1,16 @@
+{
+  "automated_gate": "FAILED",
+  "case_count": 15,
+  "completion_tokens": 34403,
+  "concurrency": 2,
+  "duration_seconds": 737.859,
+  "failed_cases": 13,
+  "human_review": "PENDING",
+  "model": "glm-5.3-flash",
+  "model_attempts": 24,
+  "prompt_tokens": 40305,
+  "reasoning_effort": "max",
+  "run_id": "20260911T033245Z",
+  "successful_cases": 2,
+  "validated_stages": 10
+}

@@ -1,8 +1,8 @@
 """M1-09 测试公共夹具：sys.path 引导与逻辑源目录定位。
 
 - 把仓库根加入 sys.path，使测试可 `from tools.data_preparation import …`；
-- source_root 夹具：优先取 PSIT_SOURCE_ROOT 环境变量，其次尝试仓库旁默认源目录；
-  两者都缺失时跳过（而不是失败），单测类用例不依赖源目录。
+- source_root 夹具：优先取 PSIT_SOURCE_ROOT 环境变量，其次尝试仓库同级 source_data；
+  普通全量测试缺失时跳过，M1-09 正式任务缺失时明确失败。
 - dataset 夹具：会话级构建一次，供双包校验类测试复用。
 """
 
@@ -18,7 +18,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-SOURCE_SUBPATH = Path("项目文档") / "PSIT项目审查" / "source_data" / "ecommercedata-main"
+LEGACY_SOURCE_SUBPATH = (
+    Path("项目文档") / "PSIT项目审查" / "source_data" / "ecommercedata-main"
+)
 REQUIRED_SOURCE = Path("dataprocessing") / "output" / "data_with_context.csv"
 
 
@@ -26,8 +28,9 @@ def _candidate_source_roots() -> list[Path]:
     candidates: list[Path] = []
     env = os.environ.get("PSIT_SOURCE_ROOT")
     if env:
-        candidates.append(Path(env))
-    candidates.append(REPO_ROOT.parent / SOURCE_SUBPATH)
+        return [Path(env)]
+    candidates.append(REPO_ROOT.parent / "source_data" / "ecommercedata-main")
+    candidates.append(REPO_ROOT.parent / LEGACY_SOURCE_SUBPATH)
     return candidates
 
 
@@ -37,10 +40,13 @@ def source_root() -> Path:
     for candidate in _candidate_source_roots():
         if (candidate / REQUIRED_SOURCE).exists():
             return candidate.resolve()
-    pytest.skip(
+    message = (
         "缺少逻辑源目录：请设置 PSIT_SOURCE_ROOT 环境变量后重跑，"
-        "或把仓库放到含 项目文档/PSIT项目审查/source_data 的目录旁"
+        "或把 source_data/ecommercedata-main 放在仓库同级目录"
     )
+    if os.environ.get("PSIT_REQUIRE_SOURCE_ROOT") == "1":
+        pytest.fail(message)
+    pytest.skip(message)
 
 
 @pytest.fixture(scope="session")

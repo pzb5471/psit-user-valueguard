@@ -1,16 +1,16 @@
 // @vitest-environment node
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { createApiClient, evidenceContentUrl } from '../../src/api/client'
 import { toResult } from '../../src/api/errors'
 import { startMsw } from './mswServer'
 
-const server = startMsw()
+startMsw()
 
 /** 测试用绝对地址：Node fetch 无法解析相对 URL，MSW 按路径匹配处理器。 */
 const api = createApiClient('http://psit-mock.local')
 
-const BATCH_ID = 'batch-demo-001'
-const CASE_ID = 'case-demo-001'
+const BATCH_ID = 'batch-mvp-001'
+const CASE_ID = 'case-mvp-001'
 
 /** 合同路径模板（规格 12.1），用于断言证据 URL 组装不越界。 */
 test('evidenceContentUrl 使用公开业务字段组装受控证据地址', () => {
@@ -21,7 +21,7 @@ test('evidenceContentUrl 使用公开业务字段组装受控证据地址', () =
 
 test('接口一：POST /api/v1/batches 上传 ZIP 返回 201', async () => {
   const form = new FormData()
-  form.append('file', new Blob([new Uint8Array([0x50, 0x4b])], { type: 'application/zip' }), 'demo_batch_v1.zip')
+  form.append('file', new Blob([new Uint8Array([0x50, 0x4b])], { type: 'application/zip' }), 'mvp_batch_v1.zip')
   const result = await toResult(api.POST('/api/v1/batches', { body: form as never }))
   expect(result.ok).toBe(true)
   if (result.ok) {
@@ -103,7 +103,7 @@ test('接口八：POST 人工确认返回 201 ReviewResultView', async () => {
       params: { path: { batch_id: BATCH_ID, case_id: CASE_ID } },
       body: {
         submission_id: '11111111-1111-4111-8111-111111111111',
-        review_token: 'demo-review-token-001',
+        review_token: 'mvp-review-token-001',
         outcome: 'APPROVED',
       },
     }),
@@ -138,7 +138,9 @@ test('接口十：GET /api/v1/health 返回 HealthView', async () => {
 })
 
 test('集中错误层：请求未到达后端时归入 network', async () => {
-  server.close()
+  const fetchFailure = vi
+    .spyOn(globalThis, 'fetch')
+    .mockRejectedValueOnce(new TypeError('simulated network failure'))
   try {
     const result = await toResult(api.GET('/api/v1/health'))
     expect(result.ok).toBe(false)
@@ -147,6 +149,6 @@ test('集中错误层：请求未到达后端时归入 network', async () => {
       expect(result.status).toBe(0)
     }
   } finally {
-    server.listen({ onUnhandledRequest: 'error' })
+    fetchFailure.mockRestore()
   }
 })

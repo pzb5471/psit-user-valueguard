@@ -25,8 +25,8 @@ export function createState(): MockState {
   return { batchStatus: 'PENDING_ANALYSIS', caseStatus: 'PENDING_REVIEW', reviewPerformed: false }
 }
 
-const BATCH_ID = 'batch-demo-001'
-const CASE_ID = 'case-demo-001'
+const BATCH_ID = 'batch-mvp-001'
+const CASE_ID = 'case-mvp-001'
 
 /** 1×1 透明 PNG，作为受控证据图片响应体。 */
 const PNG_PIXEL = Buffer.from(

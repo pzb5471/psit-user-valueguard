@@ -74,9 +74,9 @@ class RunStoreEventSink(AnalysisEventSink):
         # StageFailedEvent / AnalysisCompletedEvent 由最终 AnalysisOutcome 驱动，
         # 不在此单独持久化，避免重复记录。
 
-    @staticmethod
-    def _attempt(event: ModelAttemptFinishedEvent) -> ModelAttemptInput:
-        call_id = f"{event.stage.value}:{event.attempt_no}"
+    def _attempt(self, event: ModelAttemptFinishedEvent) -> ModelAttemptInput:
+        # call_id 在整库范围唯一，同时对同一案例运行的重复事件保持稳定。
+        call_id = f"{self._case_run_id}:{event.stage.value}:{event.attempt_no}"
         error_json: dict | None = None
         if event.status == "FAILED":
             error_json = {

@@ -42,7 +42,7 @@ function renderWorkspace() {
   )
 }
 
-function zipFile(name = 'demo_batch_v1.zip'): File {
+function zipFile(name = 'mvp_batch_v1.zip'): File {
   return new File([new Uint8Array([0x50, 0x4b, 0x03, 0x04])], name, { type: 'application/zip' })
 }
 
@@ -122,7 +122,7 @@ test('新导入成功：摘要、Mock 提示与下一主动作', async () => {
   await chooseAndImport(zipFile())
 
   expect(await screen.findByText('文件名')).toBeInTheDocument()
-  expect(screen.getByText('demo_batch_v1.zip')).toBeInTheDocument()
+  expect(screen.getByText('mvp_batch_v1.zip')).toBeInTheDocument()
   expect(screen.getByText('8')).toBeInTheDocument()
   expect(screen.getByText('21')).toBeInTheDocument()
   expect(screen.getByText('通过，已导入')).toBeInTheDocument()
@@ -200,7 +200,7 @@ test('列表加载失败显示异常态，重试后恢复导入区', async () =>
 
 test('导入成功后展示历史批次入口', async () => {
   const older = batchView('COMPLETED', {
-    batch_id: 'batch-demo-000',
+    batch_id: 'batch-mvp-000',
     source_filename: 'acceptance_batch_v1.zip',
   })
   server.use(
@@ -211,7 +211,7 @@ test('导入成功后展示历史批次入口', async () => {
   server.use(
     http.get(mockUrl('/api/v1/batches'), () =>
       HttpResponse.json({
-        items: [batchView('PENDING_ANALYSIS', { batch_id: 'batch-demo-001' }), older],
+        items: [batchView('PENDING_ANALYSIS', { batch_id: 'batch-mvp-001' }), older],
         total: 2,
       }),
     ),
@@ -220,7 +220,7 @@ test('导入成功后展示历史批次入口', async () => {
   expect(await screen.findByText('历史批次')).toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'acceptance_batch_v1.zip' })).toHaveAttribute(
     'href',
-    '/batches/batch-demo-000',
+    '/batches/batch-mvp-000',
   )
-  expect(screen.queryByRole('link', { name: 'demo_batch_v1.zip' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('link', { name: 'mvp_batch_v1.zip' })).not.toBeInTheDocument()
 })

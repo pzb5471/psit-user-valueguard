@@ -13,13 +13,13 @@
 | `rfm` | `high_value_rule_v1` 的阈值（r_p75/m_p80/m_p50）与客户/高价值数量（全量复算） |
 | `source_manifest_sha256` | 所有实际使用源文件（主表、任务与选中图片）的字节摘要 |
 | `mapping_manifest_sha256` | mapping_manifest.json 字节摘要 |
-| `packages` | DEMO（10 案例）与 ACCEPTANCE（5 案例）的文件名、SHA-256 与数量 |
+| `packages` | MVP（10 案例）与 ACCEPTANCE（5 案例）的文件名、SHA-256 与数量 |
 | `cases` | 逐案例概要（文本/图片/行为证据数与图片媒体类型） |
 | `control_case` | 普通客户对照案例标识与高价值标记 |
 
 同目录关联文件：
 
-- `demo_batch_v1.zip` / `acceptance_batch_v1.zip`：运行 ZIP（结构见
+- `mvp_batch_v1.zip` / `acceptance_batch_v1.zip`：运行 ZIP（结构见
   `tools/data_preparation/tests/fixtures/batches/README.md`）；
 - `mapping_manifest.json`：task_id → case_id / order_id / 客户 / 资产路径映射；
 - `source_manifest.json`：实际使用的源文件相对路径与 SHA-256；

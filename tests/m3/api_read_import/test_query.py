@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 from fakes import make_detail, make_queue_item, make_workspace
+from fastapi.testclient import TestClient
+
+from app.modules.application.api.router import create_contract_app
+from app.modules.application.services.query import ApplicationServices, M1Ports
 
 
 def test_list_batches_pagination(client, query) -> None:
@@ -26,6 +30,24 @@ def test_get_batch_detail(client, query) -> None:
     assert body["batch_id"] == "b1"
     assert body["case_count"] == 5
     assert body["evidence_count"] == 9
+
+
+def test_unavailable_analysis_disables_batch_start(
+    query, importer, evidence
+) -> None:
+    query.batches = [make_workspace("b1", can_start=True)]
+    services = ApplicationServices(
+        M1Ports(importer=importer, query=query, evidence=evidence),
+        analysis_available=False,
+        analysis_unavailable_message="真实分析引擎尚未装配",
+    )
+    app = create_contract_app(services=services)
+
+    with TestClient(app) as unavailable_client:
+        body = unavailable_client.get("/api/v1/batches/b1").json()
+
+    assert body["can_start_analysis"] is False
+    assert body["analysis_unavailable_message"] == "真实分析引擎尚未装配"
 
 
 def test_list_cases_filter_and_pagination(client, query) -> None:

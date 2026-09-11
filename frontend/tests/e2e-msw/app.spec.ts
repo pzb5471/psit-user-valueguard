@@ -28,11 +28,11 @@ test('完整旅程：导入→开始→队列→详情→确认→只读，并�
 
   // 上传一个 ZIP（两步导入）。
   await page.locator('input[type="file"]').setInputFiles({
-    name: 'demo_batch_v1.zip',
+    name: 'mvp_batch_v1.zip',
     mimeType: 'application/zip',
     buffer: Buffer.from('504b0304', 'hex'),
   })
-  await expect(page.getByText('已选择：demo_batch_v1.zip')).toBeVisible()
+  await expect(page.getByText('已选择：mvp_batch_v1.zip')).toBeVisible()
   await page.getByRole('button', { name: '导入批次' }).click()
   await expect(page.getByText('通过，已导入')).toBeVisible()
   // Mock 提示明确。
@@ -106,7 +106,7 @@ test('证据图片受控加载与失败回退', async ({ page }) => {
   installApiMock(page, state)
   await page.goto('/')
   // 有批次时直接进入最近批次。
-  await page.goto(`/batches/batch-demo-001`)
+  await page.goto(`/batches/batch-mvp-001`)
   await page.getByText('案例队列').waitFor()
   await page.getByRole('link', { name: '示例客户 C-1001' }).click()
   // 展开图片证据，点击可加载（不报错）。
@@ -118,7 +118,7 @@ test('两种尺寸截图产物（供人工截图审查）', async ({ page }) => 
   const state = createState()
   installApiMock(page, state)
   mkdirSync('playwright-report/screenshots', { recursive: true })
-  await page.goto('/batches/batch-demo-001')
+  await page.goto('/batches/batch-mvp-001')
   await page.getByText('案例队列').waitFor()
   const project = test.info().project.name
   await page.screenshot({ path: `playwright-report/screenshots/${project}-batch.png`, fullPage: true })

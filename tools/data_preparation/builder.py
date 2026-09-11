@@ -6,7 +6,7 @@
 3. 按锁定案例清单匹配主订单（对话 strip 精确匹配，取 order_id 最小者），
    逐个构造 CaseInput 字典与资产字节；
 4. 生成 mapping_manifest 与 source manifest 确定性摘要，写入案例 provenance；
-5. 组两个标准 ZIP（DEMO 10 案例 / ACCEPTANCE 5 案例），自校验通过后才写盘：
+5. 组两个标准 ZIP（MVP 10 案例 / ACCEPTANCE 5 案例），自校验通过后才写盘：
    - 每个 ZIP 用 ZipImportStage（M1-03）完整校验（结构/合同/泄漏/关系/媒体）；
    - 任一校验失败抛异常且不产生任何输出（可幂等重建）；
 6. 写密封参考（答案/标签/轨迹等只进 sealed/，绝不进运行包）、对照案例与报告。
@@ -20,6 +20,7 @@ runtime_data/mock_dataset_v1/（ADR-0033，不入 Git）。
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from dataclasses import dataclass, field
@@ -38,7 +39,7 @@ from .sources import load_csv_rows, load_tasks, require_source_root
 from .zip_output import json_bytes, make_checksums, write_standard_zip
 
 # 任务卡 M1-09 锁定的案例清单（顺序即 case_no，勿改）。
-DEMO_TASK_IDS = (
+MVP_TASK_IDS = (
     "000000_a",
     "000001_a",
     "000002_a",
@@ -71,8 +72,8 @@ DEFAULT_OUT_ROOT = _REPO_ROOT / "runtime_data" / "mock_dataset_v1"
 
 
 def tasks_by_selection() -> list[str]:
-    """锁定选择顺序：DEMO 在前、ACCEPTANCE 在后（顺序即 case_no）。"""
-    return list(DEMO_TASK_IDS) + list(ACCEPTANCE_TASK_IDS)
+    """锁定选择顺序：MVP 在前、ACCEPTANCE 在后（顺序即 case_no）。"""
+    return list(MVP_TASK_IDS) + list(ACCEPTANCE_TASK_IDS)
 
 
 def _selected_source_records(
@@ -130,17 +131,16 @@ def _rfm_profiles_bytes(rfm: RfmResult) -> bytes:
     lines = []
     for customer_id in sorted(rfm.profiles):
         profile = rfm.profiles[customer_id]
+        payload = {
+            "customer_unique_id": customer_id,
+            "recency_days": profile.recency_days,
+            "frequency_orders": profile.frequency_orders,
+            "monetary_total": format(profile.monetary_total, "f"),
+            "is_high_value": profile.is_high_value,
+            "decision_reason": profile.decision_reason(rfm.thresholds),
+        }
         lines.append(
-            json_bytes(
-                {
-                    "customer_unique_id": customer_id,
-                    "recency_days": profile.recency_days,
-                    "frequency_orders": profile.frequency_orders,
-                    "monetary_total": format(profile.monetary_total, "f"),
-                    "is_high_value": profile.is_high_value,
-                    "decision_reason": profile.decision_reason(rfm.thresholds),
-                }
-            )
+            json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
             + b"\n"
         )
     return b"".join(lines)
@@ -186,10 +186,10 @@ def build_dataset(
     orders: dict[str, object] = {}
     mapping_entries: list[dict[str, object]] = []
     for case_no, task_id in enumerate(selected, start=1):
-        demo = case_no <= len(DEMO_TASK_IDS)
-        seq = case_no if demo else case_no - len(DEMO_TASK_IDS)
-        batch_id = "demo_batch_v1" if demo else "acceptance_batch_v1"
-        case_id = f"demo_case_{seq:03d}" if demo else f"acceptance_case_{seq:03d}"
+        mvp = case_no <= len(MVP_TASK_IDS)
+        seq = case_no if mvp else case_no - len(MVP_TASK_IDS)
+        batch_id = "mvp_batch_v1" if mvp else "acceptance_batch_v1"
+        case_id = f"mvp_case_{seq:03d}" if mvp else f"acceptance_case_{seq:03d}"
         task = tasks[task_id]
         order = match_main_order(rows, str(task.get("conversation") or ""))
         if order is None:
@@ -201,8 +201,8 @@ def build_dataset(
             "task_id": task_id,
             "case_id": case_id,
             "batch_id": batch_id,
-            "package_prefix": "DEMO" if demo else "ACCEPT",
-            "package_type": "DEMO" if demo else "ACCEPTANCE",
+            "package_prefix": "MVP" if mvp else "ACCEPT",
+            "package_type": "MVP" if mvp else "ACCEPTANCE",
             "case_no": int(seq),
         }
         case_meta.append(meta)
@@ -324,7 +324,7 @@ def build_dataset(
             "schema_version": "batch_manifest.v1",
             "data_version": DATA_VERSION,
             "batch_id": batch_id,
-            "package_type": "DEMO" if batch_id == "demo_batch_v1" else "ACCEPTANCE",
+            "package_type": "MVP" if batch_id == "mvp_batch_v1" else "ACCEPTANCE",
             "is_mock": True,
             "source_snapshot_at": rfm.snapshot_at.isoformat(),
             "case_files": sorted(case_files),
@@ -336,15 +336,15 @@ def build_dataset(
         entries["checksums.json"] = json_bytes(make_checksums(entries))
         return entries
 
-    demo_entries = _package_entries(
-        "demo_batch_v1",
-        [payload for payload in cases if payload["batch_id"] == "demo_batch_v1"],
+    mvp_entries = _package_entries(
+        "mvp_batch_v1",
+        [payload for payload in cases if payload["batch_id"] == "mvp_batch_v1"],
     )
     acceptance_entries = _package_entries(
         "acceptance_batch_v1",
         [payload for payload in cases if payload["batch_id"] == "acceptance_batch_v1"],
     )
-    demo_bytes = write_standard_zip(demo_entries)
+    mvp_bytes = write_standard_zip(mvp_entries)
     acceptance_bytes = write_standard_zip(acceptance_entries)
 
     # 自校验：任一失败即抛异常，不写盘（可幂等重建）。
@@ -357,7 +357,7 @@ def build_dataset(
 
     stage_tmp = Path(stage_tmp_root) if stage_tmp_root is not None else None
     for label, zip_bytes in (
-        ("DEMO", demo_bytes),
+        ("MVP", mvp_bytes),
         ("ACCEPTANCE", acceptance_bytes),
     ):
         result = ZipImportStage(tmp_root=stage_tmp).stage(zip_bytes)
@@ -386,9 +386,9 @@ def build_dataset(
         (sealed_dir / f"{meta['case_id']}.json").write_bytes(
             json_bytes(sealed_payload)
         )
-    demo_zip_path = out / "demo_batch_v1.zip"
+    mvp_zip_path = out / "mvp_batch_v1.zip"
     acceptance_zip_path = out / "acceptance_batch_v1.zip"
-    demo_zip_path.write_bytes(demo_bytes)
+    mvp_zip_path.write_bytes(mvp_bytes)
     acceptance_zip_path.write_bytes(acceptance_bytes)
     (out / "mapping_manifest.json").write_bytes(mapping_bytes)
     (out / "source_manifest.json").write_bytes(source_manifest_bytes)
@@ -416,15 +416,15 @@ def build_dataset(
         "source_manifest_file": "source_manifest.json",
         "mapping_manifest_sha256": mapping_manifest_sha256,
         "packages": {
-            "demo": {
-                "batch_id": "demo_batch_v1",
-                "file_name": demo_zip_path.name,
-                "sha256": sha256_bytes(demo_bytes),
-                "case_count": sum(1 for s in summaries if s["package"] == "DEMO"),
+            "mvp": {
+                "batch_id": "mvp_batch_v1",
+                "file_name": mvp_zip_path.name,
+                "sha256": sha256_bytes(mvp_bytes),
+                "case_count": sum(1 for s in summaries if s["package"] == "MVP"),
                 "image_count": sum(
                     1
                     for s in summaries
-                    if s["package"] == "DEMO"
+                    if s["package"] == "MVP"
                     for _ in s["image_media_types"]
                 ),
             },
@@ -454,11 +454,11 @@ def build_dataset(
 
     return BuildResult(
         out_root=out,
-        demo_zip_path=demo_zip_path,
+        mvp_zip_path=mvp_zip_path,
         acceptance_zip_path=acceptance_zip_path,
-        demo_zip_sha256=sha256_bytes(demo_bytes),
+        mvp_zip_sha256=sha256_bytes(mvp_bytes),
         acceptance_zip_sha256=sha256_bytes(acceptance_bytes),
-        demo_bytes=demo_bytes,
+        mvp_bytes=mvp_bytes,
         acceptance_bytes=acceptance_bytes,
         rfm=rfm,
         source_manifest_sha256=source_manifest_sha256,
@@ -495,7 +495,7 @@ def main(argv: list[str] | None = None) -> int:
         Path(args.source_root),
         Path(args.out_root) if args.out_root else None,
     )
-    print(f"DEMO 包：{result.demo_zip_path}（{result.demo_zip_sha256[:16]}…）")
+    print(f"MVP 包：{result.mvp_zip_path}（{result.mvp_zip_sha256[:16]}…）")
     print(
         f"ACCEPTANCE 包：{result.acceptance_zip_path}（{result.acceptance_zip_sha256[:16]}…）"
     )
@@ -512,11 +512,11 @@ class BuildResult:
     """M1-09 组包结果：双包路径/字节/哈希与可复算统计。"""
 
     out_root: Path
-    demo_zip_path: Path
+    mvp_zip_path: Path
     acceptance_zip_path: Path
-    demo_zip_sha256: str
+    mvp_zip_sha256: str
     acceptance_zip_sha256: str
-    demo_bytes: bytes
+    mvp_bytes: bytes
     acceptance_bytes: bytes
     rfm: RfmResult
     source_manifest_sha256: str

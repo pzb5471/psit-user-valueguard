@@ -39,7 +39,7 @@ GIF_BYTES = (
     b"\x00\x00\x02\x02D\x01\x00;"
 )
 
-DEMO_CASE_IDS = ("demo_case_001", "demo_case_002")
+MVP_CASE_IDS = ("mvp_case_001", "mvp_case_002")
 
 
 def load_fixture(name: str) -> dict:
@@ -80,7 +80,7 @@ def make_case(
 
 
 def make_manifest(
-    case_ids: tuple[str, ...] = DEMO_CASE_IDS,
+    case_ids: tuple[str, ...] = MVP_CASE_IDS,
     *,
     evidence_count: int | None = None,
 ) -> dict:
@@ -96,7 +96,7 @@ def make_manifest(
 
 def make_entries(
     *,
-    case_ids: tuple[str, ...] = DEMO_CASE_IDS,
+    case_ids: tuple[str, ...] = MVP_CASE_IDS,
     case_builder: Callable[[str], dict] = make_case,
     manifest_overrides: dict[str, object] | None = None,
     image_bytes: bytes = JPEG_BYTES,

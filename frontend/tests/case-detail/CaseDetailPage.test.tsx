@@ -22,7 +22,7 @@ function renderCase(status: Parameters<typeof caseDetail>[0] = 'PENDING_REVIEW',
   )
   return render(
     <QueryClientProvider client={createQueryClient()}>
-      <MemoryRouter initialEntries={['/batches/batch-demo-001/cases/case-demo-001']}>
+      <MemoryRouter initialEntries={['/batches/batch-mvp-001/cases/case-mvp-001']}>
         <Routes>
           <Route path="/batches/:batchId/cases/:caseId" element={<CaseDetailPage />} />
         </Routes>

@@ -74,7 +74,7 @@ def _import_batch(
     gateway,
     *,
     batch_id: str,
-    case_ids: tuple[str, ...] = ("demo_case_001", "demo_case_002"),
+    case_ids: tuple[str, ...] = ("mvp_case_001", "mvp_case_002"),
     case_builder: Callable[[str], dict[str, Any]] | None = None,
     image_bytes: bytes = JPEG_BYTES,
     image_suffix: str = ".jpg",
@@ -159,13 +159,13 @@ def test_supported_image_content_roundtrip(
     _import_batch(
         gateway,
         batch_id=batch_id,
-        case_ids=("demo_case_001",),
+        case_ids=("mvp_case_001",),
         case_builder=builder,
         image_bytes=image_bytes,
         image_suffix=suffix,
     )
     content = evidence_gateway.get_evidence_content(
-        batch_id, "demo_case_001", "ev_image_demo_case_001"
+        batch_id, "mvp_case_001", "ev_image_mvp_case_001"
     )
     assert content.filename == f"scratch_01{suffix}"
     assert content.media_type == media_type
@@ -176,7 +176,7 @@ def test_supported_image_content_roundtrip(
 def test_second_case_image_readable(gateway, evidence_gateway) -> None:
     batch_id = _import_batch(gateway, batch_id="second")
     content = evidence_gateway.get_evidence_content(
-        batch_id, "demo_case_002", "ev_image_demo_case_002"
+        batch_id, "mvp_case_002", "ev_image_mvp_case_002"
     )
     assert content.filename == "scratch_01.jpg"
     assert content.content == JPEG_BYTES
@@ -187,9 +187,9 @@ def test_second_case_image_readable(gateway, evidence_gateway) -> None:
 def test_missing_batch_case_evidence_not_found(gateway, evidence_gateway) -> None:
     batch_id = _import_batch(gateway, batch_id="missing")
     cases = [
-        ("no-such-batch", "demo_case_001", "ev_image_demo_case_001"),
-        (batch_id, "no-such-case", "ev_image_demo_case_001"),
-        (batch_id, "demo_case_001", "no-such-evidence"),
+        ("no-such-batch", "mvp_case_001", "ev_image_mvp_case_001"),
+        (batch_id, "no-such-case", "ev_image_mvp_case_001"),
+        (batch_id, "mvp_case_001", "no-such-evidence"),
     ]
     for batch, case_id, evidence_id in cases:
         with pytest.raises(EvidenceNotFoundError) as exc:
@@ -201,8 +201,8 @@ def test_missing_batch_case_evidence_not_found(gateway, evidence_gateway) -> Non
 @pytest.mark.parametrize(
     ("batch_id", "evidence_id"),
     [
-        ("text-ev", "ev_text_demo_case_001_1"),
-        ("behavior-ev", "ev_behavior_demo_case_001_1"),
+        ("text-ev", "ev_text_mvp_case_001_1"),
+        ("behavior-ev", "ev_behavior_mvp_case_001_1"),
     ],
 )
 def test_non_image_evidence_unsupported(
@@ -210,7 +210,7 @@ def test_non_image_evidence_unsupported(
 ) -> None:
     _import_batch(gateway, batch_id=batch_id)
     with pytest.raises(UnsupportedMediaTypeError) as exc:
-        evidence_gateway.get_evidence_content(batch_id, "demo_case_001", evidence_id)
+        evidence_gateway.get_evidence_content(batch_id, "mvp_case_001", evidence_id)
     assert exc.value.code == "UNSUPPORTED_MEDIA_TYPE"
     assert exc.value.object_id == evidence_id
 
@@ -219,21 +219,21 @@ def test_no_cross_case_read_within_batch(gateway, evidence_gateway) -> None:
     batch_id = _import_batch(gateway, batch_id="cross-case")
     with pytest.raises(EvidenceNotFoundError):
         evidence_gateway.get_evidence_content(
-            batch_id, "demo_case_001", "ev_image_demo_case_002"
+            batch_id, "mvp_case_001", "ev_image_mvp_case_002"
         )
 
 
 def test_no_cross_batch_read(gateway, evidence_gateway) -> None:
-    _import_batch(gateway, batch_id="alpha", case_ids=("demo_case_001",))
-    _import_batch(gateway, batch_id="beta", case_ids=("demo_case_002",))
+    _import_batch(gateway, batch_id="alpha", case_ids=("mvp_case_001",))
+    _import_batch(gateway, batch_id="beta", case_ids=("mvp_case_002",))
     # beta 的案例在 alpha 批次中不存在
     with pytest.raises(EvidenceNotFoundError):
         evidence_gateway.get_evidence_content(
-            "alpha", "demo_case_002", "ev_image_demo_case_002"
+            "alpha", "mvp_case_002", "ev_image_mvp_case_002"
         )
     # alpha 自己的证据仍可读
     content = evidence_gateway.get_evidence_content(
-        "alpha", "demo_case_001", "ev_image_demo_case_001"
+        "alpha", "mvp_case_001", "ev_image_mvp_case_001"
     )
     assert content.content == JPEG_BYTES
 
@@ -261,13 +261,13 @@ def test_tampered_relative_path_unavailable(
     _tamper_evidence(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
-        evidence_id="ev_image_demo_case_001",
+        case_id="mvp_case_001",
+        evidence_id="ev_image_mvp_case_001",
         relative_path=relative_path,
     )
     with pytest.raises(EvidenceNotFoundError) as exc:
         evidence_gateway.get_evidence_content(
-            batch_id, "demo_case_001", "ev_image_demo_case_001"
+            batch_id, "mvp_case_001", "ev_image_mvp_case_001"
         )
     assert exc.value.message == "证据内容不可用"
     assert str(formal_root) not in exc.value.message
@@ -281,13 +281,13 @@ def test_deleted_file_unavailable(
         engine,
         formal_root,
         batch_id=batch_id,
-        case_id="demo_case_001",
-        evidence_id="ev_image_demo_case_001",
+        case_id="mvp_case_001",
+        evidence_id="ev_image_mvp_case_001",
     )
     file_path.unlink()
     with pytest.raises(EvidenceNotFoundError):
         evidence_gateway.get_evidence_content(
-            batch_id, "demo_case_001", "ev_image_demo_case_001"
+            batch_id, "mvp_case_001", "ev_image_mvp_case_001"
         )
 
 
@@ -299,13 +299,13 @@ def test_replaced_file_bytes_unavailable(
         engine,
         formal_root,
         batch_id=batch_id,
-        case_id="demo_case_001",
-        evidence_id="ev_image_demo_case_001",
+        case_id="mvp_case_001",
+        evidence_id="ev_image_mvp_case_001",
     )
     file_path.write_bytes(b"tampered file bytes")
     with pytest.raises(EvidenceNotFoundError):
         evidence_gateway.get_evidence_content(
-            batch_id, "demo_case_001", "ev_image_demo_case_001"
+            batch_id, "mvp_case_001", "ev_image_mvp_case_001"
         )
 
 
@@ -314,11 +314,11 @@ def test_tampered_content_hash_unavailable(gateway, evidence_gateway, engine) ->
     _tamper_evidence(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
-        evidence_id="ev_image_demo_case_001",
+        case_id="mvp_case_001",
+        evidence_id="ev_image_mvp_case_001",
         content_hash="0" * 64,
     )
     with pytest.raises(EvidenceNotFoundError):
         evidence_gateway.get_evidence_content(
-            batch_id, "demo_case_001", "ev_image_demo_case_001"
+            batch_id, "mvp_case_001", "ev_image_mvp_case_001"
         )

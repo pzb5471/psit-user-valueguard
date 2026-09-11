@@ -4,7 +4,7 @@
 四表（规格 11.2：每个请求使用独立同步 Session，事务内不等待外部 IO）：
 
 - data_version 全局唯一：同一 data_version 已存在时复用已有行，不重复落库；
-  demo_batch_v1 与 acceptance_batch_v1 共享 mock_dataset_v1 即此场景；
+  mvp_batch_v1 与 acceptance_batch_v1 共享 mock_dataset_v1 即此场景；
 - batch_id 全局唯一、case_id 批次内唯一、evidence_id 案例内唯一，违反约束时
   IntegrityError 向上抛给 BatchImportGateway，由网关回滚正式目录并转幂等/冲突；
 - 图片只存相对运行目录的路径、媒体类型与哈希，不存 BLOB（规格 11.2）；

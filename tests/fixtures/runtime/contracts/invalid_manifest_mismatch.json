@@ -1,13 +1,13 @@
 {
   "schema_version": "batch_manifest.v1",
   "data_version": "mock_dataset_v1",
-  "batch_id": "demo_batch_v1",
-  "package_type": "DEMO",
+  "batch_id": "mvp_batch_v1",
+  "package_type": "MVP",
   "is_mock": true,
   "source_snapshot_at": "2018-10-17T17:30:18",
   "case_files": [
-    "cases/demo_case_001.json",
-    "cases/demo_case_002.json"
+    "cases/mvp_case_001.json",
+    "cases/mvp_case_002.json"
   ],
   "case_count": 3,
   "evidence_count": 7

@@ -293,7 +293,7 @@ def _collect_cited_evidence_ids(
     def visit(value: object) -> None:
         if isinstance(value, dict):
             for key, child in value.items():
-                if key == "evidence_id" and isinstance(child, str):
+                if key in {"evidence_id", "image_evidence_id"} and isinstance(child, str):
                     ids.setdefault(child, None)
                 elif key in _EVIDENCE_REF_KEYS and isinstance(child, list):
                     for item in child:
@@ -321,7 +321,10 @@ def _image_summary(perception: dict[str, Any] | None, evidence_id: str) -> str |
     for observation in observations:
         if not isinstance(observation, dict):
             continue
-        if observation.get("evidence_id") != evidence_id:
+        observation_evidence_id = observation.get("image_evidence_id")
+        if observation_evidence_id is None:
+            observation_evidence_id = observation.get("evidence_id")
+        if observation_evidence_id != evidence_id:
             continue
         facts = observation.get("observable_facts") or observation.get("facts") or []
         if facts:

@@ -42,7 +42,7 @@ beforeEach(() => {
 function renderCase() {
   return render(
     <QueryClientProvider client={createQueryClient()}>
-      <MemoryRouter initialEntries={['/batches/batch-demo-001/cases/case-demo-001']}>
+      <MemoryRouter initialEntries={['/batches/batch-mvp-001/cases/case-mvp-001']}>
         <Routes>
           <Route path="/batches/:batchId/cases/:caseId" element={<CaseDetailPage />} />
         </Routes>
@@ -60,7 +60,7 @@ test('直接通过：只发送共同字段，无任何判断与原因', async ()
   const body = postedBodies[0]
   expect(body.outcome).toBe('APPROVED')
   expect(body.submission_id).toBeTypeOf('string')
-  expect(body.review_token).toBe('demo-review-token-001')
+  expect(body.review_token).toBe('mvp-review-token-001')
   expect(body.final_intervention_level).toBeUndefined()
   expect(body.final_cause).toBeUndefined()
   expect(body.final_actions).toBeUndefined()
@@ -163,7 +163,7 @@ test('旧 Token 返回 409 时展示冲突提示', async () => {
           code: 'STALE_CASE_RESULT',
           message: '结果已被重跑替换，请刷新后重新确认。',
           object_type: '案例',
-          object_id: 'case-demo-001',
+          object_id: 'case-mvp-001',
           stage: 'RESULT_PERSISTENCE',
           next_action: '刷新案例详情后重新审核。',
           trace_id: 'trace-1',
@@ -204,6 +204,6 @@ test('不可重跑：不显示重跑按钮', async () => {
 test('review_token 不出现在页面文本', async () => {
   const { container } = renderCase()
   await screen.findByText('示例客户 C-1001')
-  expect(container.textContent ?? '').not.toContain('demo-review-token-001')
+  expect(container.textContent ?? '').not.toContain('mvp-review-token-001')
   expect(container.textContent ?? '').not.toContain('review_token')
 })

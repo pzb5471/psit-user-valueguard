@@ -1,0 +1,3189 @@
+[
+  {
+    "batch_id": "acceptance_batch_v1",
+    "case_id": "acceptance_case_001",
+    "duration_seconds": 133.688,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:39:24.887792Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 3484,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:40:43.429447Z",
+        "latency_ms": 78531,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 5895,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 1,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "621abf7cdc91eee07dc1156d8cc78485cb96381b879b05f95dd889b4c58a8cef"
+        },
+        "response_json": {
+          "case_id": "acceptance_case_001",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "缺件声称",
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称收到的柜子少了两个面板，询问如何处理"
+            },
+            {
+              "category": "客服索要照片",
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服致歉并要求客户拍摄柜子情况照片以便处理"
+            },
+            {
+              "category": "提交照片并要求补发",
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_image_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户提交照片并声称少了两个侧板，要求尽快补发",
+              "uncertainty": "所提交照片为局部特写，无法从图片直接确认柜子缺少两个侧板"
+            },
+            {
+              "category": "发货齐全陈述",
+              "conflict_evidence_ids": [
+                "ev_text_003",
+                "ev_text_005"
+              ],
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服称根据核实信息显示产品齐全发货，与客户缺件声称相冲突",
+              "uncertainty": "客服所述核实信息的具体依据未在对话中提供"
+            },
+            {
+              "category": "补偿提议",
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服表示无法核实缺少配件，提议小额补偿红包或转接人工客服"
+            },
+            {
+              "category": "拒绝补偿坚持补发",
+              "conflict_evidence_ids": [
+                "ev_text_006"
+              ],
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户拒绝补偿红包，坚持要求补发缺少的板子"
+            },
+            {
+              "category": "转人工处理",
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_text_008"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服表示已将客户需求转交人工处理，处理结果未反馈"
+            },
+            {
+              "category": "订单履约事实",
+              "event_no": 8,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "订单于2017-09-17购买、2017-10-06送达客户，早于预计送达时间2017-10-17"
+            }
+          ],
+          "image_observations": [
+            {
+              "analysis_status": "ANALYZED",
+              "image_evidence_id": "ev_image_001",
+              "observable_facts": [
+                "画面为白色家具组件的局部特写，组件上可见一个银色金属圆形按钮",
+                "白色组件边缘呈弧形造型",
+                "画面下半部分背景昏暗且模糊，无法看清具体场景"
+              ],
+              "related_text_evidence_ids": [
+                "ev_text_003"
+              ],
+              "relation": "UNDETERMINED",
+              "uncertainty": "照片为局部特写且部分模糊，未拍到柜子整体，无法从图片确认是否缺少两个侧板"
+            }
+          ],
+          "missing_evidence": [
+            "缺少柜子整体全景或能清晰显示侧板缺失位置的照片，无法核对板件数量",
+            "缺少发货装箱清单或配件清单，无法核实发货时物品是否齐全",
+            "缺少物流包裹称重或出库记录等履约侧证据，无法佐证客服所述齐全发货的核实依据"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:39:24.887792Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 9379
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "case_id": "acceptance_case_001",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "缺件声称",
+              "conflict_evidence_ids": null,
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称收到的柜子少了两个面板，询问如何处理",
+              "uncertainty": null
+            },
+            {
+              "category": "客服索要照片",
+              "conflict_evidence_ids": null,
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服致歉并要求客户拍摄柜子情况照片以便处理",
+              "uncertainty": null
+            },
+            {
+              "category": "提交照片并要求补发",
+              "conflict_evidence_ids": null,
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_image_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户提交照片并声称少了两个侧板，要求尽快补发",
+              "uncertainty": "所提交照片为局部特写，无法从图片直接确认柜子缺少两个侧板"
+            },
+            {
+              "category": "发货齐全陈述",
+              "conflict_evidence_ids": [
+                "ev_text_003",
+                "ev_text_005"
+              ],
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服称根据核实信息显示产品齐全发货，与客户缺件声称相冲突",
+              "uncertainty": "客服所述核实信息的具体依据未在对话中提供"
+            },
+            {
+              "category": "补偿提议",
+              "conflict_evidence_ids": null,
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服表示无法核实缺少配件，提议小额补偿红包或转接人工客服",
+              "uncertainty": null
+            },
+            {
+              "category": "拒绝补偿坚持补发",
+              "conflict_evidence_ids": [
+                "ev_text_006"
+              ],
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户拒绝补偿红包，坚持要求补发缺少的板子",
+              "uncertainty": null
+            },
+            {
+              "category": "转人工处理",
+              "conflict_evidence_ids": null,
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_text_008"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服表示已将客户需求转交人工处理，处理结果未反馈",
+              "uncertainty": null
+            },
+            {
+              "category": "订单履约事实",
+              "conflict_evidence_ids": null,
+              "event_no": 8,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "订单于2017-09-17购买、2017-10-06送达客户，早于预计送达时间2017-10-17",
+              "uncertainty": null
+            }
+          ],
+          "image_observations": [
+            {
+              "analysis_status": "ANALYZED",
+              "image_evidence_id": "ev_image_001",
+              "observable_facts": [
+                "画面为白色家具组件的局部特写，组件上可见一个银色金属圆形按钮",
+                "白色组件边缘呈弧形造型",
+                "画面下半部分背景昏暗且模糊，无法看清具体场景"
+              ],
+              "related_text_evidence_ids": [
+                "ev_text_003"
+              ],
+              "relation": "UNDETERMINED",
+              "uncertainty": "照片为局部特写且部分模糊，未拍到柜子整体，无法从图片确认是否缺少两个侧板"
+            }
+          ],
+          "missing_evidence": [
+            "缺少柜子整体全景或能清晰显示侧板缺失位置的照片，无法核对板件数量",
+            "缺少发货装箱清单或配件清单，无法核实发货时物品是否齐全",
+            "缺少物流包裹称重或出库记录等履约侧证据，无法佐证客服所述齐全发货的核实依据"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:40:43.429447Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 2708,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:41:09.407510Z",
+        "latency_ms": 25983,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 2768,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "ATTRIBUTION",
+          "stream": false,
+          "system_prompt_sha256": "e35060664beb134e14594a0182e4473dc1dedaaa8b35ebd16c361a108094e95e",
+          "thinking_enabled": true,
+          "user_content_sha256": "fe556803850c3c2fcf0b3b8e5a9eb8294eedc14ce8b8cdc3cb9333d1d2249d83"
+        },
+        "response_json": {
+          "case_id": "acceptance_case_001",
+          "primary_cause": {
+            "category": "INSUFFICIENT_EVIDENCE",
+            "counter_evidence_ids": [
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_image_001",
+              "ev_text_004",
+              "ev_text_006"
+            ],
+            "explanation": "假设性解释：若客户所述属实，侧板缺失可能源于出厂装箱或仓储发货环节漏装；但当前仅有客户单方声称缺件（ev_text_001、ev_text_003、ev_text_005），照片为局部特写无法核实板件数量（ev_image_001），客服称核实显示齐全发货但依据未提供（ev_text_004），且客服明确表示无法核实缺少配件（ev_text_006），故无法在物流履约、商品问题等业务类别之间做出可靠归因。",
+            "uncertainty": "照片为局部特写且下半部分模糊，无法确认柜子缺少两个侧板；客服所述齐全发货核实信息的具体依据未在对话中提供；缺少柜子整体全景照片、装箱或配件清单以及物流称重、出库记录，缺件是否属实及发生环节均不确定。"
+          },
+          "risk_summary": "客户声称收到的柜子缺少两个侧板并多次坚持要求补发，客服核实时称产品齐全发货但未提供核实依据，双方说法冲突且未达成一致，现已转人工处理。客户提交的照片为局部特写，无法确认缺件；也缺少装箱清单、配件清单或物流出库记录等履约侧证据可供核对，缺件是否属实及其原因目前无法可靠判断。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:40:43.429447Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 5476
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "alternative_cause": null,
+          "case_id": "acceptance_case_001",
+          "primary_cause": {
+            "category": "INSUFFICIENT_EVIDENCE",
+            "counter_evidence_ids": [
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_image_001",
+              "ev_text_004",
+              "ev_text_006"
+            ],
+            "explanation": "假设性解释：若客户所述属实，侧板缺失可能源于出厂装箱或仓储发货环节漏装；但当前仅有客户单方声称缺件（ev_text_001、ev_text_003、ev_text_005），照片为局部特写无法核实板件数量（ev_image_001），客服称核实显示齐全发货但依据未提供（ev_text_004），且客服明确表示无法核实缺少配件（ev_text_006），故无法在物流履约、商品问题等业务类别之间做出可靠归因。",
+            "uncertainty": "照片为局部特写且下半部分模糊，无法确认柜子缺少两个侧板；客服所述齐全发货核实信息的具体依据未在对话中提供；缺少柜子整体全景照片、装箱或配件清单以及物流称重、出库记录，缺件是否属实及发生环节均不确定。"
+          },
+          "risk_summary": "客户声称收到的柜子缺少两个侧板并多次坚持要求补发，客服核实时称产品齐全发货但未提供核实依据，双方说法冲突且未达成一致，现已转人工处理。客户提交的照片为局部特写，无法确认缺件；也缺少装箱清单、配件清单或物流出库记录等履约侧证据可供核对，缺件是否属实及其原因目前无法可靠判断。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:41:09.407510Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 3284,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:41:38.564315Z",
+        "latency_ms": 29157,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 3645,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "STRATEGY",
+          "stream": false,
+          "system_prompt_sha256": "57deb2fc718e66231abde91d0125fc8127a2cf7aa5d5672a8094c9852568a49e",
+          "thinking_enabled": true,
+          "user_content_sha256": "3acf95a4cb16c002bd1e8a0fd068f4f14bdaab9e204017a1a2c07ee8de432364"
+        },
+        "response_json": {
+          "actions": [
+            {
+              "action_type": "EVIDENCE_CHECK",
+              "description": "建议人工补充核实证据：请客户提供能显示柜子整体及侧板缺失位置的清晰照片（现提交照片为局部特写，ev_image_001 无法确认缺件），并调取发货装箱/配件清单、物流出库或称重记录，核对客服所述齐全发货核实信息的具体依据（ev_text_004）。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_006",
+                "ev_image_001"
+              ],
+              "reason": "归因结论为证据不足（INSUFFICIENT_EVIDENCE），缺件是否属实及发生环节均无法判断，必须在人工完成证据核验后才能确定后续处理方向。"
+            },
+            {
+              "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+              "description": "若证据核实支持客户缺件声称，建议人工发起补发两个侧板的核验与审批流程（客户明确拒绝补偿红包并坚持补发，ev_text_007）；在核实完成前仅作为条件性建议提交，不得向客户承诺补发结果。",
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "reason": "客户的核心诉求自始至终是补发缺少的侧板而非补偿（ev_text_001、ev_text_005、ev_text_007），需将其诉求纳入补发核验通道并附条件提交人工决定。"
+            },
+            {
+              "action_type": "CUSTOMER_CONTACT",
+              "description": "建议人工主动联系客户：告知其需求已转人工处理（ev_text_008）但尚未反馈结果，说明当前证据核实进展、所需补充材料及预计反馈时限，避免客户在无回应状态下继续等待。",
+              "evidence_ids": [
+                "ev_text_005",
+                "ev_text_007",
+                "ev_text_008"
+              ],
+              "reason": "客服已承诺转人工但处理结果未反馈（ev_text_008），客户多次催促补发且明确拒绝替代方案（ev_text_005、ev_text_007），加之其为高价值客户，及时人工联系有助于降低投诉升级风险。"
+            }
+          ],
+          "case_id": "acceptance_case_001",
+          "caution_note": "提醒人工：客户已明确拒绝小额补偿红包并坚持补发（ev_text_006、ev_text_007），再次联系时不宜重复以补偿替代处理核心诉求；客服所述齐全发货的核实依据未在对话中提供（ev_text_004），在证据核实完成前不得向客户承诺补发，也不得认定缺件责任；高价值身份仅用于排定处理优先级，不降低证据核验要求。",
+          "communication_points": [
+            "向客户说明其提交照片为局部特写且部分模糊，暂无法据此确认侧板缺失（ev_image_001、ev_text_003），请其补充能拍到柜子整体及缺失位置的清晰照片，并说明这是加快核实的必要步骤。",
+            "告知客户人工正在调取装箱/配件清单及物流出库记录核实发货情况（ev_text_004），核实需要一定时间，将明确反馈时限，但不预先承诺补发结果。",
+            "对客户多次沟通与等待表达理解（ev_text_002），确认其补发诉求（ev_text_007）已完整记录并随案件转人工跟进（ev_text_008），核实完成后将第一时间反馈处理方案。"
+          ],
+          "intervention_level": "SHOULD_INTERVENE",
+          "priority_reason": "客户缺件声称（ev_text_003、ev_text_005、ev_text_007）与客服齐全发货陈述（ev_text_004）存在证据冲突，照片无法核实缺件，客服亦表示无法核实缺少配件（ev_text_006），问题未解决且转人工后未反馈结果（ev_text_008）；客户为高价值客户（R=394、M=937.64），建议提升处理优先级并需人工核验证据。",
+          "schema_version": "v1"
+        },
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:41:09.407510Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 6929
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "actions": [
+            {
+              "action_type": "EVIDENCE_CHECK",
+              "description": "建议人工补充核实证据：请客户提供能显示柜子整体及侧板缺失位置的清晰照片（现提交照片为局部特写，ev_image_001 无法确认缺件），并调取发货装箱/配件清单、物流出库或称重记录，核对客服所述齐全发货核实信息的具体依据（ev_text_004）。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_006",
+                "ev_image_001"
+              ],
+              "precondition": null,
+              "reason": "归因结论为证据不足（INSUFFICIENT_EVIDENCE），缺件是否属实及发生环节均无法判断，必须在人工完成证据核验后才能确定后续处理方向。"
+            },
+            {
+              "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+              "description": "若证据核实支持客户缺件声称，建议人工发起补发两个侧板的核验与审批流程（客户明确拒绝补偿红包并坚持补发，ev_text_007）；在核实完成前仅作为条件性建议提交，不得向客户承诺补发结果。",
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "precondition": null,
+              "reason": "客户的核心诉求自始至终是补发缺少的侧板而非补偿（ev_text_001、ev_text_005、ev_text_007），需将其诉求纳入补发核验通道并附条件提交人工决定。"
+            },
+            {
+              "action_type": "CUSTOMER_CONTACT",
+              "description": "建议人工主动联系客户：告知其需求已转人工处理（ev_text_008）但尚未反馈结果，说明当前证据核实进展、所需补充材料及预计反馈时限，避免客户在无回应状态下继续等待。",
+              "evidence_ids": [
+                "ev_text_005",
+                "ev_text_007",
+                "ev_text_008"
+              ],
+              "precondition": null,
+              "reason": "客服已承诺转人工但处理结果未反馈（ev_text_008），客户多次催促补发且明确拒绝替代方案（ev_text_005、ev_text_007），加之其为高价值客户，及时人工联系有助于降低投诉升级风险。"
+            }
+          ],
+          "case_id": "acceptance_case_001",
+          "caution_note": "提醒人工：客户已明确拒绝小额补偿红包并坚持补发（ev_text_006、ev_text_007），再次联系时不宜重复以补偿替代处理核心诉求；客服所述齐全发货的核实依据未在对话中提供（ev_text_004），在证据核实完成前不得向客户承诺补发，也不得认定缺件责任；高价值身份仅用于排定处理优先级，不降低证据核验要求。",
+          "communication_points": [
+            "向客户说明其提交照片为局部特写且部分模糊，暂无法据此确认侧板缺失（ev_image_001、ev_text_003），请其补充能拍到柜子整体及缺失位置的清晰照片，并说明这是加快核实的必要步骤。",
+            "告知客户人工正在调取装箱/配件清单及物流出库记录核实发货情况（ev_text_004），核实需要一定时间，将明确反馈时限，但不预先承诺补发结果。",
+            "对客户多次沟通与等待表达理解（ev_text_002），确认其补发诉求（ev_text_007）已完整记录并随案件转人工跟进（ev_text_008），核实完成后将第一时间反馈处理方案。"
+          ],
+          "intervention_level": "SHOULD_INTERVENE",
+          "priority_reason": "客户缺件声称（ev_text_003、ev_text_005、ev_text_007）与客服齐全发货陈述（ev_text_004）存在证据冲突，照片无法核实缺件，客服亦表示无法核实缺少配件（ev_text_006），问题未解决且转人工后未反馈结果（ev_text_008）；客户为高价值客户（R=394、M=937.64），建议提升处理优先级并需人工核验证据。",
+          "schema_version": "v1"
+        },
+        "stage": "STRATEGY"
+      },
+      {
+        "error_code": null,
+        "error_stage": null,
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:41:38.565315Z",
+        "status": "SUCCESS"
+      }
+    ],
+    "failure": false,
+    "model_attempts": 3,
+    "outcome": {
+      "attribution": {
+        "alternative_cause": null,
+        "case_id": "acceptance_case_001",
+        "primary_cause": {
+          "category": "INSUFFICIENT_EVIDENCE",
+          "counter_evidence_ids": [
+            "ev_text_004"
+          ],
+          "evidence_ids": [
+            "ev_text_001",
+            "ev_text_003",
+            "ev_text_005",
+            "ev_image_001",
+            "ev_text_004",
+            "ev_text_006"
+          ],
+          "explanation": "假设性解释：若客户所述属实，侧板缺失可能源于出厂装箱或仓储发货环节漏装；但当前仅有客户单方声称缺件（ev_text_001、ev_text_003、ev_text_005），照片为局部特写无法核实板件数量（ev_image_001），客服称核实显示齐全发货但依据未提供（ev_text_004），且客服明确表示无法核实缺少配件（ev_text_006），故无法在物流履约、商品问题等业务类别之间做出可靠归因。",
+          "uncertainty": "照片为局部特写且下半部分模糊，无法确认柜子缺少两个侧板；客服所述齐全发货核实信息的具体依据未在对话中提供；缺少柜子整体全景照片、装箱或配件清单以及物流称重、出库记录，缺件是否属实及发生环节均不确定。"
+        },
+        "risk_summary": "客户声称收到的柜子缺少两个侧板并多次坚持要求补发，客服核实时称产品齐全发货但未提供核实依据，双方说法冲突且未达成一致，现已转人工处理。客户提交的照片为局部特写，无法确认缺件；也缺少装箱清单、配件清单或物流出库记录等履约侧证据可供核对，缺件是否属实及其原因目前无法可靠判断。",
+        "schema_version": "v1"
+      },
+      "decision": {
+        "actions": [
+          {
+            "action_type": "EVIDENCE_CHECK",
+            "description": "建议人工补充核实证据：请客户提供能显示柜子整体及侧板缺失位置的清晰照片（现提交照片为局部特写，ev_image_001 无法确认缺件），并调取发货装箱/配件清单、物流出库或称重记录，核对客服所述齐全发货核实信息的具体依据（ev_text_004）。",
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_006",
+              "ev_image_001"
+            ],
+            "precondition": null,
+            "reason": "归因结论为证据不足（INSUFFICIENT_EVIDENCE），缺件是否属实及发生环节均无法判断，必须在人工完成证据核验后才能确定后续处理方向。"
+          },
+          {
+            "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+            "description": "若证据核实支持客户缺件声称，建议人工发起补发两个侧板的核验与审批流程（客户明确拒绝补偿红包并坚持补发，ev_text_007）；在核实完成前仅作为条件性建议提交，不得向客户承诺补发结果。",
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_005",
+              "ev_text_007"
+            ],
+            "precondition": null,
+            "reason": "客户的核心诉求自始至终是补发缺少的侧板而非补偿（ev_text_001、ev_text_005、ev_text_007），需将其诉求纳入补发核验通道并附条件提交人工决定。"
+          },
+          {
+            "action_type": "CUSTOMER_CONTACT",
+            "description": "建议人工主动联系客户：告知其需求已转人工处理（ev_text_008）但尚未反馈结果，说明当前证据核实进展、所需补充材料及预计反馈时限，避免客户在无回应状态下继续等待。",
+            "evidence_ids": [
+              "ev_text_005",
+              "ev_text_007",
+              "ev_text_008"
+            ],
+            "precondition": null,
+            "reason": "客服已承诺转人工但处理结果未反馈（ev_text_008），客户多次催促补发且明确拒绝替代方案（ev_text_005、ev_text_007），加之其为高价值客户，及时人工联系有助于降低投诉升级风险。"
+          }
+        ],
+        "case_id": "acceptance_case_001",
+        "caution_note": "提醒人工：客户已明确拒绝小额补偿红包并坚持补发（ev_text_006、ev_text_007），再次联系时不宜重复以补偿替代处理核心诉求；客服所述齐全发货的核实依据未在对话中提供（ev_text_004），在证据核实完成前不得向客户承诺补发，也不得认定缺件责任；高价值身份仅用于排定处理优先级，不降低证据核验要求。",
+        "communication_points": [
+          "向客户说明其提交照片为局部特写且部分模糊，暂无法据此确认侧板缺失（ev_image_001、ev_text_003），请其补充能拍到柜子整体及缺失位置的清晰照片，并说明这是加快核实的必要步骤。",
+          "告知客户人工正在调取装箱/配件清单及物流出库记录核实发货情况（ev_text_004），核实需要一定时间，将明确反馈时限，但不预先承诺补发结果。",
+          "对客户多次沟通与等待表达理解（ev_text_002），确认其补发诉求（ev_text_007）已完整记录并随案件转人工跟进（ev_text_008），核实完成后将第一时间反馈处理方案。"
+        ],
+        "intervention_level": "SHOULD_INTERVENE",
+        "priority_reason": "客户缺件声称（ev_text_003、ev_text_005、ev_text_007）与客服齐全发货陈述（ev_text_004）存在证据冲突，照片无法核实缺件，客服亦表示无法核实缺少配件（ev_text_006），问题未解决且转人工后未反馈结果（ev_text_008）；客户为高价值客户（R=394、M=937.64），建议提升处理优先级并需人工核验证据。",
+        "schema_version": "v1"
+      },
+      "perception": {
+        "case_id": "acceptance_case_001",
+        "emotion": {
+          "evidence_ids": [
+            "ev_text_001",
+            "ev_text_007"
+          ],
+          "value": "CALM"
+        },
+        "events": [
+          {
+            "category": "缺件声称",
+            "conflict_evidence_ids": null,
+            "event_no": 1,
+            "evidence_ids": [
+              "ev_text_001"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户声称收到的柜子少了两个面板，询问如何处理",
+            "uncertainty": null
+          },
+          {
+            "category": "客服索要照片",
+            "conflict_evidence_ids": null,
+            "event_no": 2,
+            "evidence_ids": [
+              "ev_text_002"
+            ],
+            "resolution": "RESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服致歉并要求客户拍摄柜子情况照片以便处理",
+            "uncertainty": null
+          },
+          {
+            "category": "提交照片并要求补发",
+            "conflict_evidence_ids": null,
+            "event_no": 3,
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_image_001"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户提交照片并声称少了两个侧板，要求尽快补发",
+            "uncertainty": "所提交照片为局部特写，无法从图片直接确认柜子缺少两个侧板"
+          },
+          {
+            "category": "发货齐全陈述",
+            "conflict_evidence_ids": [
+              "ev_text_003",
+              "ev_text_005"
+            ],
+            "event_no": 4,
+            "evidence_ids": [
+              "ev_text_004"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服称根据核实信息显示产品齐全发货，与客户缺件声称相冲突",
+            "uncertainty": "客服所述核实信息的具体依据未在对话中提供"
+          },
+          {
+            "category": "补偿提议",
+            "conflict_evidence_ids": null,
+            "event_no": 5,
+            "evidence_ids": [
+              "ev_text_006"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服表示无法核实缺少配件，提议小额补偿红包或转接人工客服",
+            "uncertainty": null
+          },
+          {
+            "category": "拒绝补偿坚持补发",
+            "conflict_evidence_ids": [
+              "ev_text_006"
+            ],
+            "event_no": 6,
+            "evidence_ids": [
+              "ev_text_007"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户拒绝补偿红包，坚持要求补发缺少的板子",
+            "uncertainty": null
+          },
+          {
+            "category": "转人工处理",
+            "conflict_evidence_ids": null,
+            "event_no": 7,
+            "evidence_ids": [
+              "ev_text_008"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服表示已将客户需求转交人工处理，处理结果未反馈",
+            "uncertainty": null
+          },
+          {
+            "category": "订单履约事实",
+            "conflict_evidence_ids": null,
+            "event_no": 8,
+            "evidence_ids": [
+              "ev_behavior_002",
+              "ev_behavior_003",
+              "ev_behavior_006",
+              "ev_behavior_007"
+            ],
+            "resolution": "RESOLVED",
+            "statement_basis": "PROGRAM_DERIVED",
+            "summary": "订单于2017-09-17购买、2017-10-06送达客户，早于预计送达时间2017-10-17",
+            "uncertainty": null
+          }
+        ],
+        "image_observations": [
+          {
+            "analysis_status": "ANALYZED",
+            "image_evidence_id": "ev_image_001",
+            "observable_facts": [
+              "画面为白色家具组件的局部特写，组件上可见一个银色金属圆形按钮",
+              "白色组件边缘呈弧形造型",
+              "画面下半部分背景昏暗且模糊，无法看清具体场景"
+            ],
+            "related_text_evidence_ids": [
+              "ev_text_003"
+            ],
+            "relation": "UNDETERMINED",
+            "uncertainty": "照片为局部特写且部分模糊，未拍到柜子整体，无法从图片确认是否缺少两个侧板"
+          }
+        ],
+        "missing_evidence": [
+          "缺少柜子整体全景或能清晰显示侧板缺失位置的照片，无法核对板件数量",
+          "缺少发货装箱清单或配件清单，无法核实发货时物品是否齐全",
+          "缺少物流包裹称重或出库记录等履约侧证据，无法佐证客服所述齐全发货的核实依据"
+        ],
+        "schema_version": "v1"
+      },
+      "status": "SUCCESS"
+    },
+    "success": true,
+    "validated_stages": 3
+  },
+  {
+    "batch_id": "acceptance_batch_v1",
+    "case_id": "acceptance_case_002",
+    "duration_seconds": 105.61,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:41:15.232859Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:43:00.849631Z",
+        "latency_ms": 105610,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 2,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "614cdb19c346bb4e6835622095b1edef17c435ed42e14259e8f7192b1a6dcb5f"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:41:15.232859Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:43:00.849631Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-acceptance_case_002"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "acceptance_batch_v1",
+    "case_id": "acceptance_case_003",
+    "duration_seconds": 101.796,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:41:38.565315Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 2981,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:42:05.087125Z",
+        "latency_ms": 26514,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 3190,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "8daed998f4e703a631699c0dbbe138fbcd8951b9286546cfed88f416bbfa2d0d"
+        },
+        "response_json": {
+          "case_id": "acceptance_case_003",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_005",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "商品与描述不符",
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_003"
+              ],
+              "resolution": "UNCONFIRMABLE",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称购买的智能语音款空调扇，实际收到的是机械款，与商品描述不符，要求退款退货",
+              "uncertainty": "仅客户单方陈述，无验货记录或图片证据核实实际收到的商品型号"
+            },
+            {
+              "category": "退换政策告知",
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知支持7天无理由退换，需保持商品完好，并询问是否已试用"
+            },
+            {
+              "category": "退货费用分担与退货地址",
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服提供退货地址，说明顺丰运费20.3元，运费险补贴9元，客户承担11.3元",
+              "uncertainty": "客户未对费用分担方案明确表态，但随后寄回商品可视为实际接受，费用实际承担情况未二次确认"
+            },
+            {
+              "category": "退货寄出",
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_005"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已通过顺丰寄出退货商品并提供运单号，请求查收后办理退款"
+            },
+            {
+              "category": "退款办理确认",
+              "conflict_evidence_ids": [
+                "ev_behavior_002"
+              ],
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服陈述退货已办理成功，订单状态已更新为已退款，退款将尽快处理",
+              "uncertainty": "客服陈述订单状态为已退款，但系统核验事实显示 ORDER_STATUS 为 delivered，两者存在不一致"
+            },
+            {
+              "category": "退款到账与结案",
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已收到退款，表示问题全部解决"
+            }
+          ],
+          "missing_evidence": [
+            "缺少商品实物图片或验货记录，无法核实客户声称的智能语音款与机械款不符",
+            "缺少退款流水或退款金额明细，无法核实实际退款金额与订单金额的一致性",
+            "对话缺少时间戳，无法核实退货申请是否在7天无理由退换期限内",
+            "系统订单状态显示 delivered，与客服陈述的已退款状态冲突，缺少最终订单状态或退款到账凭证"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:41:38.565315Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 6171
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "case_id": "acceptance_case_003",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_005",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "商品与描述不符",
+              "conflict_evidence_ids": null,
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_003"
+              ],
+              "resolution": "UNCONFIRMABLE",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称购买的智能语音款空调扇，实际收到的是机械款，与商品描述不符，要求退款退货",
+              "uncertainty": "仅客户单方陈述，无验货记录或图片证据核实实际收到的商品型号"
+            },
+            {
+              "category": "退换政策告知",
+              "conflict_evidence_ids": null,
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知支持7天无理由退换，需保持商品完好，并询问是否已试用",
+              "uncertainty": null
+            },
+            {
+              "category": "退货费用分担与退货地址",
+              "conflict_evidence_ids": null,
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服提供退货地址，说明顺丰运费20.3元，运费险补贴9元，客户承担11.3元",
+              "uncertainty": "客户未对费用分担方案明确表态，但随后寄回商品可视为实际接受，费用实际承担情况未二次确认"
+            },
+            {
+              "category": "退货寄出",
+              "conflict_evidence_ids": null,
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_005"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已通过顺丰寄出退货商品并提供运单号，请求查收后办理退款",
+              "uncertainty": null
+            },
+            {
+              "category": "退款办理确认",
+              "conflict_evidence_ids": [
+                "ev_behavior_002"
+              ],
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服陈述退货已办理成功，订单状态已更新为已退款，退款将尽快处理",
+              "uncertainty": "客服陈述订单状态为已退款，但系统核验事实显示 ORDER_STATUS 为 delivered，两者存在不一致"
+            },
+            {
+              "category": "退款到账与结案",
+              "conflict_evidence_ids": null,
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已收到退款，表示问题全部解决",
+              "uncertainty": null
+            }
+          ],
+          "image_observations": [],
+          "missing_evidence": [
+            "缺少商品实物图片或验货记录，无法核实客户声称的智能语音款与机械款不符",
+            "缺少退款流水或退款金额明细，无法核实实际退款金额与订单金额的一致性",
+            "对话缺少时间戳，无法核实退货申请是否在7天无理由退换期限内",
+            "系统订单状态显示 delivered，与客服陈述的已退款状态冲突，缺少最终订单状态或退款到账凭证"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:42:05.087125Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 3014,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:42:37.735735Z",
+        "latency_ms": 32656,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 2483,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "ATTRIBUTION",
+          "stream": false,
+          "system_prompt_sha256": "e35060664beb134e14594a0182e4473dc1dedaaa8b35ebd16c361a108094e95e",
+          "thinking_enabled": true,
+          "user_content_sha256": "dcb20cec6ac4a610e35976fc5dfd8e294ca5b218b212e6a1c9c074b765b5f7aa"
+        },
+        "response_json": {
+          "alternative_cause": {
+            "category": "SERVICE_COMMUNICATION",
+            "counter_evidence_ids": [
+              "ev_text_007"
+            ],
+            "evidence_ids": [
+              "ev_text_006",
+              "ev_behavior_002"
+            ],
+            "explanation": "客服陈述订单状态已更新为已退款，而系统核验显示 ORDER_STATUS 为 delivered，两者不一致，提示可能存在状态告知或系统记录层面的沟通风险；该冲突可能反映信息同步不准确的问题。",
+            "uncertainty": "客户随后确认已收到退款，冲突的实际影响有限；缺少退款流水或最终订单状态凭证，无法确定不一致源于系统延迟、记录错误还是客服表述偏差。"
+          },
+          "case_id": "acceptance_case_003",
+          "primary_cause": {
+            "category": "PRODUCT_ISSUE",
+            "counter_evidence_ids": [
+              "ev_text_002",
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003"
+            ],
+            "explanation": "假设客户实际收到的商品型号与描述不符（机械款 vs 智能语音款），该描述不符主张可能是本次售后风险的主要触发原因；但由于缺少验货记录或实物图片，且商家侧按7天无理由、个人原因退货口径处理，型号不符是否属实尚不能确认为已证明事实。",
+            "uncertainty": "商品不符仅为客户单方陈述，无验货或图片证据核实；商家将退货定性为个人原因并让客户承担部分运费，与描述不符通常由商家担责的处理方式存在张力；对话缺时间戳，无法核实是否在7天期限内；退款金额与订单金额一致性亦未核实。"
+          },
+          "risk_summary": "本案例风险可能主要源于客户主张收到的空调扇为机械款、与其所购智能语音款描述不符，从而触发退货退款流程；但该主张仅为单方陈述，商家按7天无理由和个人原因退货处理并要求客户分担运费，型号不符未经核实。次要风险为客服陈述订单已退款与系统状态 delivered 存在记录不一致；客户最终确认收到退款。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:42:05.087125Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 5497
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "alternative_cause": {
+            "category": "SERVICE_COMMUNICATION",
+            "counter_evidence_ids": [
+              "ev_text_007"
+            ],
+            "evidence_ids": [
+              "ev_text_006",
+              "ev_behavior_002"
+            ],
+            "explanation": "客服陈述订单状态已更新为已退款，而系统核验显示 ORDER_STATUS 为 delivered，两者不一致，提示可能存在状态告知或系统记录层面的沟通风险；该冲突可能反映信息同步不准确的问题。",
+            "uncertainty": "客户随后确认已收到退款，冲突的实际影响有限；缺少退款流水或最终订单状态凭证，无法确定不一致源于系统延迟、记录错误还是客服表述偏差。"
+          },
+          "case_id": "acceptance_case_003",
+          "primary_cause": {
+            "category": "PRODUCT_ISSUE",
+            "counter_evidence_ids": [
+              "ev_text_002",
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003"
+            ],
+            "explanation": "假设客户实际收到的商品型号与描述不符（机械款 vs 智能语音款），该描述不符主张可能是本次售后风险的主要触发原因；但由于缺少验货记录或实物图片，且商家侧按7天无理由、个人原因退货口径处理，型号不符是否属实尚不能确认为已证明事实。",
+            "uncertainty": "商品不符仅为客户单方陈述，无验货或图片证据核实；商家将退货定性为个人原因并让客户承担部分运费，与描述不符通常由商家担责的处理方式存在张力；对话缺时间戳，无法核实是否在7天期限内；退款金额与订单金额一致性亦未核实。"
+          },
+          "risk_summary": "本案例风险可能主要源于客户主张收到的空调扇为机械款、与其所购智能语音款描述不符，从而触发退货退款流程；但该主张仅为单方陈述，商家按7天无理由和个人原因退货处理并要求客户分担运费，型号不符未经核实。次要风险为客服陈述订单已退款与系统状态 delivered 存在记录不一致；客户最终确认收到退款。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:42:37.735735Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:43:20.363054Z",
+        "latency_ms": 42625,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "STRATEGY",
+          "stream": false,
+          "system_prompt_sha256": "57deb2fc718e66231abde91d0125fc8127a2cf7aa5d5672a8094c9852568a49e",
+          "thinking_enabled": true,
+          "user_content_sha256": "f6f28f44bf20cce9393e762efbea0731c3812af88f58992b9f246632441e89ac"
+        },
+        "response_json": null,
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:42:37.735735Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "STRATEGY"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "STRATEGY",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:43:20.363054Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 3,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "STRATEGY",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-acceptance_case_003"
+    },
+    "success": false,
+    "validated_stages": 2
+  },
+  {
+    "batch_id": "acceptance_batch_v1",
+    "case_id": "acceptance_case_004",
+    "duration_seconds": 111.547,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:43:00.849631Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 3790,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:44:03.882581Z",
+        "latency_ms": 63031,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 6528,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 1,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "66cf59a25b10df96dcf532f081d0bfc04fd2b56e23ccb189332eb93cc5bb581f"
+        },
+        "response_json": {
+          "case_id": "acceptance_case_004",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_005"
+            ],
+            "value": "IMPATIENT"
+          },
+          "events": [
+            {
+              "category": "商品与展示不符",
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称收到的绿植与页面展示不一致，并提出退款诉求"
+            },
+            {
+              "category": "客服索取凭证",
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002",
+                "ev_text_003"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服致歉并要求客户发送实物照片以便协助处理"
+            },
+            {
+              "category": "实物状态争议",
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户发送照片并声称叶片蔫萎、与页面图片完全不同，要求办理仅退款",
+              "uncertainty": "客户声称的实物（蔫萎叶片）照片未包含在当前图片证据中，实物实际状态无法直接核验"
+            },
+            {
+              "category": "平台核实结论",
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服陈述平台核实照片情况不符合质量问题标准，并提出退货退款且承担退货运费的替代方案",
+              "uncertainty": "平台核实结论的具体依据与质量问题判定标准未随证据提供，方案尚未获得客户确认"
+            },
+            {
+              "category": "方案分歧",
+              "conflict_evidence_ids": [
+                "ev_text_004"
+              ],
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_005"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户拒绝替代方案，坚持要求仅退款，并声称买一送一发出的商品全为蔫货、照片可证明属质量问题"
+            },
+            {
+              "category": "转人工处理",
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知已将客户需求转交人工处理，处理结果尚未反馈"
+            },
+            {
+              "category": "订单履约事实",
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_005",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "订单已签收：2017-03-22购买，2017-03-24交承运方，2017-03-30送达客户，早于2017-04-10预计送达时间"
+            }
+          ],
+          "image_observations": [
+            {
+              "analysis_status": "ANALYZED",
+              "image_evidence_id": "ev_image_001",
+              "observable_facts": [
+                "商品详情页主图显示叶片油亮、状态饱满的绿植，画面内字幕为“建议养几盆”",
+                "商品标题为“【买一送一】A大叶金钻绿公主室内办公桌面夏天美观盆栽配盆好”，并带“坏了包退”标签，价格显示9.9元起",
+                "页面显示“预售·包邮·5天内发货·广东省广州市发出”及“坏了包退·晚发立赔·破损包退·极速退款”服务信息"
+              ],
+              "related_text_evidence_ids": [
+                "ev_text_001",
+                "ev_text_003"
+              ],
+              "relation": "SUPPLEMENTS",
+              "uncertainty": "该图片为商品详情页截图，展示的是页面宣传的植物状态，并非客户声称发送的实物照片，无法据此核验客户实际收到商品的状态"
+            }
+          ],
+          "missing_evidence": [
+            "客户声称发送的实物（蔫萎叶片）照片未包含在当前图片证据中，实物状态无法直接核验",
+            "平台核实“不符合质量问题标准”所依据的具体标准或核实记录未提供",
+            "商品页“坏了包退”承诺的具体适用范围与判定条件说明未提供"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:43:00.849631Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 10318
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "case_id": "acceptance_case_004",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_005"
+            ],
+            "value": "IMPATIENT"
+          },
+          "events": [
+            {
+              "category": "商品与展示不符",
+              "conflict_evidence_ids": null,
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户声称收到的绿植与页面展示不一致，并提出退款诉求",
+              "uncertainty": null
+            },
+            {
+              "category": "客服索取凭证",
+              "conflict_evidence_ids": null,
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002",
+                "ev_text_003"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服致歉并要求客户发送实物照片以便协助处理",
+              "uncertainty": null
+            },
+            {
+              "category": "实物状态争议",
+              "conflict_evidence_ids": null,
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户发送照片并声称叶片蔫萎、与页面图片完全不同，要求办理仅退款",
+              "uncertainty": "客户声称的实物（蔫萎叶片）照片未包含在当前图片证据中，实物实际状态无法直接核验"
+            },
+            {
+              "category": "平台核实结论",
+              "conflict_evidence_ids": null,
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服陈述平台核实照片情况不符合质量问题标准，并提出退货退款且承担退货运费的替代方案",
+              "uncertainty": "平台核实结论的具体依据与质量问题判定标准未随证据提供，方案尚未获得客户确认"
+            },
+            {
+              "category": "方案分歧",
+              "conflict_evidence_ids": [
+                "ev_text_004"
+              ],
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_005"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户拒绝替代方案，坚持要求仅退款，并声称买一送一发出的商品全为蔫货、照片可证明属质量问题",
+              "uncertainty": null
+            },
+            {
+              "category": "转人工处理",
+              "conflict_evidence_ids": null,
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_006"
+              ],
+              "resolution": "UNRESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知已将客户需求转交人工处理，处理结果尚未反馈",
+              "uncertainty": null
+            },
+            {
+              "category": "订单履约事实",
+              "conflict_evidence_ids": null,
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_005",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "订单已签收：2017-03-22购买，2017-03-24交承运方，2017-03-30送达客户，早于2017-04-10预计送达时间",
+              "uncertainty": null
+            }
+          ],
+          "image_observations": [
+            {
+              "analysis_status": "ANALYZED",
+              "image_evidence_id": "ev_image_001",
+              "observable_facts": [
+                "商品详情页主图显示叶片油亮、状态饱满的绿植，画面内字幕为“建议养几盆”",
+                "商品标题为“【买一送一】A大叶金钻绿公主室内办公桌面夏天美观盆栽配盆好”，并带“坏了包退”标签，价格显示9.9元起",
+                "页面显示“预售·包邮·5天内发货·广东省广州市发出”及“坏了包退·晚发立赔·破损包退·极速退款”服务信息"
+              ],
+              "related_text_evidence_ids": [
+                "ev_text_001",
+                "ev_text_003"
+              ],
+              "relation": "SUPPLEMENTS",
+              "uncertainty": "该图片为商品详情页截图，展示的是页面宣传的植物状态，并非客户声称发送的实物照片，无法据此核验客户实际收到商品的状态"
+            }
+          ],
+          "missing_evidence": [
+            "客户声称发送的实物（蔫萎叶片）照片未包含在当前图片证据中，实物状态无法直接核验",
+            "平台核实“不符合质量问题标准”所依据的具体标准或核实记录未提供",
+            "商品页“坏了包退”承诺的具体适用范围与判定条件说明未提供"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:44:03.882581Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 1874,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:44:22.482407Z",
+        "latency_ms": 18608,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 2776,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "ATTRIBUTION",
+          "stream": false,
+          "system_prompt_sha256": "e35060664beb134e14594a0182e4473dc1dedaaa8b35ebd16c361a108094e95e",
+          "thinking_enabled": true,
+          "user_content_sha256": "2f4b3c3b47ae27dba738a985b546ad5c7d335552b495d91ed040f9d0eefb4a04"
+        },
+        "response_json": {
+          "alternative_cause": {
+            "category": "RETURN_REFUND",
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005"
+            ],
+            "explanation": "假设性备选：僵持点同时集中于退款方式分歧——客户坚持仅退款，平台仅提供承担退货运费的退货退款方案，双方在退货退款路径上未能达成一致，可能是争议持续未解的独立驱动因素。",
+            "uncertainty": "客户拒绝退货退款方案的真实动机（对质量问题认定不满，还是不愿走退货流程）现有证据不足以区分。"
+          },
+          "case_id": "acceptance_case_004",
+          "primary_cause": {
+            "category": "PRODUCT_ISSUE",
+            "counter_evidence_ids": [
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_image_001"
+            ],
+            "explanation": "假设性归因：争议起点疑似商品问题——客户从初次反馈到后续沟通持续声称叶片蔫萎、与页面展示不符，而详情页主图展示的是叶片油亮饱满的绿植并标注坏了包退，可能存在实物与宣传不符或到货损伤的质量争议，但该假设尚未被证实。",
+            "uncertainty": "客户声称发送的实物照片未包含在现有图片证据中，实物实际状态无法直接核验；平台判定照片不符合质量问题标准的具体依据未提供；坏了包退承诺的适用范围不明，商品问题是否成立暂无法确定。"
+          },
+          "risk_summary": "客户主张绿植叶片蔫萎、与页面展示不符，坚持要求仅退款；平台核实认为不符合质量问题标准，提出承担运费的退货退款替代方案，客户拒绝，争议已转人工待处理。实物照片证据缺失、核实依据不明，双方各执一词，叠加客户情绪不耐，存在处理升级与舆情风险。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:44:03.882581Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 4650
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "alternative_cause": {
+            "category": "RETURN_REFUND",
+            "counter_evidence_ids": null,
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005"
+            ],
+            "explanation": "假设性备选：僵持点同时集中于退款方式分歧——客户坚持仅退款，平台仅提供承担退货运费的退货退款方案，双方在退货退款路径上未能达成一致，可能是争议持续未解的独立驱动因素。",
+            "uncertainty": "客户拒绝退货退款方案的真实动机（对质量问题认定不满，还是不愿走退货流程）现有证据不足以区分。"
+          },
+          "case_id": "acceptance_case_004",
+          "primary_cause": {
+            "category": "PRODUCT_ISSUE",
+            "counter_evidence_ids": [
+              "ev_text_004"
+            ],
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_image_001"
+            ],
+            "explanation": "假设性归因：争议起点疑似商品问题——客户从初次反馈到后续沟通持续声称叶片蔫萎、与页面展示不符，而详情页主图展示的是叶片油亮饱满的绿植并标注坏了包退，可能存在实物与宣传不符或到货损伤的质量争议，但该假设尚未被证实。",
+            "uncertainty": "客户声称发送的实物照片未包含在现有图片证据中，实物实际状态无法直接核验；平台判定照片不符合质量问题标准的具体依据未提供；坏了包退承诺的适用范围不明，商品问题是否成立暂无法确定。"
+          },
+          "risk_summary": "客户主张绿植叶片蔫萎、与页面展示不符，坚持要求仅退款；平台核实认为不符合质量问题标准，提出承担运费的退货退款替代方案，客户拒绝，争议已转人工待处理。实物照片证据缺失、核实依据不明，双方各执一词，叠加客户情绪不耐，存在处理升级与舆情风险。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:44:22.483407Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 2930,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:44:52.393026Z",
+        "latency_ms": 29906,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 3676,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "STRATEGY",
+          "stream": false,
+          "system_prompt_sha256": "57deb2fc718e66231abde91d0125fc8127a2cf7aa5d5672a8094c9852568a49e",
+          "thinking_enabled": true,
+          "user_content_sha256": "dd9ea438d127ffd14cb89ce0c198e3b28de7cdf23e776d8399924d529ca4a273"
+        },
+        "response_json": {
+          "actions": [
+            {
+              "action_type": "EVIDENCE_CHECK",
+              "description": "人工核实客户声称发送的实物（蔫萎叶片）照片原件，调取平台作出'不符合质量问题标准'结论的核实记录与判定依据，并确认商品页'坏了包退'承诺的适用范围与判定条件。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_005",
+                "ev_image_001"
+              ],
+              "reason": "双方各执一词：客户声称照片清楚证明质量问题（ev_text_005），平台核实结论相反（ev_text_004）；实物照片证据缺失、核实标准不明（详情页截图 ev_image_001 仅能佐证页面宣传状态，无法核验实物），责任判断必须先补齐证据。"
+            },
+            {
+              "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+              "description": "在证据核实结论基础上，人工核验退款路径：评估客户主张的仅退款与平台提出的承担退货运费的退货退款两方案在'坏了包退'条款下的适用性，形成处理初稿提交人工审批，不代平台预先承诺任何退款结果。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_005",
+                "ev_image_001"
+              ],
+              "precondition": "以动作一关于实物状态与'坏了包退'适用范围的核验结论为前提。",
+              "reason": "退款方式分歧是当前僵持点：客户坚持仅退款（ev_text_003、ev_text_005），平台仅提供退货退款替代方案（ev_text_004），需以核实结论为依据确定合规路径，避免继续空转。"
+            },
+            {
+              "action_type": "CUSTOMER_CONTACT",
+              "description": "建议人工主动联系客户，反馈核实进展与结论，明确下一步退款路径、办理时限，并安抚其不耐情绪；联系前应已完成证据与退款路径核验，避免再次仅作程序性回复。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_005",
+                "ev_text_006"
+              ],
+              "reason": "争议已转人工但处理结果尚未反馈（ev_text_006），客户情绪不耐且言辞趋硬（ev_text_003、ev_text_005），持续无实质反馈易引发升级与舆情风险。"
+            }
+          ],
+          "case_id": "acceptance_case_004",
+          "caution_note": "实物照片证据缺失、平台核实依据未提供，商品质量问题是否成立尚不能确定，本包结论均为假设性处理建议；所有动作仅为提交人工的核验、联系与申请建议，不构成退款完成状态或任何补偿承诺，最终处理须人工审批后执行。",
+          "communication_points": [
+            "如实向客户说明平台核实所依据的具体标准与记录（对应 ev_text_004），避免只给结论不给依据而激化对立情绪。",
+            "如核验支持客户主张，明确仅退款的办理路径与时限；如不支持，则说明'坏了包退'的适用范围（ev_image_001），并确认承担退货运费的退货退款方案细节（ev_text_004）。",
+            "正面回应'买一送一发的全是蔫货'的整体质疑（ev_text_005），说明对相关商品的核验安排与覆盖范围，避免客户认为其主张被选择性忽略。"
+          ],
+          "intervention_level": "SHOULD_INTERVENE",
+          "priority_reason": "退货退款争议未解决且双方证据冲突：客户坚持仅退款并声称照片可证明质量问题（ev_text_005），平台核实结论相反（ev_text_004），实物照片与核实依据均缺失，客户情绪不耐（ev_text_003），已转人工但结果未反馈（ev_text_006），存在处理升级与舆情风险，需人工核验后推进。",
+          "schema_version": "v1"
+        },
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:44:22.483407Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 6606
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "actions": [
+            {
+              "action_type": "EVIDENCE_CHECK",
+              "description": "人工核实客户声称发送的实物（蔫萎叶片）照片原件，调取平台作出'不符合质量问题标准'结论的核实记录与判定依据，并确认商品页'坏了包退'承诺的适用范围与判定条件。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_005",
+                "ev_image_001"
+              ],
+              "precondition": null,
+              "reason": "双方各执一词：客户声称照片清楚证明质量问题（ev_text_005），平台核实结论相反（ev_text_004）；实物照片证据缺失、核实标准不明（详情页截图 ev_image_001 仅能佐证页面宣传状态，无法核验实物），责任判断必须先补齐证据。"
+            },
+            {
+              "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+              "description": "在证据核实结论基础上，人工核验退款路径：评估客户主张的仅退款与平台提出的承担退货运费的退货退款两方案在'坏了包退'条款下的适用性，形成处理初稿提交人工审批，不代平台预先承诺任何退款结果。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004",
+                "ev_text_005",
+                "ev_image_001"
+              ],
+              "precondition": "以动作一关于实物状态与'坏了包退'适用范围的核验结论为前提。",
+              "reason": "退款方式分歧是当前僵持点：客户坚持仅退款（ev_text_003、ev_text_005），平台仅提供退货退款替代方案（ev_text_004），需以核实结论为依据确定合规路径，避免继续空转。"
+            },
+            {
+              "action_type": "CUSTOMER_CONTACT",
+              "description": "建议人工主动联系客户，反馈核实进展与结论，明确下一步退款路径、办理时限，并安抚其不耐情绪；联系前应已完成证据与退款路径核验，避免再次仅作程序性回复。",
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_005",
+                "ev_text_006"
+              ],
+              "precondition": null,
+              "reason": "争议已转人工但处理结果尚未反馈（ev_text_006），客户情绪不耐且言辞趋硬（ev_text_003、ev_text_005），持续无实质反馈易引发升级与舆情风险。"
+            }
+          ],
+          "case_id": "acceptance_case_004",
+          "caution_note": "实物照片证据缺失、平台核实依据未提供，商品质量问题是否成立尚不能确定，本包结论均为假设性处理建议；所有动作仅为提交人工的核验、联系与申请建议，不构成退款完成状态或任何补偿承诺，最终处理须人工审批后执行。",
+          "communication_points": [
+            "如实向客户说明平台核实所依据的具体标准与记录（对应 ev_text_004），避免只给结论不给依据而激化对立情绪。",
+            "如核验支持客户主张，明确仅退款的办理路径与时限；如不支持，则说明'坏了包退'的适用范围（ev_image_001），并确认承担退货运费的退货退款方案细节（ev_text_004）。",
+            "正面回应'买一送一发的全是蔫货'的整体质疑（ev_text_005），说明对相关商品的核验安排与覆盖范围，避免客户认为其主张被选择性忽略。"
+          ],
+          "intervention_level": "SHOULD_INTERVENE",
+          "priority_reason": "退货退款争议未解决且双方证据冲突：客户坚持仅退款并声称照片可证明质量问题（ev_text_005），平台核实结论相反（ev_text_004），实物照片与核实依据均缺失，客户情绪不耐（ev_text_003），已转人工但结果未反馈（ev_text_006），存在处理升级与舆情风险，需人工核验后推进。",
+          "schema_version": "v1"
+        },
+        "stage": "STRATEGY"
+      },
+      {
+        "error_code": null,
+        "error_stage": null,
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:44:52.393964Z",
+        "status": "SUCCESS"
+      }
+    ],
+    "failure": false,
+    "model_attempts": 3,
+    "outcome": {
+      "attribution": {
+        "alternative_cause": {
+          "category": "RETURN_REFUND",
+          "counter_evidence_ids": null,
+          "evidence_ids": [
+            "ev_text_003",
+            "ev_text_004",
+            "ev_text_005"
+          ],
+          "explanation": "假设性备选：僵持点同时集中于退款方式分歧——客户坚持仅退款，平台仅提供承担退货运费的退货退款方案，双方在退货退款路径上未能达成一致，可能是争议持续未解的独立驱动因素。",
+          "uncertainty": "客户拒绝退货退款方案的真实动机（对质量问题认定不满，还是不愿走退货流程）现有证据不足以区分。"
+        },
+        "case_id": "acceptance_case_004",
+        "primary_cause": {
+          "category": "PRODUCT_ISSUE",
+          "counter_evidence_ids": [
+            "ev_text_004"
+          ],
+          "evidence_ids": [
+            "ev_text_001",
+            "ev_text_003",
+            "ev_text_005",
+            "ev_image_001"
+          ],
+          "explanation": "假设性归因：争议起点疑似商品问题——客户从初次反馈到后续沟通持续声称叶片蔫萎、与页面展示不符，而详情页主图展示的是叶片油亮饱满的绿植并标注坏了包退，可能存在实物与宣传不符或到货损伤的质量争议，但该假设尚未被证实。",
+          "uncertainty": "客户声称发送的实物照片未包含在现有图片证据中，实物实际状态无法直接核验；平台判定照片不符合质量问题标准的具体依据未提供；坏了包退承诺的适用范围不明，商品问题是否成立暂无法确定。"
+        },
+        "risk_summary": "客户主张绿植叶片蔫萎、与页面展示不符，坚持要求仅退款；平台核实认为不符合质量问题标准，提出承担运费的退货退款替代方案，客户拒绝，争议已转人工待处理。实物照片证据缺失、核实依据不明，双方各执一词，叠加客户情绪不耐，存在处理升级与舆情风险。",
+        "schema_version": "v1"
+      },
+      "decision": {
+        "actions": [
+          {
+            "action_type": "EVIDENCE_CHECK",
+            "description": "人工核实客户声称发送的实物（蔫萎叶片）照片原件，调取平台作出'不符合质量问题标准'结论的核实记录与判定依据，并确认商品页'坏了包退'承诺的适用范围与判定条件。",
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005",
+              "ev_image_001"
+            ],
+            "precondition": null,
+            "reason": "双方各执一词：客户声称照片清楚证明质量问题（ev_text_005），平台核实结论相反（ev_text_004）；实物照片证据缺失、核实标准不明（详情页截图 ev_image_001 仅能佐证页面宣传状态，无法核验实物），责任判断必须先补齐证据。"
+          },
+          {
+            "action_type": "REPLACEMENT_RETURN_REFUND_CHECK",
+            "description": "在证据核实结论基础上，人工核验退款路径：评估客户主张的仅退款与平台提出的承担退货运费的退货退款两方案在'坏了包退'条款下的适用性，形成处理初稿提交人工审批，不代平台预先承诺任何退款结果。",
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005",
+              "ev_image_001"
+            ],
+            "precondition": "以动作一关于实物状态与'坏了包退'适用范围的核验结论为前提。",
+            "reason": "退款方式分歧是当前僵持点：客户坚持仅退款（ev_text_003、ev_text_005），平台仅提供退货退款替代方案（ev_text_004），需以核实结论为依据确定合规路径，避免继续空转。"
+          },
+          {
+            "action_type": "CUSTOMER_CONTACT",
+            "description": "建议人工主动联系客户，反馈核实进展与结论，明确下一步退款路径、办理时限，并安抚其不耐情绪；联系前应已完成证据与退款路径核验，避免再次仅作程序性回复。",
+            "evidence_ids": [
+              "ev_text_003",
+              "ev_text_005",
+              "ev_text_006"
+            ],
+            "precondition": null,
+            "reason": "争议已转人工但处理结果尚未反馈（ev_text_006），客户情绪不耐且言辞趋硬（ev_text_003、ev_text_005），持续无实质反馈易引发升级与舆情风险。"
+          }
+        ],
+        "case_id": "acceptance_case_004",
+        "caution_note": "实物照片证据缺失、平台核实依据未提供，商品质量问题是否成立尚不能确定，本包结论均为假设性处理建议；所有动作仅为提交人工的核验、联系与申请建议，不构成退款完成状态或任何补偿承诺，最终处理须人工审批后执行。",
+        "communication_points": [
+          "如实向客户说明平台核实所依据的具体标准与记录（对应 ev_text_004），避免只给结论不给依据而激化对立情绪。",
+          "如核验支持客户主张，明确仅退款的办理路径与时限；如不支持，则说明'坏了包退'的适用范围（ev_image_001），并确认承担退货运费的退货退款方案细节（ev_text_004）。",
+          "正面回应'买一送一发的全是蔫货'的整体质疑（ev_text_005），说明对相关商品的核验安排与覆盖范围，避免客户认为其主张被选择性忽略。"
+        ],
+        "intervention_level": "SHOULD_INTERVENE",
+        "priority_reason": "退货退款争议未解决且双方证据冲突：客户坚持仅退款并声称照片可证明质量问题（ev_text_005），平台核实结论相反（ev_text_004），实物照片与核实依据均缺失，客户情绪不耐（ev_text_003），已转人工但结果未反馈（ev_text_006），存在处理升级与舆情风险，需人工核验后推进。",
+        "schema_version": "v1"
+      },
+      "perception": {
+        "case_id": "acceptance_case_004",
+        "emotion": {
+          "evidence_ids": [
+            "ev_text_003",
+            "ev_text_005"
+          ],
+          "value": "IMPATIENT"
+        },
+        "events": [
+          {
+            "category": "商品与展示不符",
+            "conflict_evidence_ids": null,
+            "event_no": 1,
+            "evidence_ids": [
+              "ev_text_001"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户声称收到的绿植与页面展示不一致，并提出退款诉求",
+            "uncertainty": null
+          },
+          {
+            "category": "客服索取凭证",
+            "conflict_evidence_ids": null,
+            "event_no": 2,
+            "evidence_ids": [
+              "ev_text_002",
+              "ev_text_003"
+            ],
+            "resolution": "RESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服致歉并要求客户发送实物照片以便协助处理",
+            "uncertainty": null
+          },
+          {
+            "category": "实物状态争议",
+            "conflict_evidence_ids": null,
+            "event_no": 3,
+            "evidence_ids": [
+              "ev_text_003"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户发送照片并声称叶片蔫萎、与页面图片完全不同，要求办理仅退款",
+            "uncertainty": "客户声称的实物（蔫萎叶片）照片未包含在当前图片证据中，实物实际状态无法直接核验"
+          },
+          {
+            "category": "平台核实结论",
+            "conflict_evidence_ids": null,
+            "event_no": 4,
+            "evidence_ids": [
+              "ev_text_004"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服陈述平台核实照片情况不符合质量问题标准，并提出退货退款且承担退货运费的替代方案",
+            "uncertainty": "平台核实结论的具体依据与质量问题判定标准未随证据提供，方案尚未获得客户确认"
+          },
+          {
+            "category": "方案分歧",
+            "conflict_evidence_ids": [
+              "ev_text_004"
+            ],
+            "event_no": 5,
+            "evidence_ids": [
+              "ev_text_005"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "CUSTOMER_CLAIMED",
+            "summary": "客户拒绝替代方案，坚持要求仅退款，并声称买一送一发出的商品全为蔫货、照片可证明属质量问题",
+            "uncertainty": null
+          },
+          {
+            "category": "转人工处理",
+            "conflict_evidence_ids": null,
+            "event_no": 6,
+            "evidence_ids": [
+              "ev_text_006"
+            ],
+            "resolution": "UNRESOLVED",
+            "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+            "summary": "客服告知已将客户需求转交人工处理，处理结果尚未反馈",
+            "uncertainty": null
+          },
+          {
+            "category": "订单履约事实",
+            "conflict_evidence_ids": null,
+            "event_no": 7,
+            "evidence_ids": [
+              "ev_behavior_002",
+              "ev_behavior_003",
+              "ev_behavior_005",
+              "ev_behavior_006",
+              "ev_behavior_007"
+            ],
+            "resolution": "RESOLVED",
+            "statement_basis": "PROGRAM_DERIVED",
+            "summary": "订单已签收：2017-03-22购买，2017-03-24交承运方，2017-03-30送达客户，早于2017-04-10预计送达时间",
+            "uncertainty": null
+          }
+        ],
+        "image_observations": [
+          {
+            "analysis_status": "ANALYZED",
+            "image_evidence_id": "ev_image_001",
+            "observable_facts": [
+              "商品详情页主图显示叶片油亮、状态饱满的绿植，画面内字幕为“建议养几盆”",
+              "商品标题为“【买一送一】A大叶金钻绿公主室内办公桌面夏天美观盆栽配盆好”，并带“坏了包退”标签，价格显示9.9元起",
+              "页面显示“预售·包邮·5天内发货·广东省广州市发出”及“坏了包退·晚发立赔·破损包退·极速退款”服务信息"
+            ],
+            "related_text_evidence_ids": [
+              "ev_text_001",
+              "ev_text_003"
+            ],
+            "relation": "SUPPLEMENTS",
+            "uncertainty": "该图片为商品详情页截图，展示的是页面宣传的植物状态，并非客户声称发送的实物照片，无法据此核验客户实际收到商品的状态"
+          }
+        ],
+        "missing_evidence": [
+          "客户声称发送的实物（蔫萎叶片）照片未包含在当前图片证据中，实物状态无法直接核验",
+          "平台核实“不符合质量问题标准”所依据的具体标准或核实记录未提供",
+          "商品页“坏了包退”承诺的具体适用范围与判定条件说明未提供"
+        ],
+        "schema_version": "v1"
+      },
+      "status": "SUCCESS"
+    },
+    "success": true,
+    "validated_stages": 3
+  },
+  {
+    "batch_id": "acceptance_batch_v1",
+    "case_id": "acceptance_case_005",
+    "duration_seconds": 102.891,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:43:20.364059Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:45:03.251097Z",
+        "latency_ms": 102891,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 1,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "b3eb366acbe8cf1fa84ce6b47f4b1466071089bf19b50ff6b2905e0963c33a18"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:43:20.364059Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:45:03.251097Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-acceptance_case_005"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_001",
+    "duration_seconds": 133.468,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:32:45.389687Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 4096,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:33:17.005312Z",
+        "latency_ms": 31609,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 3214,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "854f5e06c30964556d5a83057cb7553fe1d2569d1bc9579e6af1d92746e7a001"
+        },
+        "response_json": {
+          "raw_content": "\n{\n  \"schema_version\": \"v1\",\n  \"case_id\": \"mvp_case_001\",\n  \"events\": [\n    {\n      \"event_no\": 1,\n      \"category\": \"尺码不合适\",\n      \"summary\": \"客户反映衣服腰围过大穿着不舒服，申请退款退货\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_001\", \"ev_text_003\"]\n    },\n    {\n      \"event_no\": 2,\n      \"category\": \"商品状态自述\",\n      \"summary\": \"客户自述仅试穿过、吊牌和包装均完好\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_003\"],\n      \"uncertainty\": \"仅有客户口头陈述，无图片或验货记录佐证吊牌与包装完好情况\"\n    },\n    {\n      \"event_no\": 3,\n      \"category\": \"退换政策说明\",\n      \"summary\": \"客服告知支持7天无理由退换并称客户6月11日签收、仍在退换期内\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_002\"],\n      \"conflict_evidence_ids\": [\"ev_text_002\", \"ev_behavior_006\"],\n      \"uncertainty\": \"客服所述签收日期与已核验签收时间2017-09-21 18:33:09不一致，实际是否在退换期内无法确认\"\n    },\n    {\n      \"event_no\": 4,\n      \"category\": \"退货办理承诺\",\n      \"summary\": \"客服提供退货地址，说明个人原因退货运费约50.8元由客户承担，收到货后办理退款\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_004\"]\n    },\n    {\n      \"event_no\": 5,\n      \"category\": \"退回寄送\",\n      \"summary\": \"客户称已用顺丰寄回商品并提供单号，要求收到后尽快退款\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_005\"],\n      \"uncertainty\": \"单号已脱敏，无退回物流签收记录可供核验商家是否收到退货\"\n    },\n    {\n      \"event_no\": 6,\n      \"category\": \"退款处理\",\n      \"summary\": \"客服确认订单已进入退回处理中并承诺尽快处理退款申请\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_006\"]\n    },\n    {\n      \"event_no\": 7,\n      \"category\": \"退款到账确认\",\n      \"summary\": \"客户确认已收到退款且问题全部解决\",\n      \"statement_basis\": \"CUSTOMER_CONFIRMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_007\"]\n    },\n    {\n      \"event_no\": 8,\n      \"category\": \"订单履约事实\",\n      \"summary\": \"程序核验：2017-09-15下单、2017-09-21签收，订单状态为已送达，早于预计送达日2017-10-03\",\n      \"statement_basis\": \"PROGRAM_DERIVED\",\n      \"resolution\": \"RES"
+        },
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:32:45.389687Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 7310
+      },
+      {
+        "attempt_no": 2,
+        "completion_tokens": 3971,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:33:52.922766Z",
+        "latency_ms": 35917,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 3266,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "24a9bcb305de2fbf60ddf263ce01d041c3ef86637a79cfb8bc8be2807515e087"
+        },
+        "response_json": {
+          "case_id": "mvp_case_001",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "退换咨询",
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_002",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户咨询尺码不合适的处理方式，客服告知支持7天无理由退换且仍在退换期内"
+            },
+            {
+              "category": "签收时间陈述",
+              "conflict_evidence_ids": [
+                "ev_behavior_006"
+              ],
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002",
+                "ev_behavior_006"
+              ],
+              "resolution": "UNCONFIRMABLE",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服称客户于6月11日签收商品，与程序核验的签收时间2017-09-21不一致",
+              "uncertainty": "客服陈述的签收日期（6月11日）与核验的ORDER_DELIVERED_TO_CUSTOMER_AT（2017-09-21 18:33:09）不一致，实际签收日期以核验数据为准，客服陈述存疑"
+            },
+            {
+              "category": "商品状态与退货申请",
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户确认衣服已试穿一次、吊牌和包装完好，腰围偏大穿着不舒服，正式申请退款退货"
+            },
+            {
+              "category": "退货安排",
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004",
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服提供退货地址，要求顺丰寄回；因个人原因退货，运费约50.8元由客户承担，收货后办理退款"
+            },
+            {
+              "category": "商品寄回",
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户称已通过顺丰快递寄回商品并提供运单号"
+            },
+            {
+              "category": "退款处理承诺",
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_006",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知订单已进入退回处理中，将尽快处理退款申请"
+            },
+            {
+              "category": "退款到账确认",
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已收到退款，问题全部解决"
+            },
+            {
+              "category": "订单履约核验",
+              "event_no": 8,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_004",
+                "ev_behavior_005",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "程序核验：订单2017-09-15购买，2017-09-21 18:33:09送达客户，状态已签收，早于预计送达时间2017-10-03"
+            }
+          ],
+          "missing_evidence": [
+            "退款金额与退款方式（如原路退回）未在对话中明确",
+            "商家收到退货后的验货结果缺少系统记录，仅有客服口头表示",
+            "客户实际支付的退货运费金额未确认，仅客服预计50.8元",
+            "客户发起退货申请的具体日期未在证据中记录，无法独立核验是否在7天无理由期限内"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:33:17.005312Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 7237
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "case_id": "mvp_case_001",
+          "emotion": {
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_005",
+              "ev_text_007"
+            ],
+            "value": "CALM"
+          },
+          "events": [
+            {
+              "category": "退换咨询",
+              "conflict_evidence_ids": null,
+              "event_no": 1,
+              "evidence_ids": [
+                "ev_text_001",
+                "ev_text_002",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户咨询尺码不合适的处理方式，客服告知支持7天无理由退换且仍在退换期内",
+              "uncertainty": null
+            },
+            {
+              "category": "签收时间陈述",
+              "conflict_evidence_ids": [
+                "ev_behavior_006"
+              ],
+              "event_no": 2,
+              "evidence_ids": [
+                "ev_text_002",
+                "ev_behavior_006"
+              ],
+              "resolution": "UNCONFIRMABLE",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服称客户于6月11日签收商品，与程序核验的签收时间2017-09-21不一致",
+              "uncertainty": "客服陈述的签收日期（6月11日）与核验的ORDER_DELIVERED_TO_CUSTOMER_AT（2017-09-21 18:33:09）不一致，实际签收日期以核验数据为准，客服陈述存疑"
+            },
+            {
+              "category": "商品状态与退货申请",
+              "conflict_evidence_ids": null,
+              "event_no": 3,
+              "evidence_ids": [
+                "ev_text_003",
+                "ev_text_004"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户确认衣服已试穿一次、吊牌和包装完好，腰围偏大穿着不舒服，正式申请退款退货",
+              "uncertainty": null
+            },
+            {
+              "category": "退货安排",
+              "conflict_evidence_ids": null,
+              "event_no": 4,
+              "evidence_ids": [
+                "ev_text_004",
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服提供退货地址，要求顺丰寄回；因个人原因退货，运费约50.8元由客户承担，收货后办理退款",
+              "uncertainty": null
+            },
+            {
+              "category": "商品寄回",
+              "conflict_evidence_ids": null,
+              "event_no": 5,
+              "evidence_ids": [
+                "ev_text_005",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CLAIMED",
+              "summary": "客户称已通过顺丰快递寄回商品并提供运单号",
+              "uncertainty": null
+            },
+            {
+              "category": "退款处理承诺",
+              "conflict_evidence_ids": null,
+              "event_no": 6,
+              "evidence_ids": [
+                "ev_text_006",
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "SERVICE_AGENT_STATED_OR_PROMISED",
+              "summary": "客服告知订单已进入退回处理中，将尽快处理退款申请",
+              "uncertainty": null
+            },
+            {
+              "category": "退款到账确认",
+              "conflict_evidence_ids": null,
+              "event_no": 7,
+              "evidence_ids": [
+                "ev_text_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "CUSTOMER_CONFIRMED",
+              "summary": "客户确认已收到退款，问题全部解决",
+              "uncertainty": null
+            },
+            {
+              "category": "订单履约核验",
+              "conflict_evidence_ids": null,
+              "event_no": 8,
+              "evidence_ids": [
+                "ev_behavior_002",
+                "ev_behavior_003",
+                "ev_behavior_004",
+                "ev_behavior_005",
+                "ev_behavior_006",
+                "ev_behavior_007"
+              ],
+              "resolution": "RESOLVED",
+              "statement_basis": "PROGRAM_DERIVED",
+              "summary": "程序核验：订单2017-09-15购买，2017-09-21 18:33:09送达客户，状态已签收，早于预计送达时间2017-10-03",
+              "uncertainty": null
+            }
+          ],
+          "image_observations": [],
+          "missing_evidence": [
+            "退款金额与退款方式（如原路退回）未在对话中明确",
+            "商家收到退货后的验货结果缺少系统记录，仅有客服口头表示",
+            "客户实际支付的退货运费金额未确认，仅客服预计50.8元",
+            "客户发起退货申请的具体日期未在证据中记录，无法独立核验是否在7天无理由期限内"
+          ],
+          "schema_version": "v1"
+        },
+        "stage": "PERCEPTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:33:52.922766Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": 2271,
+        "error_code": null,
+        "error_summary": null,
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:34:16.854291Z",
+        "latency_ms": 23922,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": 2864,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "ATTRIBUTION",
+          "stream": false,
+          "system_prompt_sha256": "e35060664beb134e14594a0182e4473dc1dedaaa8b35ebd16c361a108094e95e",
+          "thinking_enabled": true,
+          "user_content_sha256": "1afb198f90f1f1222899528a232c52814687be380da680aeaa7a5a7549458f73"
+        },
+        "response_json": {
+          "alternative_cause": {
+            "category": "SERVICE_COMMUNICATION",
+            "counter_evidence_ids": [
+              "ev_text_004",
+              "ev_text_006"
+            ],
+            "evidence_ids": [
+              "ev_text_002",
+              "ev_behavior_006"
+            ],
+            "explanation": "假设性解释：客服在告知退换政策时陈述客户于6月11日签收，与程序核验的送达时间2017-09-21 18:33:09不一致，服务过程中给出的订单信息准确性可能存在风险；若签收日期影响7天期限判断，此类陈述偏差或引发争议。",
+            "uncertainty": "不一致的原因无法确定（可能是客服口误、查询口径或系统信息展示问题）；该陈述未被客户质疑，也未影响最终退换办理，实际风险影响有限，故仅作为备选原因。"
+          },
+          "case_id": "mvp_case_001",
+          "primary_cause": {
+            "category": "RETURN_REFUND",
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005",
+              "ev_text_006",
+              "ev_text_007"
+            ],
+            "explanation": "假设性解释：本案例的风险可能主要源于退换退款流程的触发——客户反馈腰围偏大穿着不适后主动申请退款退货，客服按7天无理由政策提供退货地址并要求顺丰寄回、运费由客户承担，收货后办理退款。整个交互链路（咨询、申请、寄回、退款承诺、到账确认）均围绕退货退款展开，且客服将其定性为个人原因退货。",
+            "uncertainty": "退款金额与退款方式未在对话中明确；客户实际支付的运费金额未经核验（仅客服预计50.8元）；客户发起退货申请的具体日期缺少记录，无法独立核验是否在7天无理由期限内；商家收货后的验货结果缺少系统记录。"
+          },
+          "risk_summary": "客户因衣服腰围偏大、穿着不适而咨询并申请退货退款，客服按7天无理由政策安排顺丰寄回，运费约50.8元由客户承担，最终退款到账、问题解决。风险主要属于退换退款流程触发；另存在客服陈述签收日期（6月11日）与核验送达时间（2017-09-21）不一致的信息准确性隐患。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION",
+        "started_at": "2026-09-11T03:33:52.922766Z",
+        "status": "SUCCEEDED",
+        "total_tokens": 5135
+      },
+      {
+        "contract_version": "v1",
+        "event_type": "STAGE_RESULT_VALIDATED",
+        "result": {
+          "alternative_cause": {
+            "category": "SERVICE_COMMUNICATION",
+            "counter_evidence_ids": [
+              "ev_text_004",
+              "ev_text_006"
+            ],
+            "evidence_ids": [
+              "ev_text_002",
+              "ev_behavior_006"
+            ],
+            "explanation": "假设性解释：客服在告知退换政策时陈述客户于6月11日签收，与程序核验的送达时间2017-09-21 18:33:09不一致，服务过程中给出的订单信息准确性可能存在风险；若签收日期影响7天期限判断，此类陈述偏差或引发争议。",
+            "uncertainty": "不一致的原因无法确定（可能是客服口误、查询口径或系统信息展示问题）；该陈述未被客户质疑，也未影响最终退换办理，实际风险影响有限，故仅作为备选原因。"
+          },
+          "case_id": "mvp_case_001",
+          "primary_cause": {
+            "category": "RETURN_REFUND",
+            "counter_evidence_ids": null,
+            "evidence_ids": [
+              "ev_text_001",
+              "ev_text_003",
+              "ev_text_004",
+              "ev_text_005",
+              "ev_text_006",
+              "ev_text_007"
+            ],
+            "explanation": "假设性解释：本案例的风险可能主要源于退换退款流程的触发——客户反馈腰围偏大穿着不适后主动申请退款退货，客服按7天无理由政策提供退货地址并要求顺丰寄回、运费由客户承担，收货后办理退款。整个交互链路（咨询、申请、寄回、退款承诺、到账确认）均围绕退货退款展开，且客服将其定性为个人原因退货。",
+            "uncertainty": "退款金额与退款方式未在对话中明确；客户实际支付的运费金额未经核验（仅客服预计50.8元）；客户发起退货申请的具体日期缺少记录，无法独立核验是否在7天无理由期限内；商家收货后的验货结果缺少系统记录。"
+          },
+          "risk_summary": "客户因衣服腰围偏大、穿着不适而咨询并申请退货退款，客服按7天无理由政策安排顺丰寄回，运费约50.8元由客户承担，最终退款到账、问题解决。风险主要属于退换退款流程触发；另存在客服陈述签收日期（6月11日）与核验送达时间（2017-09-21）不一致的信息准确性隐患。",
+          "schema_version": "v1"
+        },
+        "stage": "ATTRIBUTION"
+      },
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:34:16.855291Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:34:58.871552Z",
+        "latency_ms": 42014,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "STRATEGY",
+          "stream": false,
+          "system_prompt_sha256": "57deb2fc718e66231abde91d0125fc8127a2cf7aa5d5672a8094c9852568a49e",
+          "thinking_enabled": true,
+          "user_content_sha256": "d24efa57a0fe7842319b6cadd1505aa21f1c657c012123fd0d1190e72984216c"
+        },
+        "response_json": null,
+        "stage": "STRATEGY",
+        "started_at": "2026-09-11T03:34:16.855291Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "STRATEGY"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "STRATEGY",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:34:58.871552Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 4,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "STRATEGY",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_001"
+    },
+    "success": false,
+    "validated_stages": 2
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_002",
+    "duration_seconds": 38.468,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:32:45.389687Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:33:23.865503Z",
+        "latency_ms": 38468,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "09c4fd8f061ac34f8451794dff30a768fe4945d9140051d1f41a3817be38bbda"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:32:45.389687Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:33:23.866513Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_002"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_003",
+    "duration_seconds": 37.891,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:33:23.866513Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:34:01.750955Z",
+        "latency_ms": 37891,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "2f9b3b6f1d7c62c687c4a22b2bdf5f7c5fcb31742085e67da533a444b1a8c8d6"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:33:23.866513Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:34:01.750955Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_003"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_004",
+    "duration_seconds": 58.719,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:34:01.751978Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:35:00.470973Z",
+        "latency_ms": 58718,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 1,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "814ed7f0326d26a04bebc01eb3868f65038fb5a35b823570a6032fd91a5c7671"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:34:01.751978Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:35:00.470973Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_004"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_005",
+    "duration_seconds": 154.797,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:34:58.871552Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:37:33.666156Z",
+        "latency_ms": 154780,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 2,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "2a178bfad5f4ab31f16961366a1a3168bd9e459a0bbe86540e1871d85d96181f"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:34:58.871552Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:37:33.666156Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_005"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_006",
+    "duration_seconds": 124.453,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:35:00.470973Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:37:04.933033Z",
+        "latency_ms": 124452,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 3,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "90deb7fb297cd703c5438c9b41af78a88ea64bec1184b11793a54a8004aeaab6"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:35:00.470973Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:37:04.933033Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_006"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_007",
+    "duration_seconds": 123.531,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:37:04.933033Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:39:08.462339Z",
+        "latency_ms": 123531,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 1,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "64efd2f98c564b69fc724f22145dfc235b055cb886d4928ff6267af3edc415c1"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:37:04.933033Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:39:08.462339Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_007"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_008",
+    "duration_seconds": 36.641,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:37:33.667156Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:38:10.297162Z",
+        "latency_ms": 36641,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 0,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "2fc96cf74af5944c4a9373c89f3e31f0f6007cfceafe93183d0a2122736ae8fb"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:37:33.667156Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:38:10.297162Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_008"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_009",
+    "duration_seconds": 74.578,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:38:10.297162Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:39:24.887792Z",
+        "latency_ms": 74578,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 3,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "ea0e9aed3cebbe5c7416c221760912373b4af349871baa617072c3f2462ac9ce"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:38:10.297162Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:39:24.887792Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_009"
+    },
+    "success": false,
+    "validated_stages": 0
+  },
+  {
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_010",
+    "duration_seconds": 126.781,
+    "events": [
+      {
+        "event_type": "STAGE_STARTED",
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:39:08.462339Z"
+      },
+      {
+        "attempt_no": 1,
+        "completion_tokens": null,
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_summary": "模型返回空内容",
+        "event_type": "MODEL_ATTEMPT_FINISHED",
+        "finished_at": "2026-09-11T03:41:15.232859Z",
+        "latency_ms": 126781,
+        "model_name": "glm-5.3-flash",
+        "prompt_tokens": null,
+        "prompt_version": "v1",
+        "request_manifest": {
+          "connect_timeout_seconds": 10.0,
+          "do_sample": false,
+          "image_count": 2,
+          "json_object_mode": true,
+          "manifest_version": "v1",
+          "max_tokens": 4096,
+          "model": "glm-5.3-flash",
+          "prompt_version": "v1",
+          "reasoning_effort": "max",
+          "response_timeout_seconds": 300.0,
+          "stage": "PERCEPTION",
+          "stream": false,
+          "system_prompt_sha256": "4e01e4358a689b55c233d9a28137951bba126ceb0a4a912bb51de682aee98b04",
+          "thinking_enabled": true,
+          "user_content_sha256": "0b9f0b5774cc647ecf9ca997f263121e5faf047c0c3ec200f20535db0d5f2df0"
+        },
+        "response_json": null,
+        "stage": "PERCEPTION",
+        "started_at": "2026-09-11T03:39:08.462339Z",
+        "status": "FAILED",
+        "total_tokens": null
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_detail": "模型返回空内容",
+        "event_type": "STAGE_FAILED",
+        "stage": "PERCEPTION"
+      },
+      {
+        "error_code": "MODEL_OUTPUT_INVALID",
+        "error_stage": "PERCEPTION",
+        "event_type": "ANALYSIS_COMPLETED",
+        "finished_at": "2026-09-11T03:41:15.232859Z",
+        "status": "FAILED"
+      }
+    ],
+    "failure": true,
+    "model_attempts": 1,
+    "outcome": {
+      "attempts_exhausted": false,
+      "error_code": "MODEL_OUTPUT_INVALID",
+      "error_stage": "PERCEPTION",
+      "status": "FAILED",
+      "trace_id": "poc-20260911T033245Z-mvp_case_010"
+    },
+    "success": false,
+    "validated_stages": 0
+  }
+]

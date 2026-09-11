@@ -217,7 +217,7 @@
 - `image_paths` 必须在组包时从 Python 列表字符串转换为标准 JSON 数组，CSV 中无字段名的旧索引列必须丢弃。
 - 图片按真实文件内容识别格式并生成规范文件名；原始文件哈希必须保留。普通 JPG、JPEG、PNG 原样使用，GIF 生成静态首帧作为模型输入并保留原文件。当前图片不统一压缩。
 - 运行案例包与验收参考包必须物理分离。产品导入器递归发现 `mood`、`reason`、`solution`、`image_verification`、`key_answer`、`label`、`database_gt`、`trajectory`、`user_profile_st1`、`user_profile`、`question_type` 等答案或答案泄漏字段时必须拒绝导入；未规范化的 `user_address`、`database` 和重复的 `first_query` 同样不得进入运行包。
-- 固定提供互不重叠的 `demo_batch_v1` 10 个案例和 `acceptance_batch_v1` 5 个案例；前者用于开发与演示，后者用于最终验收，参考答案单独密封。技术故障案例作为测试夹具保存，不混入正常演示批次。
+- 固定提供互不重叠的 `mvp_batch_v1` 10 个案例和 `acceptance_batch_v1` 5 个案例；前者用于开发与演示，后者用于最终验收，参考答案单独密封。技术故障案例作为测试夹具保存，不混入正常演示批次。
 - 产品必须先完整校验整个 ZIP，再一次性写入正式文件目录和数据库；任一案例或文件失败时整批拒绝，不留下半成品批次。
 - 相同 ZIP 校验值再次导入时返回已有批次，不重复创建；已有 `batch_id` 对应不同内容、同一 ZIP 内 `case_id` 重复时整批拒绝。
 - 客户对外标识由 `customer_unique_id` 确定性生成，源客户标识只保留在内部来源记录中；城市、州、邮编不进入案例输入。
@@ -2381,7 +2381,7 @@ E2E 被以下事项阻塞：
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0066-use-one-blocking-analysis-entry-and-a-typed-event-sink.md
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0067-return-typed-expected-outcomes-and-map-unexpected-errors.md
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0068-let-application-decide-transitions-and-data-own-atomic-writes.md
-- E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0069-use-explicit-app-wiring-for-development-and-single-entry-demo.md
+- E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0069-use-explicit-app-wiring-for-development-and-single-entry-mvp.md
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0070-freeze-ten-resource-oriented-http-endpoints.md
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0071-hide-run-ids-and-use-an-opaque-review-token.md
 - E:\xtzj\Desktop\【临时】纪要处理\项目建设\docs\adr\0072-use-a-small-http-status-set-and-one-business-error.md
