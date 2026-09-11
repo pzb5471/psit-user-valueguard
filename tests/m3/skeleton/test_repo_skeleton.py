@@ -19,7 +19,16 @@ FROZEN_DIRS = [
 
 MODULE_DIRS = {"data", "analysis", "application"}
 # docs/ 由 README 开工顺序第 2 条的文档 PR 同步进入仓库（规则、需求、CONTEXT、规格与追溯 ADR）。
-ALLOWED_TOP_LEVEL_DIRS = {"backend", "config", "docs", "frontend", "scripts", "tests", "tools"}
+ALLOWED_TOP_LEVEL_DIRS = {
+    "artifacts",
+    "backend",
+    "config",
+    "docs",
+    "frontend",
+    "scripts",
+    "tests",
+    "tools",
+}
 ALLOWED_TOP_LEVEL_FILES = {
     ".gitignore",
     ".python-version",
