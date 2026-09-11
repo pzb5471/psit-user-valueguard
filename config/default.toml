@@ -16,8 +16,8 @@ runtime_dir = "runtime_data"
 
 [analysis]
 # GLM 连接与响应上限（规格 3.2）；2026-09-11 自动 PoC 已选定 high + 并发 2。
-# 15 案例自动结构门已通过；双人业务复核完成前仍必须保持 false。
-production_enabled = false
+# 15 案例自动结构门和项目负责人多轮演示验收已通过，默认启用真实分析。
+production_enabled = true
 connect_timeout_seconds = 10
 response_timeout_seconds = 300
 max_tokens = 4096

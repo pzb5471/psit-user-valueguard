@@ -1,4 +1,4 @@
-"""生产分析装配回归：密钥、PoC 门禁与真实客户端必须同时满足。"""
+"""生产分析装配回归：密钥、显式开关与真实客户端必须同时满足。"""
 
 from __future__ import annotations
 
@@ -34,14 +34,16 @@ def test_missing_key_keeps_analysis_closed(base_config: dict[str, Any]) -> None:
     assert "ZAI_API_KEY" in binding.message
 
 
-def test_key_without_poc_gate_keeps_analysis_closed(base_config: dict[str, Any]) -> None:
+def test_key_without_production_gate_keeps_analysis_closed(
+    base_config: dict[str, Any],
+) -> None:
     binding = build_production_analysis(
         _settings(base_config, enabled=False, key="fake-key-not-real")
     )
 
     assert binding.available is False
     assert binding.health.health_check() is False
-    assert "M2-10" in binding.message
+    assert "未开放真实分析" in binding.message
 
 
 def test_enabled_binding_constructs_real_client_with_frozen_settings(

@@ -175,6 +175,7 @@ class FakeRunStore:
 
     def __init__(self) -> None:
         self.calls: list[str] = []
+        self.model_attempts: list[tuple[int, Any]] = []
         self.case_run_id = 0
         self.reject_start = False
         self.reject_case = False
@@ -221,6 +222,7 @@ class FakeRunStore:
 
     def record_model_attempt(self, *, case_run_id, attempt) -> None:
         self.calls.append(f"model_attempt:{case_run_id}")
+        self.model_attempts.append((case_run_id, attempt))
 
     def record_stage_result(self, *, case_run_id, stage, occurred_at=None) -> None:
         self.calls.append(f"stage_result:{case_run_id}:{stage.stage_name}")

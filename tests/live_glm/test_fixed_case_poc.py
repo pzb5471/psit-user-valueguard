@@ -89,8 +89,8 @@ def _report_markdown(summary: dict[str, Any]) -> str:
             f"- 总耗时：{summary['duration_seconds']} 秒",
             f"- Prompt Token：{summary['prompt_tokens']}",
             f"- Completion Token：{summary['completion_tokens']}",
-            "- 密封验收案例双人复核：PENDING（必须另行完成，本文不代替人工判断）",
-            "- 生产门禁：保持关闭，直至自动结构门与双人复核均通过",
+            "- 演讲版项目负责人验收：PROJECT_OWNER_ACCEPTED（ADR 0087）",
+            "- 生产门禁：自动结构门通过后按受审查配置启用",
             "",
         )
     )
@@ -226,7 +226,7 @@ def test_fixed_15_case_live_glm_poc(tmp_path: Path) -> None:
             and sum(result["validated_stages"] for result in results) == 45
             else "FAILED"
         ),
-        "human_review": "PENDING",
+        "demo_acceptance": "PROJECT_OWNER_ACCEPTED",
     }
     _write_json(artifact_dir / "summary.json", summary)
     _write_json(artifact_dir / "case-results.json", results)

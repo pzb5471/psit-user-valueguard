@@ -13,3 +13,4 @@
 - 生产启动应在创建运行目录、迁移数据库之前预检监听端口；端口冲突统一返回稳定错误码 `PORT_IN_USE`，避免失败启动留下新的本地状态。
 - 当策略结果使用 `NO_IMMEDIATE_INTERVENTION` 时，动作只能是 `NO_ACTION_MONITOR`；当等级为 `SHOULD_INTERVENE` 或 `MUST_INTERVENE` 时，动作不能只有 `NO_ACTION_MONITOR`。违反时必须进入一次定向修复，不能发布互相矛盾的决策包。
 - 正式 PoC 证据必须按 ADR 0050 追踪在 `artifacts/poc/<run_id>/`，仓库顶层边界需显式允许 `artifacts/`；`runtime_data/` 仍必须保持忽略。违反时会让必要验收证据无法通过完整门禁，或把本机运行数据误提交。
+- 多案例并发把 `MODEL_ATTEMPT_FINISHED` 写入 `model_calls` 时，`call_id` 必须由案例运行 ID、阶段和尝试序号共同组成，并对同一事件保持稳定。只使用阶段和尝试序号会让不同案例互相命中全局唯一约束，导致实际调用、Token 和耗时记录被静默少算。

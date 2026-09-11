@@ -81,7 +81,7 @@ def build_production_analysis(
     *,
     runtime_root: Path | None = None,
 ) -> ProductionAnalysisBinding:
-    """只有密钥与显式 PoC 门禁同时满足时才装配真实 GlmClient。"""
+    """只有密钥与显式生产开关同时满足时才装配真实 GlmClient。"""
 
     if settings.zai_api_key is None:
         message = "未配置 ZAI_API_KEY，分析不可用；历史结果仍可查看"
@@ -94,7 +94,7 @@ def build_production_analysis(
         )
 
     if not settings.analysis.production_enabled:
-        message = "已配置 ZAI_API_KEY，但 M2-10 真实 GLM PoC 与双人验收尚未开放生产分析"
+        message = "已配置 ZAI_API_KEY，但当前配置未开放真实分析"
         unavailable = _UnavailableAnalysis(message)
         return ProductionAnalysisBinding(
             engine=unavailable,
@@ -120,7 +120,7 @@ def build_production_analysis(
         response_timeout_seconds=settings.analysis.response_timeout_seconds,
         params=params,
     )
-    message = "真实分析引擎已按 M2-10 验收门禁启用"
+    message = "真实分析引擎已按 M2-10 自动 PoC 与项目负责人演示验收启用"
     return ProductionAnalysisBinding(
         engine=engine,
         health=_StaticAnalysisHealth(available=True, message=message),
