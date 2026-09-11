@@ -30,7 +30,7 @@ def case_input_raw(**overrides: Any) -> dict[str, Any]:
     sample: dict[str, Any] = {
         "schema_version": CASE_INPUT_SCHEMA_VERSION,
         "data_version": "mock_dataset_v1",
-        "batch_id": "batch-demo-0001",
+        "batch_id": "batch-mvp-0001",
         "case_id": CASE_ID,
         "data_identity": "simulated",
         "primary_order": {

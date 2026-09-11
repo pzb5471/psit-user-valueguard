@@ -2051,8 +2051,8 @@
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_001",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_001",
     "duration_seconds": 133.468,
     "events": [
       {
@@ -2089,7 +2089,7 @@
           "user_content_sha256": "854f5e06c30964556d5a83057cb7553fe1d2569d1bc9579e6af1d92746e7a001"
         },
         "response_json": {
-          "raw_content": "\n{\n  \"schema_version\": \"v1\",\n  \"case_id\": \"demo_case_001\",\n  \"events\": [\n    {\n      \"event_no\": 1,\n      \"category\": \"尺码不合适\",\n      \"summary\": \"客户反映衣服腰围过大穿着不舒服，申请退款退货\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_001\", \"ev_text_003\"]\n    },\n    {\n      \"event_no\": 2,\n      \"category\": \"商品状态自述\",\n      \"summary\": \"客户自述仅试穿过、吊牌和包装均完好\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_003\"],\n      \"uncertainty\": \"仅有客户口头陈述，无图片或验货记录佐证吊牌与包装完好情况\"\n    },\n    {\n      \"event_no\": 3,\n      \"category\": \"退换政策说明\",\n      \"summary\": \"客服告知支持7天无理由退换并称客户6月11日签收、仍在退换期内\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_002\"],\n      \"conflict_evidence_ids\": [\"ev_text_002\", \"ev_behavior_006\"],\n      \"uncertainty\": \"客服所述签收日期与已核验签收时间2017-09-21 18:33:09不一致，实际是否在退换期内无法确认\"\n    },\n    {\n      \"event_no\": 4,\n      \"category\": \"退货办理承诺\",\n      \"summary\": \"客服提供退货地址，说明个人原因退货运费约50.8元由客户承担，收到货后办理退款\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_004\"]\n    },\n    {\n      \"event_no\": 5,\n      \"category\": \"退回寄送\",\n      \"summary\": \"客户称已用顺丰寄回商品并提供单号，要求收到后尽快退款\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_005\"],\n      \"uncertainty\": \"单号已脱敏，无退回物流签收记录可供核验商家是否收到退货\"\n    },\n    {\n      \"event_no\": 6,\n      \"category\": \"退款处理\",\n      \"summary\": \"客服确认订单已进入退回处理中并承诺尽快处理退款申请\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_006\"]\n    },\n    {\n      \"event_no\": 7,\n      \"category\": \"退款到账确认\",\n      \"summary\": \"客户确认已收到退款且问题全部解决\",\n      \"statement_basis\": \"CUSTOMER_CONFIRMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_007\"]\n    },\n    {\n      \"event_no\": 8,\n      \"category\": \"订单履约事实\",\n      \"summary\": \"程序核验：2017-09-15下单、2017-09-21签收，订单状态为已送达，早于预计送达日2017-10-03\",\n      \"statement_basis\": \"PROGRAM_DERIVED\",\n      \"resolution\": \"RES"
+          "raw_content": "\n{\n  \"schema_version\": \"v1\",\n  \"case_id\": \"mvp_case_001\",\n  \"events\": [\n    {\n      \"event_no\": 1,\n      \"category\": \"尺码不合适\",\n      \"summary\": \"客户反映衣服腰围过大穿着不舒服，申请退款退货\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_001\", \"ev_text_003\"]\n    },\n    {\n      \"event_no\": 2,\n      \"category\": \"商品状态自述\",\n      \"summary\": \"客户自述仅试穿过、吊牌和包装均完好\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_003\"],\n      \"uncertainty\": \"仅有客户口头陈述，无图片或验货记录佐证吊牌与包装完好情况\"\n    },\n    {\n      \"event_no\": 3,\n      \"category\": \"退换政策说明\",\n      \"summary\": \"客服告知支持7天无理由退换并称客户6月11日签收、仍在退换期内\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_002\"],\n      \"conflict_evidence_ids\": [\"ev_text_002\", \"ev_behavior_006\"],\n      \"uncertainty\": \"客服所述签收日期与已核验签收时间2017-09-21 18:33:09不一致，实际是否在退换期内无法确认\"\n    },\n    {\n      \"event_no\": 4,\n      \"category\": \"退货办理承诺\",\n      \"summary\": \"客服提供退货地址，说明个人原因退货运费约50.8元由客户承担，收到货后办理退款\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_004\"]\n    },\n    {\n      \"event_no\": 5,\n      \"category\": \"退回寄送\",\n      \"summary\": \"客户称已用顺丰寄回商品并提供单号，要求收到后尽快退款\",\n      \"statement_basis\": \"CUSTOMER_CLAIMED\",\n      \"resolution\": \"UNCONFIRMABLE\",\n      \"evidence_ids\": [\"ev_text_005\"],\n      \"uncertainty\": \"单号已脱敏，无退回物流签收记录可供核验商家是否收到退货\"\n    },\n    {\n      \"event_no\": 6,\n      \"category\": \"退款处理\",\n      \"summary\": \"客服确认订单已进入退回处理中并承诺尽快处理退款申请\",\n      \"statement_basis\": \"SERVICE_AGENT_STATED_OR_PROMISED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_006\"]\n    },\n    {\n      \"event_no\": 7,\n      \"category\": \"退款到账确认\",\n      \"summary\": \"客户确认已收到退款且问题全部解决\",\n      \"statement_basis\": \"CUSTOMER_CONFIRMED\",\n      \"resolution\": \"RESOLVED\",\n      \"evidence_ids\": [\"ev_text_007\"]\n    },\n    {\n      \"event_no\": 8,\n      \"category\": \"订单履约事实\",\n      \"summary\": \"程序核验：2017-09-15下单、2017-09-21签收，订单状态为已送达，早于预计送达日2017-10-03\",\n      \"statement_basis\": \"PROGRAM_DERIVED\",\n      \"resolution\": \"RES"
         },
         "stage": "PERCEPTION",
         "started_at": "2026-09-11T03:32:45.389687Z",
@@ -2125,7 +2125,7 @@
           "user_content_sha256": "24a9bcb305de2fbf60ddf263ce01d041c3ef86637a79cfb8bc8be2807515e087"
         },
         "response_json": {
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -2251,7 +2251,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -2432,7 +2432,7 @@
             "explanation": "假设性解释：客服在告知退换政策时陈述客户于6月11日签收，与程序核验的送达时间2017-09-21 18:33:09不一致，服务过程中给出的订单信息准确性可能存在风险；若签收日期影响7天期限判断，此类陈述偏差或引发争议。",
             "uncertainty": "不一致的原因无法确定（可能是客服口误、查询口径或系统信息展示问题）；该陈述未被客户质疑，也未影响最终退换办理，实际风险影响有限，故仅作为备选原因。"
           },
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "evidence_ids": [
@@ -2471,7 +2471,7 @@
             "explanation": "假设性解释：客服在告知退换政策时陈述客户于6月11日签收，与程序核验的送达时间2017-09-21 18:33:09不一致，服务过程中给出的订单信息准确性可能存在风险；若签收日期影响7天期限判断，此类陈述偏差或引发争议。",
             "uncertainty": "不一致的原因无法确定（可能是客服口误、查询口径或系统信息展示问题）；该陈述未被客户质疑，也未影响最终退换办理，实际风险影响有限，故仅作为备选原因。"
           },
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": null,
@@ -2551,14 +2551,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "STRATEGY",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_001"
+      "trace_id": "poc-20260911T033245Z-mvp_case_001"
     },
     "success": false,
     "validated_stages": 2
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_002",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_002",
     "duration_seconds": 38.468,
     "events": [
       {
@@ -2621,14 +2621,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_002"
+      "trace_id": "poc-20260911T033245Z-mvp_case_002"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_003",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_003",
     "duration_seconds": 37.891,
     "events": [
       {
@@ -2691,14 +2691,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_003"
+      "trace_id": "poc-20260911T033245Z-mvp_case_003"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_004",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_004",
     "duration_seconds": 58.719,
     "events": [
       {
@@ -2761,14 +2761,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_004"
+      "trace_id": "poc-20260911T033245Z-mvp_case_004"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_005",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_005",
     "duration_seconds": 154.797,
     "events": [
       {
@@ -2831,14 +2831,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_005"
+      "trace_id": "poc-20260911T033245Z-mvp_case_005"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_006",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_006",
     "duration_seconds": 124.453,
     "events": [
       {
@@ -2901,14 +2901,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_006"
+      "trace_id": "poc-20260911T033245Z-mvp_case_006"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_007",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_007",
     "duration_seconds": 123.531,
     "events": [
       {
@@ -2971,14 +2971,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_007"
+      "trace_id": "poc-20260911T033245Z-mvp_case_007"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_008",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_008",
     "duration_seconds": 36.641,
     "events": [
       {
@@ -3041,14 +3041,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_008"
+      "trace_id": "poc-20260911T033245Z-mvp_case_008"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_009",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_009",
     "duration_seconds": 74.578,
     "events": [
       {
@@ -3111,14 +3111,14 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_009"
+      "trace_id": "poc-20260911T033245Z-mvp_case_009"
     },
     "success": false,
     "validated_stages": 0
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_010",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_010",
     "duration_seconds": 126.781,
     "events": [
       {
@@ -3181,7 +3181,7 @@
       "error_code": "MODEL_OUTPUT_INVALID",
       "error_stage": "PERCEPTION",
       "status": "FAILED",
-      "trace_id": "poc-20260911T033245Z-demo_case_010"
+      "trace_id": "poc-20260911T033245Z-mvp_case_010"
     },
     "success": false,
     "validated_stages": 0

@@ -19,7 +19,7 @@ type CauseView = components['schemas']['CauseView']
 type ActionView = components['schemas']['ActionView']
 type CitedEvidenceView = components['schemas']['CitedEvidenceView']
 
-const MOCK_TRACE_ID = 'trace-demo-0001'
+const MOCK_TRACE_ID = 'trace-mvp-0001'
 const IMPORTED_AT = '2026-09-06T09:30:00+08:00'
 
 export function businessError(overrides: Partial<BusinessError> & { code: string; message: string }): BusinessError {
@@ -36,8 +36,8 @@ export function businessError(overrides: Partial<BusinessError> & { code: string
 export function batchView(status: BatchStatus, overrides: Partial<BatchWorkspaceView> = {}): BatchWorkspaceView {
   const analysisRunning = status === 'ANALYZING'
   return {
-    batch_id: 'batch-demo-001',
-    source_filename: 'demo_batch_v1.zip',
+    batch_id: 'batch-mvp-001',
+    source_filename: 'mvp_batch_v1.zip',
     is_mock: true,
     status,
     case_count: 8,
@@ -53,14 +53,14 @@ export function batchView(status: BatchStatus, overrides: Partial<BatchWorkspace
 
 export function batchListView(): BatchListView {
   return {
-    items: [batchView('ANALYZING'), batchView('COMPLETED', { batch_id: 'batch-demo-000' })],
+    items: [batchView('ANALYZING'), batchView('COMPLETED', { batch_id: 'batch-mvp-000' })],
     total: 2,
   }
 }
 
 export function queueItem(status: CaseStatus, overrides: Partial<CaseQueueItemView> = {}): CaseQueueItemView {
   return {
-    case_id: 'case-demo-001',
+    case_id: 'case-mvp-001',
     customer_display_id: '示例客户 C-1001',
     is_high_value: true,
     risk_summary: status === 'PENDING_ANALYSIS' || status === 'ANALYZING' ? null : '物流履约多次延误引发不满。',
@@ -82,11 +82,11 @@ export function queueItem(status: CaseStatus, overrides: Partial<CaseQueueItemVi
 export function queueView(): CaseQueueView {
   return {
     items: [
-      queueItem('PROCESSING_ERROR', { case_id: 'case-demo-101' }),
-      queueItem('PENDING_REVIEW', { case_id: 'case-demo-001' }),
-      queueItem('COMPLETED', { case_id: 'case-demo-002', customer_display_id: '示例客户 C-1002' }),
-      queueItem('ANALYZING', { case_id: 'case-demo-003' }),
-      queueItem('PENDING_ANALYSIS', { case_id: 'case-demo-004' }),
+      queueItem('PROCESSING_ERROR', { case_id: 'case-mvp-101' }),
+      queueItem('PENDING_REVIEW', { case_id: 'case-mvp-001' }),
+      queueItem('COMPLETED', { case_id: 'case-mvp-002', customer_display_id: '示例客户 C-1002' }),
+      queueItem('ANALYZING', { case_id: 'case-mvp-003' }),
+      queueItem('PENDING_ANALYSIS', { case_id: 'case-mvp-004' }),
     ],
     total: 5,
   }
@@ -133,8 +133,8 @@ export function caseDetail(
   const erroring = status === 'PROCESSING_ERROR'
   const analyzed = status === 'PENDING_REVIEW' || status === 'COMPLETED'
   return {
-    batch_id: 'batch-demo-001',
-    case_id: 'case-demo-001',
+    batch_id: 'batch-mvp-001',
+    case_id: 'case-mvp-001',
     customer_display_id: '示例客户 C-1001',
     is_high_value: true,
     customer_value_summary: '示例：近 12 个月累计消费 8420 元，共 23 笔订单（Mock 数据）。',
@@ -165,7 +165,7 @@ export function caseDetail(
       : null,
     can_rerun: status === 'PENDING_REVIEW' || erroring,
     can_review: canReview,
-    review_token: canReview ? 'demo-review-token-001' : null,
+    review_token: canReview ? 'mvp-review-token-001' : null,
     review_options: canReview ? reviewOptionsView() : null,
     ...overrides,
   }

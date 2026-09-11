@@ -10,9 +10,9 @@ const server = startMsw()
 /** 测试用绝对地址：Node fetch 无法解析相对 URL，MSW 按路径匹配处理器。 */
 const api = createApiClient('http://psit-mock.local')
 
-const BATCH = { params: { path: { batch_id: 'batch-demo-001' } } } as const
+const BATCH = { params: { path: { batch_id: 'batch-mvp-001' } } } as const
 const CASE = {
-  params: { path: { batch_id: 'batch-demo-001', case_id: 'case-demo-001' } },
+  params: { path: { batch_id: 'batch-mvp-001', case_id: 'case-mvp-001' } },
 } as const
 
 /** 每个命名场景的探针：发起对应请求并断言状态与业务判别字段。 */
@@ -282,7 +282,7 @@ const probes: Record<string, () => Promise<void>> = {
   'evidence.notFound': async () => {
     const r = await toResult(
       api.GET('/api/v1/batches/{batch_id}/cases/{case_id}/evidence/{evidence_id}/content', {
-        params: { path: { batch_id: 'batch-demo-001', case_id: 'case-demo-001', evidence_id: 'evd-missing' } },
+        params: { path: { batch_id: 'batch-mvp-001', case_id: 'case-mvp-001', evidence_id: 'evd-missing' } },
       }),
     )
     if (!r.ok && r.failure.kind === 'business') {
@@ -295,7 +295,7 @@ const probes: Record<string, () => Promise<void>> = {
   'evidence.unsupportedMedia': async () => {
     const r = await toResult(
       api.GET('/api/v1/batches/{batch_id}/cases/{case_id}/evidence/{evidence_id}/content', {
-        params: { path: { batch_id: 'batch-demo-001', case_id: 'case-demo-001', evidence_id: 'evd-bad' } },
+        params: { path: { batch_id: 'batch-mvp-001', case_id: 'case-mvp-001', evidence_id: 'evd-bad' } },
       }),
     )
     if (!r.ok && r.failure.kind === 'business') {
@@ -325,7 +325,7 @@ async function reviewProbe(): Promise<ReviewProbe> {
       ...CASE,
       body: {
         submission_id: '22222222-2222-4222-8222-222222222222',
-        review_token: 'demo-review-token-001',
+        review_token: 'mvp-review-token-001',
         outcome: 'APPROVED',
       },
     }),

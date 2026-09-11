@@ -40,7 +40,7 @@ def _read_json(path: Path) -> dict:
 
 def test_deterministic_rebuild_produces_identical_zip(dataset, source_root, tmp_path) -> None:
     second = build_dataset(source_root, tmp_path / "second")
-    assert second.demo_bytes == dataset.demo_bytes
+    assert second.mvp_bytes == dataset.mvp_bytes
     assert second.acceptance_bytes == dataset.acceptance_bytes
 
 
@@ -48,7 +48,7 @@ def test_both_batches_pass_zip_stage(dataset, tmp_path) -> None:
     from app.modules.data.importing.zip_stage import ZipImportStage
 
     for label, data, expected_cases in (
-        ("DEMO", dataset.demo_bytes, 10),
+        ("MVP", dataset.mvp_bytes, 10),
         ("ACCEPTANCE", dataset.acceptance_bytes, 5),
     ):
         result = ZipImportStage(tmp_root=tmp_path).stage(data)
@@ -59,7 +59,7 @@ def test_both_batches_pass_zip_stage(dataset, tmp_path) -> None:
 def test_no_answer_leak_in_case_payloads(dataset) -> None:
     from app.modules.data.importing.zip_stage import _leak_findings
 
-    for data in (dataset.demo_bytes, dataset.acceptance_bytes):
+    for data in (dataset.mvp_bytes, dataset.acceptance_bytes):
         for payload in _case_payloads(data):
             assert _leak_findings(payload) == []
 
@@ -69,7 +69,7 @@ def test_all_cases_satisfy_case_input_contract(dataset) -> None:
 
     all_payloads = [
         payload
-        for data in (dataset.demo_bytes, dataset.acceptance_bytes)
+        for data in (dataset.mvp_bytes, dataset.acceptance_bytes)
         for payload in _case_payloads(data)
     ]
     assert len(all_payloads) == 15
@@ -78,7 +78,7 @@ def test_all_cases_satisfy_case_input_contract(dataset) -> None:
 
 
 def test_zip_structure_has_no_prohibited_entries(dataset) -> None:
-    for data in (dataset.demo_bytes, dataset.acceptance_bytes):
+    for data in (dataset.mvp_bytes, dataset.acceptance_bytes):
         names = _zip_entries(data)
         assert len(names) == len(set(names))
         assert "manifest.json" in names
@@ -93,14 +93,14 @@ def test_zip_structure_has_no_prohibited_entries(dataset) -> None:
 
 
 def test_checksums_cover_all_entries_except_self(dataset) -> None:
-    for data in (dataset.demo_bytes, dataset.acceptance_bytes):
+    for data in (dataset.mvp_bytes, dataset.acceptance_bytes):
         checksums = _load_json(data, "checksums.json")
         expected = {name for name in _zip_entries(data) if name != "checksums.json"}
         assert set(checksums) == expected
 
 
 def test_manifest_case_files_and_evidence_count(dataset) -> None:
-    for data in (dataset.demo_bytes, dataset.acceptance_bytes):
+    for data in (dataset.mvp_bytes, dataset.acceptance_bytes):
         manifest = _load_json(data, "manifest.json")
         names = _zip_entries(data)
         for case_file in manifest["case_files"]:
@@ -118,7 +118,7 @@ def test_manifest_case_files_and_evidence_count(dataset) -> None:
 
 
 def test_asset_magic_matches_extension(dataset) -> None:
-    for data in (dataset.demo_bytes, dataset.acceptance_bytes):
+    for data in (dataset.mvp_bytes, dataset.acceptance_bytes):
         with zipfile.ZipFile(io.BytesIO(data)) as zf:
             for name in zf.namelist():
                 if not name.startswith("assets/"):
@@ -146,9 +146,9 @@ def test_control_case_satisfies_contract(dataset) -> None:
 
 def test_report_matches_packages_and_rfm(dataset) -> None:
     report = _read_json(dataset.out_root / "report.json")
-    assert report["packages"]["demo"]["case_count"] == 10
+    assert report["packages"]["mvp"]["case_count"] == 10
     assert report["packages"]["acceptance"]["case_count"] == 5
-    assert report["packages"]["demo"]["sha256"] == dataset.demo_zip_sha256
+    assert report["packages"]["mvp"]["sha256"] == dataset.mvp_zip_sha256
     assert report["packages"]["acceptance"]["sha256"] == dataset.acceptance_zip_sha256
     assert report["rfm"]["customer_count"] == dataset.rfm.customer_count
     assert report["rfm"]["high_value_count"] == dataset.rfm.high_value_count
@@ -169,7 +169,7 @@ def test_mapping_manifest_covers_all_cases(dataset) -> None:
     mapping_case_ids = {entry["case_id"] for entry in mapping["cases"]}
     payload_case_ids = {
         payload["case_id"]
-        for data in (dataset.demo_bytes, dataset.acceptance_bytes)
+        for data in (dataset.mvp_bytes, dataset.acceptance_bytes)
         for payload in _case_payloads(data)
     }
     assert payload_case_ids == mapping_case_ids
@@ -181,7 +181,7 @@ def test_sealed_reference_files_cover_all_cases(dataset) -> None:
     sealed_files = sorted(sealed_dir.glob("*.json"))
     payload_case_ids = {
         payload["case_id"]
-        for data in (dataset.demo_bytes, dataset.acceptance_bytes)
+        for data in (dataset.mvp_bytes, dataset.acceptance_bytes)
         for payload in _case_payloads(data)
     }
     assert {Path(name).stem for name in sealed_files} == payload_case_ids

@@ -16,7 +16,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-with-key.ps1
 ```
 
-打开 `http://127.0.0.1:8000`，导入仓库内的 `demo/demo_batch_v1.zip`，再点击“开始分析”。API Key 只存在于当前启动进程，不写入仓库、配置、页面或数据库。演示结束后在启动窗口按 `Ctrl+C` 正常关闭。
+打开 `http://127.0.0.1:8000`，导入仓库内的 `mvp/mvp_batch_v1.zip`，再点击“开始分析”。API Key 只存在于当前启动进程，不写入仓库、配置、页面或数据库。演示结束后在启动窗口按 `Ctrl+C` 正常关闭。
 
 ## 验证
 

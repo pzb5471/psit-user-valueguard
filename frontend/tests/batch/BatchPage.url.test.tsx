@@ -36,7 +36,7 @@ beforeEach(() => {
       })
     }),
   )
-  window.history.replaceState(null, '', '/batches/batch-demo-001')
+  window.history.replaceState(null, '', '/batches/batch-mvp-001')
 })
 
 afterEach(() => {
@@ -81,7 +81,7 @@ async function advanceClock(ms: number) {
 }
 
 test('直接地址恢复筛选与分页（结果来自服务端）', async () => {
-  renderAt('/batches/batch-demo-001?status=COMPLETED&intervention_level=MUST_INTERVENE&offset=0')
+  renderAt('/batches/batch-mvp-001?status=COMPLETED&intervention_level=MUST_INTERVENE&offset=0')
   await screen.findByText('案例队列')
   await waitFor(() => expect(seenQueueUrls.length).toBeGreaterThan(0))
   const url = new URL(seenQueueUrls[seenQueueUrls.length - 1])
@@ -92,7 +92,7 @@ test('直接地址恢复筛选与分页（结果来自服务端）', async () =>
 
 test('筛选变更写入 URL、重置分页并触发服务端新请求；返回恢复原筛选', async () => {
   const user = userEvent.setup()
-  renderAt('/batches/batch-demo-001')
+  renderAt('/batches/batch-mvp-001')
   const select = await screen.findByLabelText('案例状态')
   await user.selectOptions(select, 'COMPLETED')
 
@@ -123,7 +123,7 @@ test('默认与边界分页', async () => {
     }),
   )
   const user = userEvent.setup()
-  renderAt('/batches/batch-demo-001')
+  renderAt('/batches/batch-mvp-001')
 
   // 默认：limit=50、offset=0，首页上一页禁用。
   await screen.findByText('案例队列')
@@ -143,7 +143,7 @@ test('默认与边界分页', async () => {
 })
 
 test('越界 URL 参数回落安全默认（不把非法值发给服务端）', async () => {
-  renderAt('/batches/batch-demo-001?offset=-10&limit=999&status=BOGUS&sort_by=case_id')
+  renderAt('/batches/batch-mvp-001?offset=-10&limit=999&status=BOGUS&sort_by=case_id')
   await screen.findByText('案例队列')
   await waitFor(() => expect(seenQueueUrls.length).toBeGreaterThan(0))
   const url = new URL(seenQueueUrls[seenQueueUrls.length - 1])
@@ -156,7 +156,7 @@ test('越界 URL 参数回落安全默认（不把非法值发给服务端）', 
 test('分析中按 2 秒唯一节奏轮询，终态停止', async () => {
   currentBatchStatus = 'ANALYZING'
   vi.useFakeTimers()
-  renderAt('/batches/batch-demo-001')
+  renderAt('/batches/batch-mvp-001')
   await advanceUntil(() => expect(calls.queue).toBe(1))
 
   // 6.1 秒 → 恰好 3 次轮询（批次详情与队列同一节奏）。
@@ -182,7 +182,7 @@ test('分析中按 2 秒唯一节奏轮询，终态停止', async () => {
 test('后台标签页暂停轮询，回到前台恢复', async () => {
   currentBatchStatus = 'ANALYZING'
   vi.useFakeTimers()
-  renderAt('/batches/batch-demo-001')
+  renderAt('/batches/batch-mvp-001')
   await advanceUntil(() => expect(calls.queue).toBe(1))
 
   const defineHidden = (value: boolean) => {
@@ -201,7 +201,7 @@ test('后台标签页暂停轮询，回到前台恢复', async () => {
 })
 
 test('重复挂载无重复请求（共享同一 QueryClient）', async () => {
-  renderAt('/batches/batch-demo-001')
+  renderAt('/batches/batch-mvp-001')
   await screen.findByText('案例队列')
   expect(calls.batch).toBe(1)
   expect(calls.queue).toBe(1)

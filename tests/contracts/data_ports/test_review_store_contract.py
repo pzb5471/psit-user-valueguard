@@ -142,7 +142,7 @@ def _review_token(batch_id: str, case_id: str, run_id: str) -> str:
     return digest.hexdigest()
 
 
-def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, Any]]:
+def _standard_stages(*, case_id: str = "mvp_case_001") -> dict[str, dict[str, Any]]:
     """生成 perception/attribution/strategy 三个标准阶段结果（约定键）。"""
     return {
         "perception": {
@@ -176,7 +176,7 @@ def _standard_stages(*, case_id: str = "demo_case_001") -> dict[str, dict[str, A
 def _stage_input(
     stage_name: str,
     *,
-    case_id: str = "demo_case_001",
+    case_id: str = "mvp_case_001",
     result_json: dict[str, Any] | None = None,
 ) -> StageResultInput:
     """构造一份标准阶段结果输入；sha256 与实际 JSON 内容自洽。"""
@@ -210,7 +210,7 @@ def _import_batch(
     gateway: BatchImportGateway,
     *,
     batch_id: str,
-    case_ids: tuple[str, ...] = ("demo_case_001",),
+    case_ids: tuple[str, ...] = ("mvp_case_001",),
 ) -> str:
     """导入一个由 zip_fixtures 构造的完整标准 ZIP，返回 batch_id。"""
     entries = make_entries(
@@ -239,7 +239,7 @@ class _ReadyCase:
 class _Harness(Protocol):
     """契约测试统一读写接口：real/fake 实现逐字一致的语义。"""
 
-    def ready(self, *, batch_id: str, case_id: str = "demo_case_001") -> _ReadyCase: ...
+    def ready(self, *, batch_id: str, case_id: str = "mvp_case_001") -> _ReadyCase: ...
 
     def rerun(self, *, batch_id: str, case_id: str, run_id: str) -> _ReadyCase: ...
 
@@ -303,7 +303,7 @@ class _RealHarness:
             review_token=_review_token(batch_id, case_id, case_run.run_id),
         )
 
-    def ready(self, *, batch_id: str, case_id: str = "demo_case_001") -> _ReadyCase:
+    def ready(self, *, batch_id: str, case_id: str = "mvp_case_001") -> _ReadyCase:
         """导入单案例批次并发布首次完整决策包。"""
         _import_batch(self._gateway, batch_id=batch_id, case_ids=(case_id,))
         batch_run = self._run_store.create_batch_run(
@@ -392,7 +392,7 @@ class _FakeHarness:
                 case_run_id=case_run_id, stage_name=stage_name, result_json=content
             )
 
-    def ready(self, *, batch_id: str, case_id: str = "demo_case_001") -> _ReadyCase:
+    def ready(self, *, batch_id: str, case_id: str = "mvp_case_001") -> _ReadyCase:
         """seed 批次/案例/运行与三阶段结果，等价于 RunStore 发布后基线。"""
         self._store.seed_batch(batch_id=batch_id)
         self._store.seed_case(
@@ -594,7 +594,7 @@ def test_four_outcomes_submit_persist_and_project(harness: _Harness) -> None:
             assert view.final_cause is None
             assert view.final_actions is None
             assert view.review_reason == "图片与订单信息不足以判定责任归属"
-        snapshot = harness.case_snapshot(batch_id=batch_id, case_id="demo_case_001")
+        snapshot = harness.case_snapshot(batch_id=batch_id, case_id="mvp_case_001")
         assert snapshot["status"] == "COMPLETED"
         assert snapshot["current_review_id"] is not None
         assert snapshot["final_intervention_level"] == final_level
@@ -633,7 +633,7 @@ def test_invalid_field_payload_rejected_without_review(
 ) -> None:
     batch_id = "ct-inv"
     ready = harness.ready(batch_id=batch_id)
-    before = harness.case_snapshot(batch_id=batch_id, case_id="demo_case_001")
+    before = harness.case_snapshot(batch_id=batch_id, case_id="mvp_case_001")
     with pytest.raises(ReviewFieldValidationError) as err:
         harness.submit(
             submission_id="ct-inv-sub",
@@ -645,7 +645,7 @@ def test_invalid_field_payload_rejected_without_review(
     assert message_fragment in err.value.message
     assert harness.review_count() == 0
     assert (
-        harness.case_snapshot(batch_id=batch_id, case_id="demo_case_001") == before
+        harness.case_snapshot(batch_id=batch_id, case_id="mvp_case_001") == before
     )
 
 
@@ -682,7 +682,7 @@ def test_rerun_makes_old_token_stale_and_blocks_new_review(harness: _Harness) ->
         payload=_approved_payload(),
     )
     second = harness.rerun(
-        batch_id=batch_id, case_id="demo_case_001", run_id=f"{batch_id}-cr-2"
+        batch_id=batch_id, case_id="mvp_case_001", run_id=f"{batch_id}-cr-2"
     )
     with pytest.raises(StaleCaseResultError) as err_1:
         harness.submit(
@@ -701,7 +701,7 @@ def test_rerun_makes_old_token_stale_and_blocks_new_review(harness: _Harness) ->
         )
     assert err_2.value.code == "CASE_ALREADY_COMPLETED"
     assert harness.review_count() == 1
-    snapshot = harness.case_snapshot(batch_id=batch_id, case_id="demo_case_001")
+    snapshot = harness.case_snapshot(batch_id=batch_id, case_id="mvp_case_001")
     assert snapshot["current_review_id"] is not None
 
 

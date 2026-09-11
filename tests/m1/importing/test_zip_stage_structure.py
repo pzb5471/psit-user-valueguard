@@ -42,16 +42,16 @@ def _codes(result) -> set[str]:
     return {r.code.value for r in result.rejections}
 
 
-def test_valid_demo_zip_passes_and_reports_summary(stage) -> None:
+def test_valid_mvp_zip_passes_and_reports_summary(stage) -> None:
     raw = make_zip(make_entries())
-    result = stage.stage(raw, source_filename="demo_batch_v1.zip")
+    result = stage.stage(raw, source_filename="mvp_batch_v1.zip")
     assert result.ok
     assert result.rejections == ()
-    assert result.package_type == PackageType.DEMO
+    assert result.package_type == PackageType.MVP
     assert result.case_count == 2
     assert result.evidence_count == 14
     assert result.is_mock is True
-    assert result.source_filename == "demo_batch_v1.zip"
+    assert result.source_filename == "mvp_batch_v1.zip"
     assert len(result.package_sha256) == 64
     import hashlib
 
@@ -115,7 +115,7 @@ def test_duplicate_entry_names_rejected(stage) -> None:
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for _ in range(2):
-            zf.writestr("cases/demo_case_001.json", b"{}")
+            zf.writestr("cases/mvp_case_001.json", b"{}")
     result = stage.stage(buffer.getvalue())
     assert not result.ok
     assert any("重复条目名" in r.message for r in result.rejections)
@@ -126,8 +126,8 @@ def test_duplicate_entry_names_rejected(stage) -> None:
     (
         ("manifest.json",),
         ("checksums.json",),
-        ("cases/demo_case_001.json", "cases/demo_case_002.json"),
-        ("assets/demo_case_001/scratch_01.jpg", "assets/demo_case_002/scratch_01.jpg"),
+        ("cases/mvp_case_001.json", "cases/mvp_case_002.json"),
+        ("assets/mvp_case_001/scratch_01.jpg", "assets/mvp_case_002/scratch_01.jpg"),
     ),
 )
 def test_missing_required_members_rejected(stage, dropped: tuple[str, ...]) -> None:

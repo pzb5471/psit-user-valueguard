@@ -3671,8 +3671,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_001",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_001",
     "duration_seconds": 29.094,
     "events": [
       {
@@ -3709,7 +3709,7 @@
           "user_content_sha256": "854f5e06c30964556d5a83057cb7553fe1d2569d1bc9579e6af1d92746e7a001"
         },
         "response_json": {
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -3801,7 +3801,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -3933,7 +3933,7 @@
           "user_content_sha256": "e5bb3c8dc2eb2a0faae5b982026dbe7dbd0f4582995c19e51f0ce46da5d8fb7e"
         },
         "response_json": {
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -3961,7 +3961,7 @@
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
           "alternative_cause": null,
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -4031,7 +4031,7 @@
               "reason": "客户问题虽已解决，但签收时间记录冲突和退款金额证据缺失可能影响后续审计追溯与类似案例的退换期判定，属低成本内部核验事项，无需触达客户。"
             }
           ],
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "caution_note": "本案例建议不主动联系客户，避免在问题已解决后打扰客户；但签收日期（6月11日 vs 2017-09-21）的记录矛盾应移交内部数据或履约团队排查，如确认系统时间记录异常，可能影响其他在途退换期案例的判定，需专项复查。",
           "communication_points": [],
           "intervention_level": "NO_IMMEDIATE_INTERVENTION",
@@ -4063,7 +4063,7 @@
               "reason": "客户问题虽已解决，但签收时间记录冲突和退款金额证据缺失可能影响后续审计追溯与类似案例的退换期判定，属低成本内部核验事项，无需触达客户。"
             }
           ],
-          "case_id": "demo_case_001",
+          "case_id": "mvp_case_001",
           "caution_note": "本案例建议不主动联系客户，避免在问题已解决后打扰客户；但签收日期（6月11日 vs 2017-09-21）的记录矛盾应移交内部数据或履约团队排查，如确认系统时间记录异常，可能影响其他在途退换期案例的判定，需专项复查。",
           "communication_points": [],
           "intervention_level": "NO_IMMEDIATE_INTERVENTION",
@@ -4085,7 +4085,7 @@
     "outcome": {
       "attribution": {
         "alternative_cause": null,
-        "case_id": "demo_case_001",
+        "case_id": "mvp_case_001",
         "primary_cause": {
           "category": "RETURN_REFUND",
           "counter_evidence_ids": [
@@ -4120,7 +4120,7 @@
             "reason": "客户问题虽已解决，但签收时间记录冲突和退款金额证据缺失可能影响后续审计追溯与类似案例的退换期判定，属低成本内部核验事项，无需触达客户。"
           }
         ],
-        "case_id": "demo_case_001",
+        "case_id": "mvp_case_001",
         "caution_note": "本案例建议不主动联系客户，避免在问题已解决后打扰客户；但签收日期（6月11日 vs 2017-09-21）的记录矛盾应移交内部数据或履约团队排查，如确认系统时间记录异常，可能影响其他在途退换期案例的判定，需专项复查。",
         "communication_points": [],
         "intervention_level": "NO_IMMEDIATE_INTERVENTION",
@@ -4128,7 +4128,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_001",
+        "case_id": "mvp_case_001",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -4230,8 +4230,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_002",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_002",
     "duration_seconds": 33.578,
     "events": [
       {
@@ -4268,7 +4268,7 @@
           "user_content_sha256": "09c4fd8f061ac34f8451794dff30a768fe4945d9140051d1f41a3817be38bbda"
         },
         "response_json": {
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -4349,7 +4349,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -4475,7 +4475,7 @@
             "explanation": "客服明确陈述'已成功办理退货，物流状态已拦截，订单状态为已取消'，但订单事实显示商品已于2017-12-11交付承运人并已送达客户，客服陈述与核验事实存在矛盾，可能存在服务沟通中信息不实或不准确的风险假设。",
             "uncertainty": "客户后续确认退款已处理并表示无其他问题，可能表明退货流程实际已完成而订单状态字段未同步更新，即冲突也可能源于系统状态不同步而非客服沟通失实，现有证据无法区分这两种可能。"
           },
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -4518,7 +4518,7 @@
             "explanation": "客服明确陈述'已成功办理退货，物流状态已拦截，订单状态为已取消'，但订单事实显示商品已于2017-12-11交付承运人并已送达客户，客服陈述与核验事实存在矛盾，可能存在服务沟通中信息不实或不准确的风险假设。",
             "uncertainty": "客户后续确认退款已处理并表示无其他问题，可能表明退货流程实际已完成而订单状态字段未同步更新，即冲突也可能源于系统状态不同步而非客服沟通失实，现有证据无法区分这两种可能。"
           },
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -4608,7 +4608,7 @@
               "reason": "客户确认问题已解决且情绪平稳（ev_text_001、ev_text_009），高价值客户身份不应单独触发升级动作；是否需要进一步介入取决于证据核验结果，而非价值结论。"
             }
           ],
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "caution_note": "本案例核心风险是内部事实冲突而非客户不满：客服对客户作出的'物流已拦截、订单已取消'陈述（ev_text_004）与订单已送达记录（ev_behavior_002、ev_behavior_005、ev_behavior_006）不一致，无论退款是否实际到账，均建议人工核查该客服陈述的产生原因及订单状态同步机制，防止同类信息不实沟通再次发生。所有动作仅为提交人工的核验建议，不会自动执行。",
           "communication_points": [
             "如需联系客户，仅围绕订单状态核实与退款确认进行，说明退款到账时效参考（支付宝通常1到3个工作日，ev_text_008）及退款已按客户确认处理（ev_text_009），避免提及客户此前'未发货'陈述与订单已送达记录（ev_behavior_002、ev_behavior_006）之间的冲突细节。",
@@ -4665,7 +4665,7 @@
               "reason": "客户确认问题已解决且情绪平稳（ev_text_001、ev_text_009），高价值客户身份不应单独触发升级动作；是否需要进一步介入取决于证据核验结果，而非价值结论。"
             }
           ],
-          "case_id": "demo_case_002",
+          "case_id": "mvp_case_002",
           "caution_note": "本案例核心风险是内部事实冲突而非客户不满：客服对客户作出的'物流已拦截、订单已取消'陈述（ev_text_004）与订单已送达记录（ev_behavior_002、ev_behavior_005、ev_behavior_006）不一致，无论退款是否实际到账，均建议人工核查该客服陈述的产生原因及订单状态同步机制，防止同类信息不实沟通再次发生。所有动作仅为提交人工的核验建议，不会自动执行。",
           "communication_points": [
             "如需联系客户，仅围绕订单状态核实与退款确认进行，说明退款到账时效参考（支付宝通常1到3个工作日，ev_text_008）及退款已按客户确认处理（ev_text_009），避免提及客户此前'未发货'陈述与订单已送达记录（ev_behavior_002、ev_behavior_006）之间的冲突细节。",
@@ -4704,7 +4704,7 @@
           "explanation": "客服明确陈述'已成功办理退货，物流状态已拦截，订单状态为已取消'，但订单事实显示商品已于2017-12-11交付承运人并已送达客户，客服陈述与核验事实存在矛盾，可能存在服务沟通中信息不实或不准确的风险假设。",
           "uncertainty": "客户后续确认退款已处理并表示无其他问题，可能表明退货流程实际已完成而订单状态字段未同步更新，即冲突也可能源于系统状态不同步而非客服沟通失实，现有证据无法区分这两种可能。"
         },
-        "case_id": "demo_case_002",
+        "case_id": "mvp_case_002",
         "primary_cause": {
           "category": "RETURN_REFUND",
           "counter_evidence_ids": [
@@ -4762,7 +4762,7 @@
             "reason": "客户确认问题已解决且情绪平稳（ev_text_001、ev_text_009），高价值客户身份不应单独触发升级动作；是否需要进一步介入取决于证据核验结果，而非价值结论。"
           }
         ],
-        "case_id": "demo_case_002",
+        "case_id": "mvp_case_002",
         "caution_note": "本案例核心风险是内部事实冲突而非客户不满：客服对客户作出的'物流已拦截、订单已取消'陈述（ev_text_004）与订单已送达记录（ev_behavior_002、ev_behavior_005、ev_behavior_006）不一致，无论退款是否实际到账，均建议人工核查该客服陈述的产生原因及订单状态同步机制，防止同类信息不实沟通再次发生。所有动作仅为提交人工的核验建议，不会自动执行。",
         "communication_points": [
           "如需联系客户，仅围绕订单状态核实与退款确认进行，说明退款到账时效参考（支付宝通常1到3个工作日，ev_text_008）及退款已按客户确认处理（ev_text_009），避免提及客户此前'未发货'陈述与订单已送达记录（ev_behavior_002、ev_behavior_006）之间的冲突细节。",
@@ -4774,7 +4774,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_002",
+        "case_id": "mvp_case_002",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -4856,8 +4856,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_003",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_003",
     "duration_seconds": 26.782,
     "events": [
       {
@@ -4894,7 +4894,7 @@
           "user_content_sha256": "2f9b3b6f1d7c62c687c4a22b2bdf5f7c5fcb31742085e67da533a444b1a8c8d6"
         },
         "response_json": {
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -4994,7 +4994,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -5148,7 +5148,7 @@
             "explanation": "客户坚持按质量问题退货退款，客服提供了退货地址、运费说明并完成退款，流程环节中亦存在退货条件与运费承担（扣除运费险补贴后18.6元由客户支付）等潜在争议点，可作为备选原因假设。",
             "uncertainty": "退货包裹实际签收情况无核验记录（单号已脱敏），运费收取及运费险补贴核销亦缺少凭证，退货环节是否真正引发争议无法确认。"
           },
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": null,
@@ -5186,7 +5186,7 @@
             "explanation": "客户坚持按质量问题退货退款，客服提供了退货地址、运费说明并完成退款，流程环节中亦存在退货条件与运费承担（扣除运费险补贴后18.6元由客户支付）等潜在争议点，可作为备选原因假设。",
             "uncertainty": "退货包裹实际签收情况无核验记录（单号已脱敏），运费收取及运费险补贴核销亦缺少凭证，退货环节是否真正引发争议无法确认。"
           },
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": null,
@@ -5260,7 +5260,7 @@
               "reason": "退货寄回仅为客户单方声称（ev_text_005），物流签收与运费收取均缺核验记录；退款已完成且客户确认结案，此核验仅作后台档案完善，不需要打扰客户，也不影响当前结案状态。"
             }
           ],
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "caution_note": "质量问题始终仅为客户单方陈述（ev_text_001、ev_text_003），缺少图片或质检证据；若同款商品再次出现类似质量反馈，建议合并作为产品质量线索提交人工复核，必要时补充质检或图片证据。",
           "communication_points": [
             "如后续需与客户沟通，应认可其反馈的商品问题（一个腿宽一个腿窄，ev_text_003），并说明退款已按7天无理由及质量问题退货流程办结（ev_text_002、ev_text_006），避免重复解释流程。",
@@ -5303,7 +5303,7 @@
               "reason": "退货寄回仅为客户单方声称（ev_text_005），物流签收与运费收取均缺核验记录；退款已完成且客户确认结案，此核验仅作后台档案完善，不需要打扰客户，也不影响当前结案状态。"
             }
           ],
-          "case_id": "demo_case_003",
+          "case_id": "mvp_case_003",
           "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 质量问题始终仅为客户单方陈述（ev_text_001、ev_text_003），缺少图片或质检证据；若同款商品再次出现类似质量反馈，建议合并作为产品质量线索提交人工复核，必要时补充质检或图片证据。",
           "communication_points": [
             "如后续需与客户沟通，应认可其反馈的商品问题（一个腿宽一个腿窄，ev_text_003），并说明退款已按7天无理由及质量问题退货流程办结（ev_text_002、ev_text_006），避免重复解释流程。",
@@ -5342,7 +5342,7 @@
           "explanation": "客户坚持按质量问题退货退款，客服提供了退货地址、运费说明并完成退款，流程环节中亦存在退货条件与运费承担（扣除运费险补贴后18.6元由客户支付）等潜在争议点，可作为备选原因假设。",
           "uncertainty": "退货包裹实际签收情况无核验记录（单号已脱敏），运费收取及运费险补贴核销亦缺少凭证，退货环节是否真正引发争议无法确认。"
         },
-        "case_id": "demo_case_003",
+        "case_id": "mvp_case_003",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": null,
@@ -5381,7 +5381,7 @@
             "reason": "退货寄回仅为客户单方声称（ev_text_005），物流签收与运费收取均缺核验记录；退款已完成且客户确认结案，此核验仅作后台档案完善，不需要打扰客户，也不影响当前结案状态。"
           }
         ],
-        "case_id": "demo_case_003",
+        "case_id": "mvp_case_003",
         "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 质量问题始终仅为客户单方陈述（ev_text_001、ev_text_003），缺少图片或质检证据；若同款商品再次出现类似质量反馈，建议合并作为产品质量线索提交人工复核，必要时补充质检或图片证据。",
         "communication_points": [
           "如后续需与客户沟通，应认可其反馈的商品问题（一个腿宽一个腿窄，ev_text_003），并说明退款已按7天无理由及质量问题退货流程办结（ev_text_002、ev_text_006），避免重复解释流程。",
@@ -5393,7 +5393,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_003",
+        "case_id": "mvp_case_003",
         "emotion": {
           "evidence_ids": [
             "ev_text_003",
@@ -5503,8 +5503,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_004",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_004",
     "duration_seconds": 234.093,
     "events": [
       {
@@ -5575,7 +5575,7 @@
           "user_content_sha256": "814ed7f0326d26a04bebc01eb3868f65038fb5a35b823570a6032fd91a5c7671"
         },
         "response_json": {
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -5714,7 +5714,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -5893,7 +5893,7 @@
           "user_content_sha256": "35535a26137769d99ae846b500267b2923308035a3d125f764b327a48ae1b610"
         },
         "response_json": {
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -5921,7 +5921,7 @@
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
           "alternative_cause": null,
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -6005,7 +6005,7 @@
               "reason": "事件 7 显示客户以 CUSTOMER_CONFIRMED 确认问题解决，当前没有可执行的风险事项；主要剩余风险（补发是否落地、缺扣是否属实）已通过核验动作覆盖，暂不介入符合最低介入规则。"
             }
           ],
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "caution_note": "请注意两点证据缺口：一是照片（ev_image_001）仅展示衣服局部且可见多颗扣子，无法确认是否确实少扣，与客户陈述存在潜在冲突，客服所称核实结果的具体依据未提供；二是补发扣子仅有登记记录、缺少发货与物流证据，建议在补发闭环核验完成前保留复查标记。",
           "communication_points": [
             "若人工后续联系客户，应以补发扣子请求的执行进展为核心内容，告知补发安排与物流信息，呼应客户『麻烦直接补发一个扣子就行』的明确诉求（ev_text_005、ev_text_006）。",
@@ -6055,7 +6055,7 @@
               "reason": "事件 7 显示客户以 CUSTOMER_CONFIRMED 确认问题解决，当前没有可执行的风险事项；主要剩余风险（补发是否落地、缺扣是否属实）已通过核验动作覆盖，暂不介入符合最低介入规则。"
             }
           ],
-          "case_id": "demo_case_004",
+          "case_id": "mvp_case_004",
           "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 请注意两点证据缺口：一是照片（ev_image_001）仅展示衣服局部且可见多颗扣子，无法确认是否确实少扣，与客户陈述存在潜在冲突，客服所称核实结果的具体依据未提供；二是补发扣子仅有登记记录、缺少发货与物流证据，建议在补发闭环核验完成前保留复查标记。",
           "communication_points": [
             "若人工后续联系客户，应以补发扣子请求的执行进展为核心内容，告知补发安排与物流信息，呼应客户『麻烦直接补发一个扣子就行』的明确诉求（ev_text_005、ev_text_006）。",
@@ -6081,7 +6081,7 @@
     "outcome": {
       "attribution": {
         "alternative_cause": null,
-        "case_id": "demo_case_004",
+        "case_id": "mvp_case_004",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": [
@@ -6130,7 +6130,7 @@
             "reason": "事件 7 显示客户以 CUSTOMER_CONFIRMED 确认问题解决，当前没有可执行的风险事项；主要剩余风险（补发是否落地、缺扣是否属实）已通过核验动作覆盖，暂不介入符合最低介入规则。"
           }
         ],
-        "case_id": "demo_case_004",
+        "case_id": "mvp_case_004",
         "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 请注意两点证据缺口：一是照片（ev_image_001）仅展示衣服局部且可见多颗扣子，无法确认是否确实少扣，与客户陈述存在潜在冲突，客服所称核实结果的具体依据未提供；二是补发扣子仅有登记记录、缺少发货与物流证据，建议在补发闭环核验完成前保留复查标记。",
         "communication_points": [
           "若人工后续联系客户，应以补发扣子请求的执行进展为核心内容，告知补发安排与物流信息，呼应客户『麻烦直接补发一个扣子就行』的明确诉求（ev_text_005、ev_text_006）。",
@@ -6142,7 +6142,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_004",
+        "case_id": "mvp_case_004",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -6291,8 +6291,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_005",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_005",
     "duration_seconds": 59.516,
     "events": [
       {
@@ -6329,7 +6329,7 @@
           "user_content_sha256": "2a178bfad5f4ab31f16961366a1a3168bd9e459a0bbe86540e1871d85d96181f"
         },
         "response_json": {
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -6498,7 +6498,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -6719,7 +6719,7 @@
             "explanation": "存在另一类假设：客服在确认问题属实后仅提出7元红包补偿，与客户预期的退货退款诉求差距较大，引发客户不满和情绪升级（客户称'7块钱打发谁呢'），可能延长了处理周期并加剧了负面体验。",
             "uncertainty": "该假设仅说明协商过程可能加重不满，但若商品质量假设成立，最初的问题触发点仍是商品瑕疵，服务沟通因素的作用程度无法量化。"
           },
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -6758,7 +6758,7 @@
             "explanation": "存在另一类假设：客服在确认问题属实后仅提出7元红包补偿，与客户预期的退货退款诉求差距较大，引发客户不满和情绪升级（客户称'7块钱打发谁呢'），可能延长了处理周期并加剧了负面体验。",
             "uncertainty": "该假设仅说明协商过程可能加重不满，但若商品质量假设成立，最初的问题触发点仍是商品瑕疵，服务沟通因素的作用程度无法量化。"
           },
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -6835,7 +6835,7 @@
               "reason": "斑点成因（发货前已存在还是收货后产生）缺乏质检与时间线证据无法确认，图片光线偏暗判断受限，为避免同类问题复发可作内部核验。"
             }
           ],
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "caution_note": "两点供人工注意：1) 商品斑点成因未查证，本次结案不代表质量假设成立，如出现同款同类投诉应关联核查；2) 程序核验显示实际送达时间（ev_behavior_006，2018-05-05）晚于预计送达时间（ev_behavior_007，2018-04-26），客户从未提及物流延迟，该时间差与投诉的关联无法确认，暂不作为对客处理依据。",
           "communication_points": [
             "若后续回访，宜以感谢配合退货退款流程、确认退款已到账为主（ev_text_008、ev_text_009），不作额外补偿承诺。",
@@ -6878,7 +6878,7 @@
               "reason": "斑点成因（发货前已存在还是收货后产生）缺乏质检与时间线证据无法确认，图片光线偏暗判断受限，为避免同类问题复发可作内部核验。"
             }
           ],
-          "case_id": "demo_case_005",
+          "case_id": "mvp_case_005",
           "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 两点供人工注意：1) 商品斑点成因未查证，本次结案不代表质量假设成立，如出现同款同类投诉应关联核查；2) 程序核验显示实际送达时间（ev_behavior_006，2018-05-05）晚于预计送达时间（ev_behavior_007，2018-04-26），客户从未提及物流延迟，该时间差与投诉的关联无法确认，暂不作为对客处理依据。",
           "communication_points": [
             "若后续回访，宜以感谢配合退货退款流程、确认退款已到账为主（ev_text_008、ev_text_009），不作额外补偿承诺。",
@@ -6913,7 +6913,7 @@
           "explanation": "存在另一类假设：客服在确认问题属实后仅提出7元红包补偿，与客户预期的退货退款诉求差距较大，引发客户不满和情绪升级（客户称'7块钱打发谁呢'），可能延长了处理周期并加剧了负面体验。",
           "uncertainty": "该假设仅说明协商过程可能加重不满，但若商品质量假设成立，最初的问题触发点仍是商品瑕疵，服务沟通因素的作用程度无法量化。"
         },
-        "case_id": "demo_case_005",
+        "case_id": "mvp_case_005",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": [
@@ -6957,7 +6957,7 @@
             "reason": "斑点成因（发货前已存在还是收货后产生）缺乏质检与时间线证据无法确认，图片光线偏暗判断受限，为避免同类问题复发可作内部核验。"
           }
         ],
-        "case_id": "demo_case_005",
+        "case_id": "mvp_case_005",
         "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 两点供人工注意：1) 商品斑点成因未查证，本次结案不代表质量假设成立，如出现同款同类投诉应关联核查；2) 程序核验显示实际送达时间（ev_behavior_006，2018-05-05）晚于预计送达时间（ev_behavior_007，2018-04-26），客户从未提及物流延迟，该时间差与投诉的关联无法确认，暂不作为对客处理依据。",
         "communication_points": [
           "若后续回访，宜以感谢配合退货退款流程、确认退款已到账为主（ev_text_008、ev_text_009），不作额外补偿承诺。",
@@ -6969,7 +6969,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_005",
+        "case_id": "mvp_case_005",
         "emotion": {
           "evidence_ids": [
             "ev_text_003",
@@ -7151,8 +7151,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_006",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_006",
     "duration_seconds": 48.36,
     "events": [
       {
@@ -7189,7 +7189,7 @@
           "user_content_sha256": "90deb7fb297cd703c5438c9b41af78a88ea64bec1184b11793a54a8004aeaab6"
         },
         "response_json": {
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -7327,7 +7327,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -7502,7 +7502,7 @@
           "user_content_sha256": "549f4f29c15cf249af3dfec68261e756775da1bd49f5749ee347d15b7383f1cf"
         },
         "response_json": {
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": null,
@@ -7530,7 +7530,7 @@
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
           "alternative_cause": null,
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": null,
@@ -7609,7 +7609,7 @@
               "reason": "商品到货即存在明显变质表象，客户等待多日且情绪不耐（IMPATIENT），其高价值身份支持提升处理优先级与关怀评估。"
             }
           ],
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "caution_note": "荔枝损坏的具体成因（采后、运输或存储环节）无法从现有证据确认，图片存在模糊，白色霜状物是冰霜还是霉变无法直接判断，损坏比例缺少量化信息；履约核验显示实际签收时间早于预计送达时间，与客户截图所示物流异常日期不一致，二者关系未明，暂不足以支持物流升级。退款到账核验通过前，本案例不宜直接关闭。",
           "communication_points": [
             "若人工核验发现退款未到账，应主动联系客户说明实际状态并给出补办时间安排（证据：ev_text_004）。",
@@ -7653,7 +7653,7 @@
               "reason": "商品到货即存在明显变质表象，客户等待多日且情绪不耐（IMPATIENT），其高价值身份支持提升处理优先级与关怀评估。"
             }
           ],
-          "case_id": "demo_case_006",
+          "case_id": "mvp_case_006",
           "caution_note": "荔枝损坏的具体成因（采后、运输或存储环节）无法从现有证据确认，图片存在模糊，白色霜状物是冰霜还是霉变无法直接判断，损坏比例缺少量化信息；履约核验显示实际签收时间早于预计送达时间，与客户截图所示物流异常日期不一致，二者关系未明，暂不足以支持物流升级。退款到账核验通过前，本案例不宜直接关闭。",
           "communication_points": [
             "若人工核验发现退款未到账，应主动联系客户说明实际状态并给出补办时间安排（证据：ev_text_004）。",
@@ -7678,7 +7678,7 @@
     "outcome": {
       "attribution": {
         "alternative_cause": null,
-        "case_id": "demo_case_006",
+        "case_id": "mvp_case_006",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": null,
@@ -7722,7 +7722,7 @@
             "reason": "商品到货即存在明显变质表象，客户等待多日且情绪不耐（IMPATIENT），其高价值身份支持提升处理优先级与关怀评估。"
           }
         ],
-        "case_id": "demo_case_006",
+        "case_id": "mvp_case_006",
         "caution_note": "荔枝损坏的具体成因（采后、运输或存储环节）无法从现有证据确认，图片存在模糊，白色霜状物是冰霜还是霉变无法直接判断，损坏比例缺少量化信息；履约核验显示实际签收时间早于预计送达时间，与客户截图所示物流异常日期不一致，二者关系未明，暂不足以支持物流升级。退款到账核验通过前，本案例不宜直接关闭。",
         "communication_points": [
           "若人工核验发现退款未到账，应主动联系客户说明实际状态并给出补办时间安排（证据：ev_text_004）。",
@@ -7733,7 +7733,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_006",
+        "case_id": "mvp_case_006",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -7878,8 +7878,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_007",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_007",
     "duration_seconds": 35.14,
     "events": [
       {
@@ -7916,7 +7916,7 @@
           "user_content_sha256": "64efd2f98c564b69fc724f22145dfc235b055cb886d4928ff6267af3edc415c1"
         },
         "response_json": {
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -8009,7 +8009,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -8134,7 +8134,7 @@
           "user_content_sha256": "f9d7b46ba9db47d00e7a2e835c77382fec1c56a4ade8970180787cb51ee7b56e"
         },
         "response_json": {
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "primary_cause": {
             "category": "LOGISTICS_FULFILLMENT",
             "counter_evidence_ids": [
@@ -8163,7 +8163,7 @@
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
           "alternative_cause": null,
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "primary_cause": {
             "category": "LOGISTICS_FULFILLMENT",
             "counter_evidence_ids": [
@@ -8248,7 +8248,7 @@
               "reason": "客户情绪平稳（CALM）且配合上传了照片，但补发尚未落地；高价值身份提示应提升联系优先级与沟通质量，由人工执行联系，系统不自动外呼。"
             }
           ],
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "caution_note": "少发货尚未被证实为事实，仅与客户陈述相互印证，人工核验前请勿向客户确认责任归属或做出任何赔偿承诺；订单妥投状态（ev_behavior_002、ev_behavior_006）不能证明包裹内商品数量，反证作用有限；高价值结论仅用于提升处理优先级，不得作为责任判定依据。",
           "communication_points": [
             "向客户确认补发核验进展：说明正在核实补发2件糕点的发货状态，并承诺在核验完成后及时同步物流单号（ev_text_004、ev_text_005）。",
@@ -8301,7 +8301,7 @@
               "reason": "客户情绪平稳（CALM）且配合上传了照片，但补发尚未落地；高价值身份提示应提升联系优先级与沟通质量，由人工执行联系，系统不自动外呼。"
             }
           ],
-          "case_id": "demo_case_007",
+          "case_id": "mvp_case_007",
           "caution_note": "少发货尚未被证实为事实，仅与客户陈述相互印证，人工核验前请勿向客户确认责任归属或做出任何赔偿承诺；订单妥投状态（ev_behavior_002、ev_behavior_006）不能证明包裹内商品数量，反证作用有限；高价值结论仅用于提升处理优先级，不得作为责任判定依据。",
           "communication_points": [
             "向客户确认补发核验进展：说明正在核实补发2件糕点的发货状态，并承诺在核验完成后及时同步物流单号（ev_text_004、ev_text_005）。",
@@ -8327,7 +8327,7 @@
     "outcome": {
       "attribution": {
         "alternative_cause": null,
-        "case_id": "demo_case_007",
+        "case_id": "mvp_case_007",
         "primary_cause": {
           "category": "LOGISTICS_FULFILLMENT",
           "counter_evidence_ids": [
@@ -8380,7 +8380,7 @@
             "reason": "客户情绪平稳（CALM）且配合上传了照片，但补发尚未落地；高价值身份提示应提升联系优先级与沟通质量，由人工执行联系，系统不自动外呼。"
           }
         ],
-        "case_id": "demo_case_007",
+        "case_id": "mvp_case_007",
         "caution_note": "少发货尚未被证实为事实，仅与客户陈述相互印证，人工核验前请勿向客户确认责任归属或做出任何赔偿承诺；订单妥投状态（ev_behavior_002、ev_behavior_006）不能证明包裹内商品数量，反证作用有限；高价值结论仅用于提升处理优先级，不得作为责任判定依据。",
         "communication_points": [
           "向客户确认补发核验进展：说明正在核实补发2件糕点的发货状态，并承诺在核验完成后及时同步物流单号（ev_text_004、ev_text_005）。",
@@ -8392,7 +8392,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_007",
+        "case_id": "mvp_case_007",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -8487,8 +8487,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_008",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_008",
     "duration_seconds": 40.218,
     "events": [
       {
@@ -8525,7 +8525,7 @@
           "user_content_sha256": "2fc96cf74af5944c4a9373c89f3e31f0f6007cfceafe93183d0a2122736ae8fb"
         },
         "response_json": {
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -8618,7 +8618,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -8756,7 +8756,7 @@
             "explanation": "部分证据同时指向服务沟通问题：客服提供的支付时间（6月8日10时）与程序核验的支付时间（2018-08-13 22:51:49）不一致，且客服声称订单已取消与订单已签收状态存在出入，可能反映客服陈述信息不准确。",
             "uncertainty": "无法确定客服信息不一致是由于沟通口径问题、系统数据差异还是其他原因，也缺乏客服取消订单操作的系统记录加以佐证。"
           },
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -8796,7 +8796,7 @@
             "explanation": "部分证据同时指向服务沟通问题：客服提供的支付时间（6月8日10时）与程序核验的支付时间（2018-08-13 22:51:49）不一致，且客服声称订单已取消与订单已签收状态存在出入，可能反映客服陈述信息不准确。",
             "uncertainty": "无法确定客服信息不一致是由于沟通口径问题、系统数据差异还是其他原因，也缺乏客服取消订单操作的系统记录加以佐证。"
           },
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "primary_cause": {
             "category": "RETURN_REFUND",
             "counter_evidence_ids": [
@@ -8887,7 +8887,7 @@
               "reason": "客户曾确认需求解决（ev_text_005），但退款生效情况未核实且客户为高价值客户，主动回访可降低客诉反转风险；是否回访及口径由人工决定。"
             }
           ],
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "caution_note": "本案例存在三处不一致需人工特别留意：客户声称未到货与订单已签收的矛盾、客服称订单已取消与订单状态已签收的矛盾、客服所述支付时间与系统支付时间的差异。在退款生效与签收事实核验完成前，请勿对外承诺任何退款结果或权益；本包仅为人工处理初稿建议，不构成执行指令。",
           "communication_points": [
             "如需回访，向客户确认退款金额（26.9元）是否已实际到账，并请其提供或确认到账情况，以便核实退款是否生效。",
@@ -8969,7 +8969,7 @@
               "reason": "客户虽口头确认解决，但退款是否到账未经验证，且客服陈述的支付时间与核验时间不一致，建议以核验结果为准主动与客户对齐事实。"
             }
           ],
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "caution_note": "客户表面已确认解决，但退款生效与订单状态存在证据冲突，切勿仅以客户确认结案；人工核验退款流水与签收凭证前，不建议对外做出任何退款完成或订单取消的表述。客服陈述的支付时间与系统记录不一致，提示需复核客服沟通口径。",
           "communication_points": [
             "向客户确认退款是否已实际到账，如未到账则说明人工将跟进核验退款进度（依据 ev_text_003、ev_text_004）。",
@@ -9025,7 +9025,7 @@
               "reason": "客户虽口头确认解决，但退款是否到账未经验证，且客服陈述的支付时间与核验时间不一致，建议以核验结果为准主动与客户对齐事实。"
             }
           ],
-          "case_id": "demo_case_008",
+          "case_id": "mvp_case_008",
           "caution_note": "客户表面已确认解决，但退款生效与订单状态存在证据冲突，切勿仅以客户确认结案；人工核验退款流水与签收凭证前，不建议对外做出任何退款完成或订单取消的表述。客服陈述的支付时间与系统记录不一致，提示需复核客服沟通口径。",
           "communication_points": [
             "向客户确认退款是否已实际到账，如未到账则说明人工将跟进核验退款进度（依据 ev_text_003、ev_text_004）。",
@@ -9063,7 +9063,7 @@
           "explanation": "部分证据同时指向服务沟通问题：客服提供的支付时间（6月8日10时）与程序核验的支付时间（2018-08-13 22:51:49）不一致，且客服声称订单已取消与订单已签收状态存在出入，可能反映客服陈述信息不准确。",
           "uncertainty": "无法确定客服信息不一致是由于沟通口径问题、系统数据差异还是其他原因，也缺乏客服取消订单操作的系统记录加以佐证。"
         },
-        "case_id": "demo_case_008",
+        "case_id": "mvp_case_008",
         "primary_cause": {
           "category": "RETURN_REFUND",
           "counter_evidence_ids": [
@@ -9118,7 +9118,7 @@
             "reason": "客户虽口头确认解决，但退款是否到账未经验证，且客服陈述的支付时间与核验时间不一致，建议以核验结果为准主动与客户对齐事实。"
           }
         ],
-        "case_id": "demo_case_008",
+        "case_id": "mvp_case_008",
         "caution_note": "客户表面已确认解决，但退款生效与订单状态存在证据冲突，切勿仅以客户确认结案；人工核验退款流水与签收凭证前，不建议对外做出任何退款完成或订单取消的表述。客服陈述的支付时间与系统记录不一致，提示需复核客服沟通口径。",
         "communication_points": [
           "向客户确认退款是否已实际到账，如未到账则说明人工将跟进核验退款进度（依据 ev_text_003、ev_text_004）。",
@@ -9130,7 +9130,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_008",
+        "case_id": "mvp_case_008",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -9225,8 +9225,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_009",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_009",
     "duration_seconds": 29.813,
     "events": [
       {
@@ -9263,7 +9263,7 @@
           "user_content_sha256": "ea0e9aed3cebbe5c7416c221760912373b4af349871baa617072c3f2462ac9ce"
         },
         "response_json": {
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -9410,7 +9410,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "emotion": {
             "evidence_ids": [
               "ev_text_001",
@@ -9591,7 +9591,7 @@
           "user_content_sha256": "e24d18c9e83125c11939982350d3961e169e3f1236a31d9e230f3032a2ae54d1"
         },
         "response_json": {
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -9620,7 +9620,7 @@
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
           "alternative_cause": null,
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -9696,7 +9696,7 @@
               "reason": "当前无可执行的未解决风险事项，符合最低介入规则中已确认解决的情形；仅保留对退款核验结果的观察复查。"
             }
           ],
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "caution_note": "需人工注意：1) 退款金额未在对话中明确，须核验实际退款金额与订单信息是否一致；2) 退货包裹缺少签收与质检核验记录，若核验异常应提升介入等级；3) 该客户为高价值客户，后续任何新问题建议优先处理。",
           "communication_points": [
             "如需回访，向客户确认退款已到账且金额无误，参考客服已告知订单状态更新为已退款（ev_text_009）及客户确认（ev_text_010）。",
@@ -9739,7 +9739,7 @@
               "reason": "当前无可执行的未解决风险事项，符合最低介入规则中已确认解决的情形；仅保留对退款核验结果的观察复查。"
             }
           ],
-          "case_id": "demo_case_009",
+          "case_id": "mvp_case_009",
           "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 需人工注意：1) 退款金额未在对话中明确，须核验实际退款金额与订单信息是否一致；2) 退货包裹缺少签收与质检核验记录，若核验异常应提升介入等级；3) 该客户为高价值客户，后续任何新问题建议优先处理。",
           "communication_points": [
             "如需回访，向客户确认退款已到账且金额无误，参考客服已告知订单状态更新为已退款（ev_text_009）及客户确认（ev_text_010）。",
@@ -9765,7 +9765,7 @@
     "outcome": {
       "attribution": {
         "alternative_cause": null,
-        "case_id": "demo_case_009",
+        "case_id": "mvp_case_009",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": [
@@ -9808,7 +9808,7 @@
             "reason": "当前无可执行的未解决风险事项，符合最低介入规则中已确认解决的情形；仅保留对退款核验结果的观察复查。"
           }
         ],
-        "case_id": "demo_case_009",
+        "case_id": "mvp_case_009",
         "caution_note": "程序底线：因存在未解决严重问题或证据冲突/不足，介入等级调整为建议介入，需人工核验。 需人工注意：1) 退款金额未在对话中明确，须核验实际退款金额与订单信息是否一致；2) 退货包裹缺少签收与质检核验记录，若核验异常应提升介入等级；3) 该客户为高价值客户，后续任何新问题建议优先处理。",
         "communication_points": [
           "如需回访，向客户确认退款已到账且金额无误，参考客服已告知订单状态更新为已退款（ev_text_009）及客户确认（ev_text_010）。",
@@ -9820,7 +9820,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_009",
+        "case_id": "mvp_case_009",
         "emotion": {
           "evidence_ids": [
             "ev_text_001",
@@ -9971,8 +9971,8 @@
     "validated_stages": 3
   },
   {
-    "batch_id": "demo_batch_v1",
-    "case_id": "demo_case_010",
+    "batch_id": "mvp_batch_v1",
+    "case_id": "mvp_case_010",
     "duration_seconds": 76.391,
     "events": [
       {
@@ -10009,7 +10009,7 @@
           "user_content_sha256": "0b9f0b5774cc647ecf9ca997f263121e5faf047c0c3ec200f20535db0d5f2df0"
         },
         "response_json": {
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -10146,7 +10146,7 @@
         "contract_version": "v1",
         "event_type": "STAGE_RESULT_VALIDATED",
         "result": {
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "emotion": {
             "evidence_ids": [
               "ev_text_003",
@@ -10334,7 +10334,7 @@
             "explanation": "假设风险同时部分来自退款履约未闭环：客服称“已核实”并办理仅退款，但客户追问到账时间且未见实际到账凭证，退款承诺与实际执行之间可能存在落差，进而转人工处理。",
             "uncertainty": "客服明确承诺已办理退款，但缺少退款金额、渠道及实际到账时间的凭证，“经过核实”的具体过程未知，无法确认退款是否已实际执行。"
           },
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -10375,7 +10375,7 @@
             "explanation": "假设风险同时部分来自退款履约未闭环：客服称“已核实”并办理仅退款，但客户追问到账时间且未见实际到账凭证，退款承诺与实际执行之间可能存在落差，进而转人工处理。",
             "uncertainty": "客服明确承诺已办理退款，但缺少退款金额、渠道及实际到账时间的凭证，“经过核实”的具体过程未知，无法确认退款是否已实际执行。"
           },
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "primary_cause": {
             "category": "PRODUCT_ISSUE",
             "counter_evidence_ids": [
@@ -10462,7 +10462,7 @@
               "reason": "客户情绪为 IMPATIENT（ev_text_005）且已被转交人工（ev_text_006），高价值客户身份支持提高处理优先级与沟通质量，但补偿内容须由人工决定。"
             }
           ],
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "caution_note": "退款是否已实际执行尚无凭证，人工联系客户前应先完成退款核验，避免向客户作出无法确认的到账承诺；图片证据无法确认果肉变质成因，向客户解释时应避免对成因作出未经核实的断言；该客户为高价值客户，挽留申请的补偿内容由人工审批决定，系统不执行。",
           "communication_points": [
             "向客户说明退款核验的具体进展：若退款已执行，提供退款金额、渠道与到账时间；若尚未到账，说明当前状态与后续跟进方式，避免再次使用无法兑现的承诺（依据 ev_text_004、ev_text_005）。",
@@ -10544,7 +10544,7 @@
               "reason": "客户已等待较长时间并追问退款到账（ev_text_005），情绪不耐烦，且客户为高价值客户（M=1550.68），提交道歉补偿或挽留申请有助于维护客户关系，但仅作提交建议由人工审批。"
             }
           ],
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "caution_note": "图片仅显示果肉半透明水渍状外观，无法确认是否腐烂变质及成因（冻伤、成熟度等），缺少物流温度记录佐证，质量归因存在不确定性；人工沟通时避免直接确认'腐烂变质'表述，以可观察事实为准。客服'经过核实'的内部过程无记录，需人工补充核验依据。",
           "communication_points": [
             "向客户明确退款核实结果：确认退款金额、渠道及实际到账时间，如已执行则提供到账进度说明，如未执行则告知具体处理安排（依据 ev_text_004、ev_text_005）。",
@@ -10600,7 +10600,7 @@
               "reason": "客户已等待较长时间并追问退款到账（ev_text_005），情绪不耐烦，且客户为高价值客户（M=1550.68），提交道歉补偿或挽留申请有助于维护客户关系，但仅作提交建议由人工审批。"
             }
           ],
-          "case_id": "demo_case_010",
+          "case_id": "mvp_case_010",
           "caution_note": "图片仅显示果肉半透明水渍状外观，无法确认是否腐烂变质及成因（冻伤、成熟度等），缺少物流温度记录佐证，质量归因存在不确定性；人工沟通时避免直接确认'腐烂变质'表述，以可观察事实为准。客服'经过核实'的内部过程无记录，需人工补充核验依据。",
           "communication_points": [
             "向客户明确退款核实结果：确认退款金额、渠道及实际到账时间，如已执行则提供到账进度说明，如未执行则告知具体处理安排（依据 ev_text_004、ev_text_005）。",
@@ -10638,7 +10638,7 @@
           "explanation": "假设风险同时部分来自退款履约未闭环：客服称“已核实”并办理仅退款，但客户追问到账时间且未见实际到账凭证，退款承诺与实际执行之间可能存在落差，进而转人工处理。",
           "uncertainty": "客服明确承诺已办理退款，但缺少退款金额、渠道及实际到账时间的凭证，“经过核实”的具体过程未知，无法确认退款是否已实际执行。"
         },
-        "case_id": "demo_case_010",
+        "case_id": "mvp_case_010",
         "primary_cause": {
           "category": "PRODUCT_ISSUE",
           "counter_evidence_ids": [
@@ -10694,7 +10694,7 @@
             "reason": "客户已等待较长时间并追问退款到账（ev_text_005），情绪不耐烦，且客户为高价值客户（M=1550.68），提交道歉补偿或挽留申请有助于维护客户关系，但仅作提交建议由人工审批。"
           }
         ],
-        "case_id": "demo_case_010",
+        "case_id": "mvp_case_010",
         "caution_note": "图片仅显示果肉半透明水渍状外观，无法确认是否腐烂变质及成因（冻伤、成熟度等），缺少物流温度记录佐证，质量归因存在不确定性；人工沟通时避免直接确认'腐烂变质'表述，以可观察事实为准。客服'经过核实'的内部过程无记录，需人工补充核验依据。",
         "communication_points": [
           "向客户明确退款核实结果：确认退款金额、渠道及实际到账时间，如已执行则提供到账进度说明，如未执行则告知具体处理安排（依据 ev_text_004、ev_text_005）。",
@@ -10706,7 +10706,7 @@
         "schema_version": "v1"
       },
       "perception": {
-        "case_id": "demo_case_010",
+        "case_id": "mvp_case_010",
         "emotion": {
           "evidence_ids": [
             "ev_text_003",

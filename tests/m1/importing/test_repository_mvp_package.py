@@ -9,21 +9,21 @@ from app.contracts.data import PackageType
 from app.modules.data.importing.zip_stage import ZipImportStage
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DEMO_PACKAGE = REPO_ROOT / "demo" / "demo_batch_v1.zip"
-DEMO_PACKAGE_SHA256 = "a7968fdf3e49010dbae73bb4db14611948ed00a37d6c7cf31b365058b559d3f2"
+MVP_PACKAGE = REPO_ROOT / "mvp" / "mvp_batch_v1.zip"
+MVP_PACKAGE_SHA256 = "958f7c8bc8b113ed4c1de943d52b09b88bd04e097234fc446e50e654bece301b"
 
 
-def test_repository_demo_package_is_fixed_and_importable(tmp_path: Path) -> None:
-    assert DEMO_PACKAGE.is_file(), "仓库缺少 demo/demo_batch_v1.zip"
-    raw = DEMO_PACKAGE.read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == DEMO_PACKAGE_SHA256
+def test_repository_mvp_package_is_fixed_and_importable(tmp_path: Path) -> None:
+    assert MVP_PACKAGE.is_file(), "仓库缺少 mvp/mvp_batch_v1.zip"
+    raw = MVP_PACKAGE.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == MVP_PACKAGE_SHA256
 
     result = ZipImportStage(tmp_root=tmp_path).stage(
         raw,
-        source_filename=DEMO_PACKAGE.name,
+        source_filename=MVP_PACKAGE.name,
     )
 
     assert result.ok, result.rejections
-    assert result.package_type == PackageType.DEMO
+    assert result.package_type == PackageType.MVP
     assert result.case_count == 10
     assert result.is_mock is True

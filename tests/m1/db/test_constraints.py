@@ -47,7 +47,7 @@ def data_version_row(*, data_version: str = "dv-1") -> dict[str, Any]:
         "data_version": data_version,
         "source_snapshot_ref": "snapshot/001",
         "source_manifest_sha256": "a" * 64,
-        "provenance_json": {"package": "demo"},
+        "provenance_json": {"package": "mvp"},
         "created_at": UTC_NOW,
     }
 
@@ -73,7 +73,7 @@ def case_row(*, batch_id: int, case_id: str = "c1") -> dict[str, Any]:
         "batch_id": batch_id,
         "case_id": case_id,
         "schema_version": "case_input_v1",
-        "case_input_json": {"customer": "demo"},
+        "case_input_json": {"customer": "mvp"},
         "customer_display_id": "cust-1",
         "is_high_value": True,
         "status": "PENDING_ANALYSIS",

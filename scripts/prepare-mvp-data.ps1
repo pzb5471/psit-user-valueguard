@@ -23,7 +23,7 @@ try {
     $env:PSIT_SOURCE_ROOT = $resolvedSource
     & uv run python -m tools.data_preparation --source-root $resolvedSource
     if ($LASTEXITCODE -ne 0) {
-        throw "Demo data generation failed (exit $LASTEXITCODE)."
+        throw "MVP data generation failed (exit $LASTEXITCODE)."
     }
     & powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test.ps1 -Task M1-09
     if ($LASTEXITCODE -ne 0) {
@@ -40,4 +40,4 @@ finally {
     Pop-Location
 }
 
-Write-Host '[PASS] Fixed DEMO (10 cases) and ACCEPTANCE (5 cases) packages passed M1-09.' -ForegroundColor Green
+Write-Host '[PASS] Fixed MVP (10 cases) and ACCEPTANCE (5 cases) packages passed M1-09.' -ForegroundColor Green

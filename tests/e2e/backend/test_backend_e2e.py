@@ -25,7 +25,7 @@ def _wait_analysed(client: TestClient, batch_id: str, timeout: float = 8.0) -> d
 def _upload(client: TestClient, zip_bytes: bytes) -> str:
     response = client.post(
         "/api/v1/batches",
-        files={"file": ("demo.zip", zip_bytes, "application/zip")},
+        files={"file": ("mvp.zip", zip_bytes, "application/zip")},
     )
     assert response.status_code == 201, response.text
     return response.json()["batch_id"]

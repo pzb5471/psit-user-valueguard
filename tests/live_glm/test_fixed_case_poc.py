@@ -32,7 +32,7 @@ pytestmark = pytest.mark.live_glm
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = REPO_ROOT / "runtime_data" / "mock_dataset_v1"
 PACKAGE_SPECS = (
-    (DATA_ROOT / "demo_batch_v1.zip", 10),
+    (DATA_ROOT / "mvp_batch_v1.zip", 10),
     (DATA_ROOT / "acceptance_batch_v1.zip", 5),
 )
 
@@ -105,7 +105,7 @@ def test_fixed_15_case_live_glm_poc(tmp_path: Path) -> None:
         pytest.fail(
             "LIVE_GLM_PREREQUISITE_MISSING: "
             + ", ".join(missing)
-            + "; run scripts/prepare-demo-data.ps1 and provide the key via environment only"
+            + "; run scripts/prepare-mvp-data.ps1 and provide the key via environment only"
         )
 
     effort = os.environ.get("PSIT_POC_REASONING_EFFORT", "high")
@@ -226,7 +226,7 @@ def test_fixed_15_case_live_glm_poc(tmp_path: Path) -> None:
             and sum(result["validated_stages"] for result in results) == 45
             else "FAILED"
         ),
-        "demo_acceptance": "PROJECT_OWNER_ACCEPTED",
+        "mvp_acceptance": "PROJECT_OWNER_ACCEPTED",
     }
     _write_json(artifact_dir / "summary.json", summary)
     _write_json(artifact_dir / "case-results.json", results)

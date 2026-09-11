@@ -23,7 +23,7 @@ ALLOWED_TOP_LEVEL_DIRS = {
     "artifacts",
     "backend",
     "config",
-    "demo",
+    "mvp",
     "docs",
     "frontend",
     "scripts",

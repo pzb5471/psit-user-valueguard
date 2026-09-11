@@ -137,7 +137,7 @@ def test_enum_members_match_spec() -> None:
     assert {m.value for m in RelationIdentity} == {"mock_mapped"}
     assert {m.value for m in TextRole} == {"CUSTOMER", "SERVICE_AGENT"}
     assert {m.value for m in ImageMediaType} == {"image/jpeg", "image/png", "image/gif"}
-    assert {m.value for m in PackageType} == {"DEMO", "ACCEPTANCE"}
+    assert {m.value for m in PackageType} == {"MVP", "ACCEPTANCE"}
     assert {m.value for m in BehaviorFactType} == {
         "HIGH_VALUE_CUSTOMER",
         "ORDER_STATUS",
@@ -340,13 +340,13 @@ def test_manifest_empty_case_files_rejected() -> None:
 
 def test_manifest_case_files_duplicate_rejected() -> None:
     payload = valid_manifest()
-    payload["case_files"] = ["cases/demo_case_001.json", "cases/demo_case_001.json"]
+    payload["case_files"] = ["cases/mvp_case_001.json", "cases/mvp_case_001.json"]
     reject(BatchManifest, payload)
 
 
 def test_manifest_case_files_unsorted_rejected() -> None:
     payload = valid_manifest()
-    payload["case_files"] = ["cases/demo_case_002.json", "cases/demo_case_001.json"]
+    payload["case_files"] = ["cases/mvp_case_002.json", "cases/mvp_case_001.json"]
     reject(BatchManifest, payload)
 
 
@@ -359,7 +359,7 @@ def test_manifest_case_count_upper_bound_rejected() -> None:
 
 def test_manifest_case_file_path_must_be_under_cases() -> None:
     payload = valid_manifest()
-    payload["case_files"] = ["cases/demo_case_001.json", "data/other.json"]
+    payload["case_files"] = ["cases/mvp_case_001.json", "data/other.json"]
     reject(BatchManifest, payload)
 
 
@@ -528,7 +528,7 @@ def test_checksums_path_must_be_safe_relative() -> None:
 
 def test_checksums_bad_hash_rejected() -> None:
     payload = valid_checksums()
-    payload["cases/demo_case_001.json"] = "XYZ"
+    payload["cases/mvp_case_001.json"] = "XYZ"
     reject(Checksums, payload)
 
 
@@ -540,7 +540,7 @@ def test_checksums_keys_normalized_sorted() -> None:
 def test_checksums_coverage_is_importer_concern() -> None:
     # 合同只约束路径与哈希格式；"必须覆盖 manifest/全部案例/全部图片"
     # 由导入器（M1-03/M1-04）负责，不在单文件 Schema 内强制。
-    Checksums.model_validate({"cases/demo_case_001.json": "a" * 64})
+    Checksums.model_validate({"cases/mvp_case_001.json": "a" * 64})
 
 @pytest.mark.parametrize(
     ("fact_type", "value"),

@@ -14,6 +14,6 @@ def test_spa_fallback_only_handles_frontend_routes(tmp_path) -> None:
     mount_frontend(app, dist)
 
     with TestClient(app) as client:
-        assert client.get("/batches/demo").status_code == 200
+        assert client.get("/batches/mvp").status_code == 200
         assert client.get("/api/v1/not-found").status_code == 404
         assert client.get("/assets/not-found.js").status_code == 404

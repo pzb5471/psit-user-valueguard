@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const BATCH_ID = 'batch-demo-0001'
+const BATCH_ID = 'batch-mvp-0001'
 
 test('真实 API：导入→开始→队列→详情→图片→确认→刷新读回', async ({ page, request }) => {
   const externalRequests: string[] = []
@@ -11,14 +11,14 @@ test('真实 API：导入→开始→队列→详情→图片→确认→刷新�
     }
   })
 
-  const archiveResponse = await request.get('/e2e/demo.zip')
+  const archiveResponse = await request.get('/e2e/mvp.zip')
   expect(archiveResponse.ok()).toBe(true)
   const archive = await archiveResponse.body()
 
   await page.goto('/')
   await expect(page.getByText('批次导入')).toBeVisible()
   await page.locator('input[type="file"]').setInputFiles({
-    name: 'demo_batch_v1.zip',
+    name: 'mvp_batch_v1.zip',
     mimeType: 'application/zip',
     buffer: archive,
   })

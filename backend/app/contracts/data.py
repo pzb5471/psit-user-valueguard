@@ -190,9 +190,9 @@ class BehaviorFactType(StrEnum):
 
 
 class PackageType(StrEnum):
-    """标准 ZIP 包类型（规格 5.4）：DEMO 或 ACCEPTANCE。"""
+    """标准 ZIP 包类型（规格 5.4）：MVP 或 ACCEPTANCE。"""
 
-    DEMO = "DEMO"
+    MVP = "MVP"
     ACCEPTANCE = "ACCEPTANCE"
 
 

@@ -75,7 +75,7 @@ def _import_batch(
     gateway,
     *,
     batch_id: str,
-    case_ids: tuple[str, ...] = ("demo_case_001", "demo_case_002"),
+    case_ids: tuple[str, ...] = ("mvp_case_001", "mvp_case_002"),
     source_filename: str = "upload.zip",
 ) -> str:
     """导入一个由 zip_fixtures 构造的完整标准 ZIP，返回 batch_id。"""
@@ -104,7 +104,7 @@ def _case_row(session: Session, *, batch_id: str, case_id: str) -> Case:
 
 def _standard_stages(
     *,
-    case_id: str = "demo_case_001",
+    case_id: str = "mvp_case_001",
     risk_summary: str = DEFAULT_RISK_SUMMARY,
     intervention_level: str = "MUST_INTERVENE",
     conflict: bool = False,
@@ -388,11 +388,11 @@ def test_get_batch_missing_raises_lookup_error(query_gateway) -> None:
 # ---------- 批次详情 / 实时聚合 ----------
 
 def test_batch_workspace_projection(query_gateway, gateway) -> None:
-    batch_id = _import_batch(gateway, batch_id="ws", source_filename="customer_demo_v1.zip")
+    batch_id = _import_batch(gateway, batch_id="ws", source_filename="customer_mvp_v1.zip")
     view = query_gateway.get_batch(batch_id)
     assert isinstance(view, BatchWorkspaceView)
     assert view.batch_id == "ws"
-    assert view.source_filename == "customer_demo_v1.zip"
+    assert view.source_filename == "customer_mvp_v1.zip"
     assert view.is_mock is True
     assert view.status == BatchStatus.PENDING_ANALYSIS.value
     assert view.case_count == 2
@@ -419,7 +419,7 @@ def test_batch_status_and_counts_lifecycle(query_gateway, gateway, engine) -> No
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="life-c1",
         status=CaseStatus.PENDING_REVIEW,
         system_level=InterventionLevel.MUST_INTERVENE,
@@ -428,11 +428,11 @@ def test_batch_status_and_counts_lifecycle(query_gateway, gateway, engine) -> No
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_002",
+        case_id="mvp_case_002",
         run_id="life-c2",
         status=CaseStatus.COMPLETED,
         system_level=InterventionLevel.SHOULD_INTERVENE,
-        stages=_standard_stages(case_id="demo_case_002"),
+        stages=_standard_stages(case_id="mvp_case_002"),
     )
     view = query_gateway.get_batch(batch_id)
     assert view.status == BatchStatus.COMPLETED.value
@@ -443,7 +443,7 @@ def test_batch_status_and_counts_lifecycle(query_gateway, gateway, engine) -> No
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_002",
+        case_id="mvp_case_002",
         run_id="life-c2-fail",
         status=CaseStatus.PROCESSING_ERROR,
         run_status=CaseRunStatus.FAILED,
@@ -458,7 +458,7 @@ def test_batch_status_and_counts_lifecycle(query_gateway, gateway, engine) -> No
 
     # 任一案例处于 ANALYZING 优先 → ANALYZING
     _update_case(
-        engine, batch_id=batch_id, case_id="demo_case_001", status=CaseStatus.ANALYZING
+        engine, batch_id=batch_id, case_id="mvp_case_001", status=CaseStatus.ANALYZING
     )
     assert query_gateway.get_batch(batch_id).status == BatchStatus.ANALYZING.value
 
@@ -476,7 +476,7 @@ def test_batch_can_start_analysis_flow(query_gateway, gateway, engine) -> None:
     # 案例已进入 ANALYZING 同样禁止开始
     batch2 = _import_batch(gateway, batch_id="start2")
     _update_case(
-        engine, batch_id=batch2, case_id="demo_case_001", status=CaseStatus.ANALYZING
+        engine, batch_id=batch2, case_id="mvp_case_001", status=CaseStatus.ANALYZING
     )
     assert query_gateway.get_batch(batch2).can_start_analysis is False
 
@@ -627,7 +627,7 @@ def test_queue_flags_derive_from_frozen_result_contract() -> None:
         SimpleNamespace(
             stage_name="perception",
             result_json={
-                "events": [{"conflicting_evidence": ["ev_image_demo_case_001"]}],
+                "events": [{"conflicting_evidence": ["ev_image_mvp_case_001"]}],
                 "image_observations": [
                     {"relationship": "CONFLICTS"},
                 ],
@@ -685,7 +685,7 @@ def test_queue_rejects_invalid_limit(query_gateway, limit) -> None:
 def test_case_detail_missing_batch_or_case_raises(query_gateway, gateway) -> None:
     batch_id = _import_batch(gateway, batch_id="miss")
     with pytest.raises(LookupError):
-        query_gateway.get_case_detail("no-such-batch", "demo_case_001")
+        query_gateway.get_case_detail("no-such-batch", "mvp_case_001")
     with pytest.raises(LookupError):
         query_gateway.get_case_detail(batch_id, "no-such-case")
 
@@ -695,19 +695,19 @@ def test_case_detail_full_projection(query_gateway, gateway, engine) -> None:
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="detail-run-1",
         status=CaseStatus.PENDING_REVIEW,
         system_level=InterventionLevel.MUST_INTERVENE,
         stages=_standard_stages(
-            cited_ids=("ev_text_demo_case_001_1", "ev_behavior_demo_case_001_1")
+            cited_ids=("ev_text_mvp_case_001_1", "ev_behavior_mvp_case_001_1")
         ),
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     assert isinstance(detail, CaseDetailView)
     assert detail.batch_id == "detail"
-    assert detail.case_id == "demo_case_001"
-    assert detail.customer_display_id == "CUST-DEMO-000001"
+    assert detail.case_id == "mvp_case_001"
+    assert detail.customer_display_id == "CUST-MVP-000001"
     assert detail.is_high_value is True
     assert detail.customer_value_summary == (
         "高价值客户：R=88<=397 且 M=2860.42>=209.604，满足高价值判定"
@@ -735,34 +735,34 @@ def test_case_detail_full_projection(query_gateway, gateway, engine) -> None:
 
 
 def test_case_detail_cited_evidence_views(query_gateway, gateway, engine) -> None:
-    batch_id = _import_batch(gateway, batch_id="cited", case_ids=("demo_case_001",))
+    batch_id = _import_batch(gateway, batch_id="cited", case_ids=("mvp_case_001",))
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="cited-run-1",
         status=CaseStatus.PENDING_REVIEW,
         stages=_standard_stages(
-            cited_ids=("ev_text_demo_case_001_1", "ev_behavior_demo_case_001_1")
+            cited_ids=("ev_text_mvp_case_001_1", "ev_behavior_mvp_case_001_1")
         ),
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     cited = {evidence.evidence_id: evidence for evidence in (detail.cited_evidence or [])}
     assert set(cited) == {
-        "ev_image_demo_case_001",
-        "ev_text_demo_case_001_1",
-        "ev_behavior_demo_case_001_1",
+        "ev_image_mvp_case_001",
+        "ev_text_mvp_case_001_1",
+        "ev_behavior_mvp_case_001_1",
     }
-    image = cited["ev_image_demo_case_001"]
+    image = cited["ev_image_mvp_case_001"]
     assert image.modality == "image"
     assert image.label == "售后图片"
     assert image.summary == "商品外观有划痕"
     assert image.text is None
-    text = cited["ev_text_demo_case_001_1"]
+    text = cited["ev_text_mvp_case_001_1"]
     assert text.modality == "text"
     assert text.label == "客户对话"
     assert text.text == "收到的商品有划痕，请帮我处理。"
-    behavior = cited["ev_behavior_demo_case_001_1"]
+    behavior = cited["ev_behavior_mvp_case_001_1"]
     assert behavior.modality == "behavior"
     assert behavior.label == "订单与客户价值事实"
     assert behavior.text == "高价值客户标识：是"
@@ -775,33 +775,33 @@ def test_case_detail_separates_current_from_first_history(
     first = _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="hist-run-first",
         status=CaseStatus.PENDING_REVIEW,
         system_level=InterventionLevel.SHOULD_INTERVENE,
         stages=_standard_stages(
             risk_summary="首次批量分析风险",
-            cited_ids=("ev_text_demo_case_001_1",),
+            cited_ids=("ev_text_mvp_case_001_1",),
         ),
     )
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="hist-run-current",
         previous_case_run_id=first,
         status=CaseStatus.PENDING_REVIEW,
         system_level=InterventionLevel.MUST_INTERVENE,
         stages=_standard_stages(risk_summary="重跑后的当前风险"),
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     # 详情只投影当前 case_run：风险摘要取当前运行
     assert detail.risk_summary == "重跑后的当前风险"
     assert detail.intervention_level == "MUST_INTERVENE"
     # 首次历史引用的文本证据不进入当前投影
     cited_ids = [evidence.evidence_id for evidence in (detail.cited_evidence or [])]
-    assert "ev_image_demo_case_001" in cited_ids
-    assert "ev_text_demo_case_001_1" not in cited_ids
+    assert "ev_image_mvp_case_001" in cited_ids
+    assert "ev_text_mvp_case_001_1" not in cited_ids
     assert detail.status == "PENDING_REVIEW"
     assert detail.review_token is not None
 
@@ -811,14 +811,14 @@ def test_case_detail_review_token_changes_on_rerun(query_gateway, gateway, engin
     first = _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="tok-run-1",
         status=CaseStatus.PENDING_REVIEW,
         stages=_standard_stages(),
     )
-    detail1 = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail1 = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     expected1 = hashlib.sha256(
-        f"psit-review:{batch_id}:demo_case_001:tok-run-1".encode()
+        f"psit-review:{batch_id}:mvp_case_001:tok-run-1".encode()
     ).hexdigest()
     assert detail1.can_review is True
     assert detail1.review_token == expected1
@@ -826,15 +826,15 @@ def test_case_detail_review_token_changes_on_rerun(query_gateway, gateway, engin
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="tok-run-2",
         previous_case_run_id=first,
         status=CaseStatus.PENDING_REVIEW,
         stages=_standard_stages(),
     )
-    detail2 = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail2 = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     expected2 = hashlib.sha256(
-        f"psit-review:{batch_id}:demo_case_001:tok-run-2".encode()
+        f"psit-review:{batch_id}:mvp_case_001:tok-run-2".encode()
     ).hexdigest()
     assert detail2.review_token == expected2
     # 结果被重跑替换后旧 Token 失效（规格 12.3）
@@ -903,7 +903,7 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
     run_id = _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rv1-run-1",
         status=CaseStatus.PENDING_REVIEW,
         system_level=InterventionLevel.SHOULD_INTERVENE,
@@ -912,7 +912,7 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
     _insert_review(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         case_run_id=run_id,
         outcome=ReviewOutcome.APPROVED,
         final_level=InterventionLevel.MUST_INTERVENE,
@@ -921,7 +921,7 @@ def test_case_detail_review_result_human_first(query_gateway, gateway, engine) -
         review_reason="人工复核为价格或权益问题",
         execution_note="已联系客户确认权益补偿方案",
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     assert detail.status == "COMPLETED"
     review_result = detail.review_result
     assert review_result is not None
@@ -942,7 +942,7 @@ def test_case_detail_review_result_system_fallback(query_gateway, gateway, engin
     run_id = _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="rv2-run-1",
         status=CaseStatus.PENDING_REVIEW,
         stages=_standard_stages(intervention_level="SHOULD_INTERVENE"),
@@ -951,11 +951,11 @@ def test_case_detail_review_result_system_fallback(query_gateway, gateway, engin
     _insert_review(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         case_run_id=run_id,
         outcome=ReviewOutcome.APPROVED,
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     review_result = detail.review_result
     assert review_result is not None
     assert review_result.final_intervention_level == "SHOULD_INTERVENE"
@@ -986,7 +986,7 @@ def test_processing_error_stage_mapping(
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id=f"perr-{error_stage}",
         status=CaseStatus.PROCESSING_ERROR,
         run_status=CaseRunStatus.FAILED,
@@ -995,7 +995,7 @@ def test_processing_error_stage_mapping(
         error_detail_json={"trace_id": "tr-1"},
         stages={},
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     assert detail.processing_error is not None
     assert detail.processing_error.stage == expected_stage
     assert detail.processing_error.code == "MODEL_TIMEOUT"
@@ -1009,7 +1009,7 @@ def test_processing_error_unknown_code_fallback(query_gateway, gateway, engine) 
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="perr2-run-1",
         status=CaseStatus.PROCESSING_ERROR,
         run_status=CaseRunStatus.FAILED,
@@ -1017,7 +1017,7 @@ def test_processing_error_unknown_code_fallback(query_gateway, gateway, engine) 
         error_stage="future_stage",
         stages={},
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     assert detail.processing_error is not None
     assert detail.processing_error.code == "BRAND_NEW_ERROR"
     assert detail.processing_error.message == "处理过程发生异常"
@@ -1029,7 +1029,7 @@ def test_processing_error_empty_code_defaults(query_gateway, gateway, engine) ->
     _complete_current_run(
         engine,
         batch_id=batch_id,
-        case_id="demo_case_001",
+        case_id="mvp_case_001",
         run_id="perr3-run-1",
         status=CaseStatus.PROCESSING_ERROR,
         run_status=CaseRunStatus.FAILED,
@@ -1037,7 +1037,7 @@ def test_processing_error_empty_code_defaults(query_gateway, gateway, engine) ->
         error_stage=None,
         stages={},
     )
-    detail = query_gateway.get_case_detail(batch_id, "demo_case_001")
+    detail = query_gateway.get_case_detail(batch_id, "mvp_case_001")
     assert detail.processing_error is not None
     assert detail.processing_error.code == "UNEXPECTED_PROCESSING_ERROR"
     assert detail.processing_error.message == "处理过程发生未预期错误"
@@ -1048,12 +1048,12 @@ def test_processing_error_empty_code_defaults(query_gateway, gateway, engine) ->
 
 def test_get_case_input_roundtrip_and_missing(query_gateway, gateway) -> None:
     batch_id = _import_batch(gateway, batch_id="input1")
-    case_input = query_gateway.get_case_input(batch_id, "demo_case_001")
+    case_input = query_gateway.get_case_input(batch_id, "mvp_case_001")
     assert case_input is not None
-    assert case_input.case_id == "demo_case_001"
+    assert case_input.case_id == "mvp_case_001"
     assert case_input.data_identity == "simulated"
-    assert case_input.customer.customer_ref == "CUST-DEMO-000001"
-    assert query_gateway.get_case_input("no-such-batch", "demo_case_001") is None
+    assert case_input.customer.customer_ref == "CUST-MVP-000001"
+    assert query_gateway.get_case_input("no-such-batch", "mvp_case_001") is None
     assert query_gateway.get_case_input(batch_id, "no-such-case") is None
 
 
@@ -1073,8 +1073,8 @@ def test_review_options_catalog_of_record() -> None:
 
 def test_dtos_reject_extra_and_loose_types() -> None:
     payload = {
-        "case_id": "demo_case_001",
-        "customer_display_id": "CUST-DEMO-000001",
+        "case_id": "mvp_case_001",
+        "customer_display_id": "CUST-MVP-000001",
         "is_high_value": True,
         "status": "PENDING_ANALYSIS",
         "has_evidence_conflict": False,

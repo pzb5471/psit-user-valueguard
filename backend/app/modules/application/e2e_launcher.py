@@ -36,7 +36,7 @@ from app.modules.application.m2_wiring import build_analysis_engine  # noqa: E40
 from app.modules.application.static_frontend import mount_frontend  # noqa: E402
 from app.modules.application.wiring import build_runtime, build_services  # noqa: E402
 
-BATCH_ID = "batch-demo-0001"
+BATCH_ID = "batch-mvp-0001"
 CASE_ID = "case-0001"
 
 
@@ -60,7 +60,7 @@ def _with_image(raw: dict) -> dict:
     return raw
 
 
-def demo_zip_bytes() -> bytes:
+def mvp_zip_bytes() -> bytes:
     entries = make_entries(
         case_ids=(CASE_ID,),
         case_builder=lambda _case_id: _with_image(case_input_raw()),
@@ -107,9 +107,9 @@ def build_app():
         review_service=services.review,
     )
 
-    @app.get("/e2e/demo.zip")
-    def get_demo_zip() -> Response:
-        return Response(content=demo_zip_bytes(), media_type="application/zip")
+    @app.get("/e2e/mvp.zip")
+    def get_mvp_zip() -> Response:
+        return Response(content=mvp_zip_bytes(), media_type="application/zip")
 
     # /api 与 /e2e 已先注册，静态兜底不遮蔽接口。
     mount_frontend(app, FRONTEND_DIST)

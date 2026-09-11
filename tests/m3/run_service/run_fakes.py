@@ -57,7 +57,7 @@ def make_workspace(
 ) -> BatchWorkspaceView:
     return BatchWorkspaceView(
         batch_id=batch_id,
-        source_filename="demo.zip",
+        source_filename="mvp.zip",
         is_mock=True,
         status=status,
         case_count=case_count,

@@ -2,7 +2,7 @@
 
 本目录只运行真实 `GlmClient`，不使用 `ScriptedGlmClient`，也不进入普通 PR 门禁。
 
-1. 运行 `scripts/prepare-demo-data.ps1`，生成固定 10 个 DEMO 与 5 个 ACCEPTANCE 案例。
+1. 运行 `scripts/prepare-mvp-data.ps1`，生成固定 10 个 MVP 与 5 个 ACCEPTANCE 案例。
 2. 只通过环境变量配置 `ZAI_API_KEY`。
 3. 运行 `scripts/test.ps1 -Task M2-10`。测试会继续跑完全部案例，并把模型尝试、阶段结果、Token、耗时和失败记录写入 `artifacts/poc/<run_id>/`。
 4. 演讲版 MVP 按 ADR 0087 使用项目负责人基于多轮真实运行记录的演示验收，不再重复执行双人复核。

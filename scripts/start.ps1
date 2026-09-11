@@ -16,7 +16,7 @@ try {
     $env:PYTHONPATH = Join-Path $repoRoot 'backend'
     & uv run python -m app.modules.application.launcher
     if ($LASTEXITCODE -ne 0) {
-        throw "PSIT demo startup failed (exit $LASTEXITCODE)."
+        throw "PSIT mvp startup failed (exit $LASTEXITCODE)."
     }
 }
 finally {

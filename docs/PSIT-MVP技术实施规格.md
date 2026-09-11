@@ -1,6 +1,6 @@
 # PSIT MVP 技术实施规格（AI 技术执行文档）
 
-- 文档状态：DEMO_RELEASE_VERIFIED；四模块、固定案例、真实模型自动结构门、项目负责人多轮演示验收和正式生产网页复验均已完成
+- 文档状态：MVP_RELEASE_VERIFIED；四模块、固定案例、真实模型自动结构门、项目负责人多轮演示验收和正式生产网页复验均已完成
 - 适用阶段：10 天本机可运行 MVP
 - 适用对象：M1 数据与存储、M2 AI 分析引擎、M3 业务服务与 API、M4 前端工作台
 - 文档角色：PSIT MVP 唯一技术执行真源，内含 37 张开发 Task
@@ -34,11 +34,11 @@ MVP 的最小闭环是：
 | 技术架构与跨模块合同 | 已冻结在本文 | 四个模块直接按本文开发，不再从历史材料挑选方案 |
 | 37 张 Task | 已定义 | 每张卡仍须在依赖满足后执行，不代表代码已经存在 |
 | 四模块代码与 SQLite | 已完成确定性集成 | 应用、数据库、前端和测试模型流程可运行；不等于真实模型已验收 |
-| `demo_batch_v1` 与 `acceptance_batch_v1` | 组包程序和 10+5 案例门已完成 | 脱敏演示 ZIP 固定进入 `demo/`；验收 ZIP、私有源数据和密封参考仍不入 Git |
+| `mvp_batch_v1` 与 `acceptance_batch_v1` | 组包程序和 10+5 案例门已完成 | 脱敏演示 ZIP 固定进入 `mvp/`；验收 ZIP、私有源数据和密封参考仍不入 Git |
 | GLM-5.3-Flash 真实 PoC | 自动门与演讲验收已通过 | 最终 run_id `20260911T040909Z` 为 15/15 案例、45/45 阶段通过；项目负责人依据多轮运行按 ADR 0087 完成演示验收 |
 | MVP 可用性 | 演示发布已验证 | 2026-09-11 正式生产网页复验为 10/10 案例成功、0 错误、30/30 阶段与 30 条模型调用完整落库；可合并 PR #29 |
 
-`DEMO_RELEASE_VERIFIED` 表示当前提交已经从全新运行目录完成生产启动、真实分析、浏览器操作、人工确认、刷新和重启读回复验。它只证明固定案例演讲链路可用，不代表真实业务准确率或企业生产认证。
+`MVP_RELEASE_VERIFIED` 表示当前提交已经从全新运行目录完成生产启动、真实分析、浏览器操作、人工确认、刷新和重启读回复验。它只证明固定案例演讲链路可用，不代表真实业务准确率或企业生产认证。
 
 ### 2.2 最终裁决摘要
 
@@ -217,11 +217,11 @@ ZIP 根目录固定包含：
 
 cases 中每个案例保存一份 CaseInput v1。assets 只包含这些案例实际引用的图片。manifest 和案例只能使用相对路径。原始大 CSV、完整图片库和验收答案不能进入运行 ZIP。
 
-`manifest.json` 只允许以下字段：`schema_version="batch_manifest.v1"`、`data_version`、`batch_id`、`package_type`（`DEMO` 或 `ACCEPTANCE`）、`is_mock=true`、`source_snapshot_at`、`case_files`、`case_count`、`evidence_count`。`case_files` 按路径升序排列；数量必须与实际 `cases/*.json` 一致。
+`manifest.json` 只允许以下字段：`schema_version="batch_manifest.v1"`、`data_version`、`batch_id`、`package_type`（`MVP` 或 `ACCEPTANCE`）、`is_mock=true`、`source_snapshot_at`、`case_files`、`case_count`、`evidence_count`。`case_files` 按路径升序排列；数量必须与实际 `cases/*.json` 一致。
 
 `checksums.json` 是“相对路径 → 小写 SHA-256”的对象，必须覆盖 manifest、全部案例和全部图片，但不包含自身。ZIP 内文件按相对路径升序写入，JSON 使用 UTF-8、LF、稳定键顺序和无意义空白最小化；ZIP 条目的时间戳、权限和压缩参数固定。相同输入连续组包必须得到相同文件清单、内容哈希和 ZIP 哈希。
 
-固定数据版本为 mock_dataset_v1。项目提供互不重叠的 demo_batch_v1 10 个案例和 acceptance_batch_v1 5 个案例。任何数据或映射变化必须产生新的 data_version 和 batch_id，不能覆盖旧版本。
+固定数据版本为 mock_dataset_v1。项目提供互不重叠的 mvp_batch_v1 10 个案例和 acceptance_batch_v1 5 个案例。任何数据或映射变化必须产生新的 data_version 和 batch_id，不能覆盖旧版本。
 
 导入规则：
 
@@ -993,7 +993,7 @@ React、TypeScript、Vite、Ant Design、React Router、TanStack Query、Ant Des
 
 脚本只能使用项目相对路径、PATH 或项目级工具发现逻辑，不能写成员电脑、WindowsApps 别名或 Codex 缓存绝对路径。
 
-仓库直接提供 `demo/demo_batch_v1.zip`；只有需要重新生成 10+5 数据包时才运行 `scripts/prepare-demo-data.ps1` 并提供私有源数据。开发联调运行 `scripts/dev.ps1`，它从同一份 TOML 配置读取 FastAPI 与 Vite 端口。真实生产分析除 `ZAI_API_KEY` 外，还要求 `analysis.production_enabled=true`；演讲版开关按 M2-10 自动门与 ADR 0087 的项目负责人演示验收启用，不能用本机 Fake 或普通测试替代。
+仓库直接提供 `mvp/mvp_batch_v1.zip`；只有需要重新生成 10+5 数据包时才运行 `scripts/prepare-mvp-data.ps1` 并提供私有源数据。开发联调运行 `scripts/dev.ps1`，它从同一份 TOML 配置读取 FastAPI 与 Vite 端口。真实生产分析除 `ZAI_API_KEY` 外，还要求 `analysis.production_enabled=true`；演讲版开关按 M2-10 自动门与 ADR 0087 的项目负责人演示验收启用，不能用本机 Fake 或普通测试替代。
 
 演示模式由 FastAPI 在同一 127.0.0.1 端口提供 React 静态文件、/api/v1 和证据图片。用户不需要 Docker、Vite 开发服务器或第二个手工终端。
 
@@ -1024,7 +1024,7 @@ scripts/test.ps1 至少覆盖：
 真实 GLM 验收单独运行，不放入普通确定性测试：
 
 1. 使用官方 SDK 和真实 ZAI_API_KEY 完成健康检查和单案例三阶段冒烟。
-2. 选定配置完整运行 demo_batch_v1 与 acceptance_batch_v1，共 15 个案例、45 个阶段；不能跳过、替换或删除失败案例。
+2. 选定配置完整运行 mvp_batch_v1 与 acceptance_batch_v1，共 15 个案例、45 个阶段；不能跳过、替换或删除失败案例。
 3. 所有发布结果必须经过严格合同，不能存在跨案例或不存在的证据、目录外动作、隐藏答案字段或密封答案泄漏。
 4. 任何阶段耗尽允许请求后，案例进入可解释的 PROCESSING_ERROR，不能用预写答案或 Fake 补成功。
 5. 保存每阶段首次结构通过、修复后通过、失败类别、耗时、Token、实际调用次数、429 和图片贡献记录。
@@ -1039,7 +1039,7 @@ scripts/test.ps1 至少覆盖：
 
 从一个空的 runtime_data 开始，使用浏览器完成：
 
-1. 导入 demo_batch_v1，看到正确摘要和 Mock 提示，且没有自动调用模型。
+1. 导入 mvp_batch_v1，看到正确摘要和 Mock 提示，且没有自动调用模型。
 2. 明确开始分析，刷新页面后状态和进度继续正确。
 3. 打开一个完成分析的案例，看到高价值结论、原因、证据、动作和不确定性。
 4. 完成一次直接通过、一次修改后确认、一次证据不足或驳回并给出判断。
@@ -1180,7 +1180,7 @@ M3-09 与 M4-09 还必须运行无参数全量确定性测试。M2-10 的真实 
 - **类型**：HITL，确定性数据处理加四人共同业务核验。
 - **目标**：以现有清洗后主表为主、同源原始表为核验补充，生成可复算的 `mock_dataset_v1`、10 案例演示 ZIP、5 案例验收 ZIP和物理分离的密封参考结果。
 - **输入**：本规格第 5、7.2、15.2 节；M1-01；逻辑源目录 `source_data/ecommercedata-main/`。
-- **输出**：可重复运行的数据组包程序；`demo_batch_v1.zip`；`acceptance_batch_v1.zip`；密封参考 JSON；一个普通客户测试对照；独立技术故障夹具；源文件哈希、固定映射、RFM 边界、案例覆盖和脱敏检查报告。
+- **输出**：可重复运行的数据组包程序；`mvp_batch_v1.zip`；`acceptance_batch_v1.zip`；密封参考 JSON；一个普通客户测试对照；独立技术故障夹具；源文件哈希、固定映射、RFM 边界、案例覆盖和脱敏检查报告。
 - **依赖**：M1-01。
 - **修改范围**：`tools/data_preparation/`、`tests/fixtures/batches/`、`tests/fixtures/sealed/`、`tests/fixtures/failures/`、`docs/data/`；不得修改产品运行模块。
 - **禁止事项**：不得寻找新数据、重新随机映射、强行跨源认定真实客户、把 CSV 行直接当案例、沿用旧绝对 RFM 阈值、把密封答案写入运行 ZIP、Prompt 或产品目录、用虚构时间或币种补字段。
